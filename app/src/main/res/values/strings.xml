@@ -16,4 +16,14 @@
     <string name="accept">Подтвердить</string>
     <string name="settings_page">Страница настроек</string>
     <string name="one_page_higher">Перейти на предыдущую страницу</string>
+    <string name="title_activity_choosing_thems">ChoosingThemsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="light_theme">Светлая</string>
+    <string name="dark_theme">Тёмная</string>
+    <string name="dark_radio_button">Переключатель на тёмную тему приложения</string>
+    <string name="change_theme_button">Изменить темы оформления приложения</string>
 </resources>

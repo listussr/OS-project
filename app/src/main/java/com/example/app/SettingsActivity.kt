@@ -17,4 +17,9 @@ class SettingsActivity : ComponentActivity() {
         startActivity(intent)
         finish()
     }
+
+    fun changeThemeButtonCallback(view: View){
+        val intent = Intent(this, ThemeChoosingActivity::class.java)
+        startActivity(intent)
+    }
 }
