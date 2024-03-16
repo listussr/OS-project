@@ -6,18 +6,14 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import android.content.Intent
 
-class MainAppPage : ComponentActivity() {
+class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_app_page)
+        setContentView(R.layout.activity_settings)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    fun settingsButtonCallback(view: View){
-        val intent = Intent(this, SettingsActivity::class.java)
+    fun backButtonCallback(view: View){
+        val intent = Intent(this, MainAppPage::class.java)
         startActivity(intent)
         finish()
     }

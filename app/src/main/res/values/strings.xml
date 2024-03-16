@@ -14,4 +14,6 @@
     <string name="finger_print">Отпечаток пальца</string>
     <string name="delete">Удалить последний символ</string>
     <string name="accept">Подтвердить</string>
+    <string name="settings_page">Страница настроек</string>
+    <string name="one_page_higher">Перейти на предыдущую страницу</string>
 </resources>

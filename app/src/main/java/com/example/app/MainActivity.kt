@@ -30,10 +30,22 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.main_activity)
     }
 
+    private fun clearPassword(){
+        index = 0
+        for (i in 0..4){
+            password[i] = 0
+        }
+        var changingView = findViewById<TextView>(passwordEdit)
+        var amount = 0
+        changingView.text = amount.toString()
+    }
+
+
     /**
      * Метод для переключения между страницами
      */
     private fun changeActivity() {
+        clearPassword()
         val intent = Intent(this@MainActivity, MainAppPage::class.java)
         startActivity(intent)
     }
@@ -45,14 +57,8 @@ class MainActivity : ComponentActivity() {
         if(password contentEquals appPassword){
             changeActivity()
         }
-        else{
-            for (i in 0..4){
-                password[i] = 0
-            }
-            var changingView = findViewById<TextView>(passwordEdit)
-            var amount = 0
-            changingView.text = amount.toString()
-            index = 0
+        else {
+            clearPassword()
         }
     }
 
