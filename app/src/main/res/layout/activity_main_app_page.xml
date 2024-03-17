@@ -10,28 +10,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/settingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="320dp"
             android:layout_weight="1"
             android:contentDescription="@string/settings_page"
             android:onClick="settingsButtonCallback"
-            android:src="@android:drawable/ic_menu_compass" />
+            android:src="@android:drawable/ic_menu_manage" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/helloApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100px"
-        android:layout_marginTop="100px"
-        android:layout_marginRight="100px"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="120dp"
         android:fontFamily="@font/b612_mono"
-        android:text="Страница успешно открыта"
+        android:text="Main page"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="24sp" />
 

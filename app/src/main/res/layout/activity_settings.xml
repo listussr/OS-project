@@ -17,10 +17,23 @@
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
+            android:background="#FFFFFF"
             android:contentDescription="@string/one_page_higher"
             android:onClick="backButtonCallback"
             android:src="?android:attr/homeAsUpIndicator" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/b612_mono"
+            android:text="@string/t_settings_page"
+            android:textAlignment="center"
+            android:textColor="#1B1A1A"
+            android:textSize="26sp" />
     </LinearLayout>
 
 

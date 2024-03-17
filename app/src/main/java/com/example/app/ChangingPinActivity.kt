@@ -1,6 +1,7 @@
 package com.example.app
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -18,10 +19,14 @@ class ChangingPinActivity : ComponentActivity() {
         setContentView(R.layout.activity_changing_pin)
     }
 
-    private fun saveNewPassword(){
+    private fun changeActivity(){
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun saveNewPassword(){
+        changeActivity()
     }
 
     /**

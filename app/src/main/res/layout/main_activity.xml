@@ -11,22 +11,22 @@
         android:id="@+id/aboveLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100px"
+        android:layout_marginTop="35dp"
         android:background="#EBEDFA"
         android:orientation="vertical"
-        android:paddingBottom="50px">
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="210px"
-            android:layout_marginRight="200px"
+            android:layout_height="0dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginEnd="60dp"
             android:layout_weight="1"
             android:accessibilityLiveRegion="polite"
             android:fontFamily="@font/b612_mono"
             android:gravity="center"
-            android:text="@string/enter_password"
+            android:text="@string/t_enter_password"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textAppearance="@android:style/TextAppearance.Material.Display1"
@@ -38,9 +38,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="200px"
-            android:layout_marginTop="30px"
-            android:layout_marginRight="200px"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -58,6 +59,7 @@
                 android:id="@+id/passwordEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/b612_mono"
                 android:text="0"
@@ -77,9 +79,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="100px"
-            android:layout_marginRight="50px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
@@ -90,7 +92,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onOneClicked"
-                android:text="@string/one"
+                android:text="@string/t_one"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -103,7 +105,7 @@
                 android:alpha="90"
                 android:fontFamily="serif"
                 android:onClick="onTwoClicked"
-                android:text="@string/two"
+                android:text="@string/t_two"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -115,7 +117,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onThreeClicked"
-                android:text="@string/three"
+                android:text="@string/t_three"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -124,9 +126,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="150px"
-            android:layout_marginRight="50px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
@@ -137,7 +139,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onFourClicked"
-                android:text="@string/four"
+                android:text="@string/t_four"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -150,7 +152,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onFiveClicked"
-                android:text="@string/five"
+                android:text="@string/t_five"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -163,7 +165,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onSixClicked"
-                android:text="@string/six"
+                android:text="@string/t_six"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -173,9 +175,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="150px"
-            android:layout_marginRight="50px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
@@ -186,7 +188,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onSevenClicked"
-                android:text="@string/seven"
+                android:text="@string/t_seven"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -199,7 +201,7 @@
                 android:alpha="90"
                 android:fontFamily="serif"
                 android:onClick="onEightClicked"
-                android:text="@string/eight"
+                android:text="@string/t_eight"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -211,7 +213,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onNineClicked"
-                android:text="@string/nine"
+                android:text="@string/t_nine"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -221,9 +223,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="150px"
-            android:layout_marginRight="50px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <ImageButton
@@ -243,7 +245,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:onClick="onZeroClicked"
-                android:text="@string/zero"
+                android:text="@string/t_zero"
                 android:textAllCaps="false"
                 android:textSize="25sp"
                 android:textStyle="bold" />

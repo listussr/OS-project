@@ -1,43 +1,66 @@
 package com.example.app
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.app.ui.theme.AppTheme
 import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import com.example.app.jsonClasses.SettingsJsonClass
+import com.google.gson.Gson
+import org.json.JSONObject
+import java.io.IOException
+import java.nio.charset.Charset
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var prefs: SharedPreferences
+    private var appPassword: Array<Int> = arrayOf(1, 2, 3, 4, 5)
 
-    private val appPassword = arrayOf(1, 2, 3, 4, 5)
-
-    private var password = arrayOf(0, 0, 0, 0, 0)
+    private var password: Array<Int> = arrayOf(0, 0, 0, 0, 0)
     private var index: Int = 0
-
     private val passwordEdit = R.id.passwordEdit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        prefs = getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        //appPassword = unmaskPassword(getAppPassword())
     }
 
-    override fun onResume(){
-        super.onResume()
-        // сделать вывод из настроек
+    private fun getAppPassword(): String {
+        val jsonString: String? = getJSONFromAssets()!!
+        val strPassword: SettingsJsonClass? =
+            Gson().fromJson(jsonString, SettingsJsonClass::class.java)
+        val objectJson = JSONObject(getJSONFromAssets()!!)
+        return objectJson.getJSONObject("appPassword").toString()
+    }
+
+    private fun getJSONFromAssets(): String? {
+
+        var json: String? = null
+        val charset: Charset = Charsets.UTF_8
+        try {
+            val myUsersJSONFile = assets.open("Settings.json")
+            val size = myUsersJSONFile.available()
+            val buffer = ByteArray(size)
+            myUsersJSONFile.read(buffer)
+            myUsersJSONFile.close()
+            json = String(buffer, charset)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+            return null
+        }
+        return json
+    }
+
+    private fun unmaskPassword(strPassword: String): Array<Int> {
+        return arrayOf(
+            strPassword[0].toString().toInt(),
+            strPassword[1].toString().toInt(),
+            strPassword[2].toString().toInt(),
+            strPassword[3].toString().toInt(),
+            strPassword[4].toString().toInt()
+            )
     }
 
     private fun clearPassword(){
@@ -58,6 +81,7 @@ class MainActivity : ComponentActivity() {
         clearPassword()
         val intent = Intent(this@MainActivity, MainAppPage::class.java)
         startActivity(intent)
+        finish()
     }
 
     /**
@@ -69,6 +93,7 @@ class MainActivity : ComponentActivity() {
         }
         else {
             clearPassword()
+            Toast.makeText(applicationContext, R.string.msg_incorrect_password, Toast.LENGTH_LONG).show()
         }
     }
 
