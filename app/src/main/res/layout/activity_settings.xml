@@ -23,18 +23,38 @@
             android:src="?android:attr/homeAsUpIndicator" />
     </LinearLayout>
 
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="25dp">
 
-        <Button
-            android:id="@+id/button10"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="changeThemeButtonCallback"
-            android:text="@string/change_theme_button"
-            app:icon="@android:drawable/ic_menu_manage" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="changeThemeButtonCallback"
+                android:text="@string/change_theme_button"
+                app:icon="@android:drawable/ic_menu_manage" />
+
+            <Button
+                android:id="@+id/button12"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#673AB7"
+                android:onClick="changePinCodeButtonCallback"
+                android:text="@string/change_pin"
+                app:icon="@android:drawable/ic_media_ff" />
+
+        </LinearLayout>
+
+
     </ScrollView>
 
 </LinearLayout>

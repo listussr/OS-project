@@ -12,14 +12,21 @@ class SettingsActivity : ComponentActivity() {
         setContentView(R.layout.activity_settings)
     }
 
-    fun backButtonCallback(view: View){
+    fun backButtonCallback(view: View) {
         val intent = Intent(this, MainAppPage::class.java)
         startActivity(intent)
         finish()
     }
 
-    fun changeThemeButtonCallback(view: View){
+    fun changeThemeButtonCallback(view: View) {
         val intent = Intent(this, ThemeChoosingActivity::class.java)
         startActivity(intent)
     }
+
+    fun changePinCodeButtonCallback(view: View){
+        val intent = Intent(this, ChangingPinActivity::class.java)
+        startActivity(intent)
+    }
+
+
 }
