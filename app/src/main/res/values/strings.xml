@@ -25,4 +25,5 @@
     <string name="t_enter_new_pin">Введите новый пароль</string>
     <string name="t_settings_page">Настройки приложения</string>
     <string name="msg_incorrect_password">Некорректный код безопасности</string>
+    <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
 </resources>

@@ -2,21 +2,25 @@ package com.example.app
 
 import android.os.Bundle
 import android.view.View
+import android.content.Context
 import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.*
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import com.example.app.jsonClasses.SettingsJsonClass
 import com.google.gson.Gson
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
 
 class MainActivity : ComponentActivity() {
 
     private var appPassword: Array<Int> = arrayOf(1, 2, 3, 4, 5)
-
+    private lateinit var settings: SharedPreferences
     private var password: Array<Int> = arrayOf(0, 0, 0, 0, 0)
     private var index: Int = 0
     private val passwordEdit = R.id.passwordEdit
@@ -24,15 +28,46 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        //appPassword = unmaskPassword(getAppPassword())
+        settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        appPassword = unmaskPassword(getAppPassword())
+
     }
 
+    /*
     private fun getAppPassword(): String {
-        val jsonString: String? = getJSONFromAssets()!!
-        val strPassword: SettingsJsonClass? =
-            Gson().fromJson(jsonString, SettingsJsonClass::class.java)
-        val objectJson = JSONObject(getJSONFromAssets()!!)
-        return objectJson.getJSONObject("appPassword").toString()
+        //val jsonString: String? = getJSONFromAssets()!!
+        //val strPassword: SettingsJsonClass? =
+        //    Gson().fromJson(jsonString, SettingsJsonClass::class.java)
+        //val jsonString = applicationContext.assets.open("com/example/app/jsonClasses/resources/Settings.json").bufferedReader().use { it.readText() }
+
+        try {
+            val jsonString = File(applicationContext.filesDir, "Settings.json").readText()
+            val objectJson = Gson().fromJson(jsonString, SettingsJsonClass::class.java)
+            //val objectJson = JSONObject(jsonString)
+            //Log.i("Password: ", objectJson.getString("appPassword"))
+            return objectJson.appPassword
+        }
+        catch(exception: IOException) {
+            Toast.makeText(applicationContext, "Can't open JSON file", Toast.LENGTH_LONG).show()
+            return "00000"
+        }
+    }
+
+     */
+
+    private fun getAppPassword(): String? {
+        val strPassword: String?
+        if(settings.contains("Password")){
+            strPassword = settings.getString("Password", null)
+        }
+        else{
+            strPassword = "00000"
+            val editor = settings.edit()
+            editor.putString("Password", strPassword)
+            editor.commit()
+        }
+        Toast.makeText(applicationContext, "Password, $strPassword", Toast.LENGTH_LONG).show()
+        return strPassword
     }
 
     private fun getJSONFromAssets(): String? {
@@ -40,7 +75,7 @@ class MainActivity : ComponentActivity() {
         var json: String? = null
         val charset: Charset = Charsets.UTF_8
         try {
-            val myUsersJSONFile = assets.open("Settings.json")
+            val myUsersJSONFile = assets.open("com/example/app/jsonClasses/resources/Settings.json")
             val size = myUsersJSONFile.available()
             val buffer = ByteArray(size)
             myUsersJSONFile.read(buffer)
@@ -53,9 +88,9 @@ class MainActivity : ComponentActivity() {
         return json
     }
 
-    private fun unmaskPassword(strPassword: String): Array<Int> {
+    private fun unmaskPassword(strPassword: String?): Array<Int> {
         return arrayOf(
-            strPassword[0].toString().toInt(),
+            strPassword!![0].toString().toInt(),
             strPassword[1].toString().toInt(),
             strPassword[2].toString().toInt(),
             strPassword[3].toString().toInt(),

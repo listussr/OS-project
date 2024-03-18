@@ -1,15 +1,21 @@
 package com.example.app
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import com.example.app.jsonClasses.SettingsJsonClass
+import com.google.gson.Gson
+import java.io.File
+import java.io.IOException
 
 class ChangingPinActivity : ComponentActivity() {
 
+    private lateinit var settings: SharedPreferences
     private var index: Int = 0
     private var password = arrayOf(0, 0, 0, 0, 0)
     private val passwordEdit = R.id.passwordEdit
@@ -25,7 +31,49 @@ class ChangingPinActivity : ComponentActivity() {
         finish()
     }
 
+    /*
+    private fun savePasswordToSettings(strPassword: String) {
+        val jsonString = applicationContext.assets.open("com/example/app/jsonClasses/resources/Settings.json").bufferedReader().use { it.readText() }
+        val gson = Gson()
+        val jsonObject = gson.fromJson(jsonString, SettingsJsonClass::class.java)
+        jsonObject.appPassword = strPassword
+        //val obj = SettingsJsonClass(jsonObject.wasRegistered, jsonObject.colorTheme, strPassword)
+        val modifiedJsonString = gson.toJson(jsonObject)
+        /*PrintWriter(FileWriter("C:\\University\\kurs_2\\semestr_2\\project\\app\\src\\main\\assets\\Settings.json")).use {
+            val gson = Gson()
+            val jsonString = gson.toJson(jsonObject)
+            it.write(jsonString)
+        }
+         */
+        try {
+            File(applicationContext.filesDir, "Settings.json").readText()
+        }catch(exception: IOException){
+            Toast.makeText(applicationContext, "Can't open JSON file", Toast.LENGTH_LONG).show()
+        }
+    }
+
+     */
+
+    private fun savePasswordToSettings() {
+        settings = this.getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        Toast.makeText(applicationContext, "New password: ${passwordToString()}", Toast.LENGTH_LONG).show()
+        editor.putString("Password", passwordToString())
+        editor.commit()
+    }
+
+    private fun passwordToString(): String{
+        var string = ""
+        string += password[0].toString()
+        string += password[1].toString()
+        string += password[2].toString()
+        string += password[3].toString()
+        string += password[4].toString()
+        return string
+    }
+
     private fun saveNewPassword(){
+        savePasswordToSettings()
         changeActivity()
     }
 

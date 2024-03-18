@@ -19,11 +19,6 @@
             android:name=".ThemeChoosingActivity"
             android:exported="false" />
         <activity
-            android:name=".ChoosingThemsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_choosing_thems"
-            android:theme="@style/Theme.App" />
-        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
