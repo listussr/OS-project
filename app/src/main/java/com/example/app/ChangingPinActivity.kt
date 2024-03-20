@@ -3,8 +3,10 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -23,45 +25,55 @@ class ChangingPinActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_changing_pin)
+        settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        setColorTheme(getColorTheme())
     }
 
+    /**
+     * Функция получения цветовой темы приложения из SharedPreferences
+     * @return lightThemeFlag
+     */
+    private fun getColorTheme() : Boolean {
+        val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
+        Toast.makeText(applicationContext, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
+        return lightThemeFlag
+    }
+
+    /**
+     * Функция установки цветовой темы, исходя из установленных настроек
+     * @param colorTheme
+     */
+    private fun setColorTheme(colorTheme: Boolean) {
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        if(colorTheme) {
+            mainLayout.setBackgroundColor(Color.WHITE)
+        } else {
+            mainLayout.setBackgroundColor(Color.GRAY)
+        }
+    }
+
+    /**
+     * Функция смены страницы приложения
+     */
     private fun changeActivity(){
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    /*
-    private fun savePasswordToSettings(strPassword: String) {
-        val jsonString = applicationContext.assets.open("com/example/app/jsonClasses/resources/Settings.json").bufferedReader().use { it.readText() }
-        val gson = Gson()
-        val jsonObject = gson.fromJson(jsonString, SettingsJsonClass::class.java)
-        jsonObject.appPassword = strPassword
-        //val obj = SettingsJsonClass(jsonObject.wasRegistered, jsonObject.colorTheme, strPassword)
-        val modifiedJsonString = gson.toJson(jsonObject)
-        /*PrintWriter(FileWriter("C:\\University\\kurs_2\\semestr_2\\project\\app\\src\\main\\assets\\Settings.json")).use {
-            val gson = Gson()
-            val jsonString = gson.toJson(jsonObject)
-            it.write(jsonString)
-        }
-         */
-        try {
-            File(applicationContext.filesDir, "Settings.json").readText()
-        }catch(exception: IOException){
-            Toast.makeText(applicationContext, "Can't open JSON file", Toast.LENGTH_LONG).show()
-        }
-    }
-
+    /**
+     * Сохраняем пароль в файл с настройками
      */
-
     private fun savePasswordToSettings() {
-        settings = this.getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         val editor = settings.edit()
         Toast.makeText(applicationContext, "New password: ${passwordToString()}", Toast.LENGTH_LONG).show()
         editor.putString("Password", passwordToString())
         editor.commit()
     }
 
+    /**
+     * Преобразуем пароль в строку
+     */
     private fun passwordToString(): String{
         var string = ""
         string += password[0].toString()
@@ -72,6 +84,9 @@ class ChangingPinActivity : ComponentActivity() {
         return string
     }
 
+    /**
+     * Функция смены пароля и выхода со страницы
+     */
     private fun saveNewPassword(){
         savePasswordToSettings()
         changeActivity()
@@ -246,6 +261,7 @@ class ChangingPinActivity : ComponentActivity() {
             saveNewPassword()
         }
     }
+
 
     /**
      * Метод для обработки нажатия кнопки backspace

@@ -6,55 +6,85 @@ import android.content.Context
 import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.SharedPreferences.*
-import android.util.Log
+import android.graphics.Color
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.example.app.jsonClasses.SettingsJsonClass
-import com.google.gson.Gson
-import org.json.JSONObject
-import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
 
 class MainActivity : ComponentActivity() {
 
+    /**
+     * Пароль приложения из настроек
+     */
     private var appPassword: Array<Int> = arrayOf(1, 2, 3, 4, 5)
+
+    /**
+     * Файл с настройками приложения
+     */
     private lateinit var settings: SharedPreferences
+
+    /**
+     * Массив для набираемого пароля
+     */
     private var password: Array<Int> = arrayOf(0, 0, 0, 0, 0)
+
+    /**
+     * Индекс в массиве для вводимого символа
+     */
     private var index: Int = 0
+
+    /**
+     * id виджета для изменения отображения количества введеных цифр пароля
+     */
     private val passwordEdit = R.id.passwordEdit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_pin_code_entering)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        setColorTheme(getColorTheme())
         appPassword = unmaskPassword(getAppPassword())
 
     }
 
-    /*
-    private fun getAppPassword(): String {
-        //val jsonString: String? = getJSONFromAssets()!!
-        //val strPassword: SettingsJsonClass? =
-        //    Gson().fromJson(jsonString, SettingsJsonClass::class.java)
-        //val jsonString = applicationContext.assets.open("com/example/app/jsonClasses/resources/Settings.json").bufferedReader().use { it.readText() }
-
-        try {
-            val jsonString = File(applicationContext.filesDir, "Settings.json").readText()
-            val objectJson = Gson().fromJson(jsonString, SettingsJsonClass::class.java)
-            //val objectJson = JSONObject(jsonString)
-            //Log.i("Password: ", objectJson.getString("appPassword"))
-            return objectJson.appPassword
+    /**
+     * Функция получения цветовой темы приложения из SharedPreferences
+     * @return lightThemeFlag
+     */
+    private fun getColorTheme() : Boolean {
+        val lightThemeFlag: Boolean
+        if(settings.contains("ColorTheme")){
+            lightThemeFlag = settings.getBoolean("ColorTheme", true)
         }
-        catch(exception: IOException) {
-            Toast.makeText(applicationContext, "Can't open JSON file", Toast.LENGTH_LONG).show()
-            return "00000"
+        else{
+            lightThemeFlag = true
+            val editor = settings.edit()
+            editor.putBoolean("ColorTheme", lightThemeFlag)
+            editor.commit()
+        }
+        Toast.makeText(applicationContext, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
+        return lightThemeFlag
+    }
+
+    /**
+     * Функция установки цветовой темы, исходя из установленных настроек
+     * @param colorTheme
+     */
+    private fun setColorTheme(colorTheme: Boolean) {
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        if(colorTheme) {
+            mainLayout.setBackgroundColor(Color.WHITE)
+        } else {
+            mainLayout.setBackgroundColor(Color.GRAY)
         }
     }
 
+    /**
+     * Получаем пароль из SharedPreferences
+     * @return String? strPassword
      */
-
     private fun getAppPassword(): String? {
         val strPassword: String?
         if(settings.contains("Password")){
@@ -88,6 +118,11 @@ class MainActivity : ComponentActivity() {
         return json
     }
 
+    /**
+     * Получаем численное значение пароля из строки
+     * @param strPassword
+     * @return Array<Int>
+     */
     private fun unmaskPassword(strPassword: String?): Array<Int> {
         return arrayOf(
             strPassword!![0].toString().toInt(),
@@ -98,6 +133,9 @@ class MainActivity : ComponentActivity() {
             )
     }
 
+    /**
+     * Очищаем пароль, устанавливаем индекс в 0 и выводим это на экран
+     */
     private fun clearPassword(){
         index = 0
         for (i in 0..4){
