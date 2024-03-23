@@ -1,7 +1,8 @@
 package com.example.app
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -10,50 +11,78 @@ import androidx.activity.ComponentActivity
 
 class RegistrationActivity : ComponentActivity() {
 
-    private val passwordEdit     = R.id.editTextTextPassword
-    private val passwordEditCopy = R.id.editTextTextPassword2
-    private val emailEdit        = R.id.editTextTextEmailAddress
+    /**
+     * Id виджетов с информацией
+     */
+    private val passwordEdit     = R.id.editTextPasswordRegistration
+    private val passwordEditCopy = R.id.editTextPasswordRegistrationExtra
+    private val emailEdit        = R.id.editTextEmailAddressRegistration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
     }
 
-    private fun getEmail() : String {
-        val emailEditText = findViewById<TextView>(emailEdit)
-        return emailEditText.text.toString()
+    /**
+     * Проверка на корректность почты
+     */
+    private fun isEmailValid(email: String) : Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun getPassword(widget: Int) : String {
-        val passwordText = findViewById<TextView>(widget)
-        return passwordText.text.toString()
+    /**
+     * Считываем данные из виджетов, наследующихся от TextView
+     * @param widget
+     */
+    private fun getViewInfo(widget: Int) : String {
+        val viewText = findViewById<TextView>(widget)
+        return viewText.text.toString()
     }
 
+    /**
+     * Сравниваем пароли на равенство
+     * @param password
+     * @param passwordCopy
+     */
     private fun arePasswordsEqual(password: String, passwordCopy: String) : Boolean {
         return password == passwordCopy
     }
 
+    /**
+     * Обработка нажатия на кнопку "Уже зарегистрирован"
+     */
     fun onEntryButtonClicked(view: View) {
         val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * Очистка поля ввода под пароль
+     * @param widget
+     */
     private fun clearPassword(widget: Int) {
         val passwordText = findViewById<TextView>(widget)
         passwordText.text = ""
     }
 
-    private fun toMainPage() {
-        val intent = Intent(this@RegistrationActivity, MainAppPage::class.java)
+    /**
+     * Переход на страницу задания PIN кода приложения
+     */
+    private fun toSettingPIN() {
+        val intent = Intent(this@RegistrationActivity, ChangingPinActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * Обработка нажатия на кнопку "Войти"
+     */
     fun onContinueButtonClicked(view: View) {
-        val emailString: String = getEmail()
-        val passwordString: String = getPassword(passwordEdit)
-        val passwordStringCopy: String = getPassword(passwordEditCopy)
+        val emailString: String = getViewInfo(emailEdit)
+        val passwordString: String = getViewInfo(passwordEdit)
+        val passwordStringCopy: String = getViewInfo(passwordEditCopy)
+
         if(passwordString.isEmpty()){
             clearPassword(passwordEditCopy)
             Toast.makeText(applicationContext, "Пароль не может быть пустым!", Toast.LENGTH_LONG).show()
@@ -61,8 +90,12 @@ class RegistrationActivity : ComponentActivity() {
             clearPassword(passwordEdit)
             clearPassword(passwordEditCopy)
             Toast.makeText(applicationContext, "Пароли не совпадают! Повторите ввод!", Toast.LENGTH_LONG).show()
+        } else if(emailString.isEmpty()) {
+            Toast.makeText(applicationContext, "Почта не может быть пустой!", Toast.LENGTH_LONG).show()
+        } else if(!isEmailValid(emailString)){
+            Toast.makeText(applicationContext, "Некорректная почта!", Toast.LENGTH_LONG).show()
         } else {
-            toMainPage()
+            toSettingPIN()
         }
     }
 }

@@ -10,16 +10,20 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import com.example.app.jsonClasses.SettingsJsonClass
-import com.google.gson.Gson
-import java.io.File
-import java.io.IOException
 
 class ChangingPinActivity : ComponentActivity() {
 
+    /**
+     * Файл с настройками приложения
+     */
     private lateinit var settings: SharedPreferences
+
     private var index: Int = 0
     private var password = arrayOf(0, 0, 0, 0, 0)
+
+    /**
+     * Виджет для отображения изменений пароля приложения
+     */
     private val passwordEdit = R.id.passwordEdit
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +31,13 @@ class ChangingPinActivity : ComponentActivity() {
         setContentView(R.layout.activity_changing_pin)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme(getColorTheme())
+    }
+
+    /**
+     * Получаем флаг входа в приложение
+     */
+    private fun getWasRegisteredFlag() : Boolean {
+        return settings.getBoolean("WasRegistered", false)
     }
 
     /**
@@ -53,10 +64,29 @@ class ChangingPinActivity : ComponentActivity() {
     }
 
     /**
-     * Функция смены страницы приложения
+     * Меняем флаг входа в приложение
      */
-    private fun changeActivity(){
-        val intent = Intent(this, SettingsActivity::class.java)
+    private fun changeWasRegisteredFlag() {
+        val settings: SharedPreferences = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        editor.putBoolean("WasRegistered", true)
+        editor.commit()
+    }
+
+    /**
+     * Переходим в меню настроек
+     */
+    private fun changeActivitySettings() {
+        val intent = Intent(this@ChangingPinActivity, SettingsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    /**
+     * Переходим на главную страницу приложения
+     */
+    private fun changeActivityMain() {
+        val intent = Intent(this@ChangingPinActivity, MainAppPageActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -89,7 +119,12 @@ class ChangingPinActivity : ComponentActivity() {
      */
     private fun saveNewPassword(){
         savePasswordToSettings()
-        changeActivity()
+        if(getWasRegisteredFlag()) {
+            changeActivitySettings()
+        } else {
+            changeWasRegisteredFlag()
+            changeActivityMain()
+        }
     }
 
     /**

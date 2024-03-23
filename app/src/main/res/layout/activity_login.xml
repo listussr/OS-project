@@ -12,19 +12,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
+        android:contextClickable="false"
         android:fontFamily="@font/b612_mono"
         android:text="@string/t_email_input"
         android:textAlignment="center"
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress2"
+        android:id="@+id/editTextEmailAddressLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:ems="10"
         android:fontFamily="@font/b612_mono"
-        android:hint="@string/descr_email_input"
+        android:hint="@string/t_email"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textSize="23sp" />
@@ -42,7 +43,7 @@
         android:textSize="22sp" />
 
     <EditText
-        android:id="@+id/editTextTextPassword3"
+        android:id="@+id/editTextPasswordLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -56,7 +57,7 @@
         android:textSize="22sp" />
 
     <Button
-        android:id="@+id/entryButton"
+        android:id="@+id/entryButtonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -69,9 +70,9 @@
         android:id="@+id/registrationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginEnd="80dp"
         android:onClick="onRegistrationButtonClicked"
         android:text="@string/t_registration" />
 

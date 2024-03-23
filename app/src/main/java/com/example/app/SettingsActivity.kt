@@ -1,7 +1,6 @@
 package com.example.app
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -50,7 +49,7 @@ class SettingsActivity : ComponentActivity() {
     }
 
     fun backButtonCallback(view: View) {
-        val intent = Intent(this, MainAppPage::class.java)
+        val intent = Intent(this, MainAppPageActivity::class.java)
         startActivity(intent)
         finish()
     }

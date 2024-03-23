@@ -13,7 +13,7 @@ import android.widget.Toast
 import java.io.IOException
 import java.nio.charset.Charset
 
-class MainActivity : ComponentActivity() {
+class PINCodeActivity : ComponentActivity() {
 
     /**
      * Пароль приложения из настроек
@@ -54,16 +54,7 @@ class MainActivity : ComponentActivity() {
      * @return lightThemeFlag
      */
     private fun getColorTheme() : Boolean {
-        val lightThemeFlag: Boolean
-        if(settings.contains("ColorTheme")){
-            lightThemeFlag = settings.getBoolean("ColorTheme", true)
-        }
-        else{
-            lightThemeFlag = true
-            val editor = settings.edit()
-            editor.putBoolean("ColorTheme", lightThemeFlag)
-            editor.commit()
-        }
+        val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
         Toast.makeText(applicationContext, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
         return lightThemeFlag
     }
@@ -152,7 +143,7 @@ class MainActivity : ComponentActivity() {
      */
     private fun changeActivity() {
         clearPassword()
-        val intent = Intent(this@MainActivity, MainAppPage::class.java)
+        val intent = Intent(this@PINCodeActivity, MainAppPageActivity::class.java)
         startActivity(intent)
         finish()
     }

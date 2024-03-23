@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:onClick="onEntryButtonClicked"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".RegistrationActivity">
 
@@ -13,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <TextView
@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/editTextEmailAddressRegistration"
         style="@style/Widget.AppCompat.AutoCompleteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,9 +40,9 @@
         android:breakStrategy="simple"
         android:ems="10"
         android:fontFamily="@font/b612_mono"
+        android:hint="@string/t_email"
         android:hyphenationFrequency="normal"
         android:inputType="textEmailAddress"
-        android:text="@string/descr_email_input"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="23sp" />
@@ -60,7 +60,7 @@
         android:textSize="22sp" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/editTextPasswordRegistration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -72,15 +72,17 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="80dp"
         android:text="@string/descr_repeat_password"
+        android:textAlignment="center"
         android:textSize="22sp" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextPasswordRegistrationExtra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -98,15 +100,15 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="120dp"
         android:onClick="onContinueButtonClicked"
-        android:text="@string/t_continue" />
+        android:text="@string/t_entry" />
 
     <Button
         android:id="@+id/enterButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="135dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="135dp"
+        android:layout_marginEnd="70dp"
         android:onClick="onEntryButtonClicked"
-        android:text="@string/t_entry" />
+        android:text="@string/t_was_registered" />
 </LinearLayout>

@@ -26,11 +26,12 @@
     <string name="t_settings_page">Настройки приложения</string>
     <string name="msg_incorrect_password">Некорректный код безопасности</string>
     <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
-    <string name="descr_email_input">Email Input</string>
     <string name="descr_enter_password">Введите пароль</string>
     <string name="descr_repeat_password">Повторите пароль</string>
     <string name="t_email_input">Введите адрес электронной почты</string>
     <string name="t_entry">Войти</string>
     <string name="t_registration">Зарегистрироваться</string>
     <string name="t_continue">Продолжить</string>
+    <string name="t_email">Электронная почта</string>
+    <string name="t_was_registered">Уже зарегистрирован</string>
 </resources>
