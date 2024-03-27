@@ -30,7 +30,7 @@ class ChangingPinActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_changing_pin)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        setColorTheme(getColorTheme())
+        //setColorTheme(getColorTheme())
     }
 
     /**

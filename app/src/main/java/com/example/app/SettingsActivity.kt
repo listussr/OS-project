@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 
@@ -17,11 +18,52 @@ class SettingsActivity : ComponentActivity() {
      */
     private lateinit var settings: SharedPreferences
 
+    private var secondClickExitButtonFlag: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setContentView(R.layout.activity_settings)
-        setColorTheme(getColorTheme())
+        setColorTheme()
+    }
+
+    /**
+     * Переходим к регистрации в приложении
+     */
+    private fun toRegistration() {
+        val intent = Intent(this@SettingsActivity, RegistrationActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    /**
+     * Изменяем флаг входа в приложение
+     */
+    private fun changeWasRegisteredFlag() {
+        val editor = settings.edit()
+        editor.putBoolean("WasRegistered", false)
+        editor.commit()
+    }
+
+    /**
+     * Меняем текст кнопки при первом нажатии
+     */
+    private fun changeViewText() {
+        val button = findViewById<Button>(R.id.buttonExit)
+        button.text = "Если вы уверены, нажмите ещё раз"
+    }
+
+    /**
+     * Обработка нажатия на кнопку выхода из учётной записи
+     */
+    fun onExitUserClicked(view: View) {
+        if(secondClickExitButtonFlag) {
+            secondClickExitButtonFlag = false
+            changeWasRegisteredFlag()
+            toRegistration()
+        } else {
+            changeViewText()
+            secondClickExitButtonFlag = true
+        }
     }
 
     /**
@@ -36,9 +78,8 @@ class SettingsActivity : ComponentActivity() {
 
     /**
      * Функция установки цветовой темы, исходя из установленных настроек
-     * @param colorTheme
      */
-    private fun setColorTheme(colorTheme: Boolean) {
+    private fun setColorTheme() {
         val lightAppTheme: Boolean = getColorTheme()
         val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
         if(lightAppTheme) {
@@ -49,7 +90,7 @@ class SettingsActivity : ComponentActivity() {
     }
 
     fun backButtonCallback(view: View) {
-        val intent = Intent(this, MainAppPageActivity::class.java)
+        val intent = Intent(this@SettingsActivity, MainAppPageActivity::class.java)
         startActivity(intent)
         finish()
     }

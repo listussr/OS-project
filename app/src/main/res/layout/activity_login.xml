@@ -1,79 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9F9F9"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
     <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewWealthFamilyLoging"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:contextClickable="false"
-        android:fontFamily="@font/b612_mono"
-        android:text="@string/t_email_input"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/t_wealth_family"
         android:textAlignment="center"
-        android:textSize="20sp" />
+        android:textColor="#1F5CB6"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/editTextEmailAddressLogin"
+    <LinearLayout
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:fontFamily="@font/b612_mono"
-        android:hint="@string/t_email"
-        android:inputType="textEmailAddress"
-        android:textAlignment="center"
-        android:textSize="23sp" />
+        android:layout_below="@id/textViewWealthFamilyLoging"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/roundrect"
+        android:backgroundTint="#F2F2F2"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="100dp"
-        android:fontFamily="@font/b612_mono"
-        android:text="@string/descr_enter_password"
-        android:textAlignment="center"
-        android:textSize="22sp" />
+        <TextView
+            android:id="@+id/textViewEntryWealthFamilyLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/t_entry_wf"
+            android:textAlignment="center"
+            android:textColor="#1F5CB6"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/editTextPasswordLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:fontFamily="@font/b612_mono"
-        android:hint="****"
-        android:inputType="textPassword"
-        android:textAlignment="center"
-        android:textSize="22sp" />
+        <EditText
+            android:id="@+id/editTextEmailAddressLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundrect"
+            android:backgroundTint="#F9F9F9"
+            android:ems="10"
+            android:fontFamily="@font/montserrat"
+            android:hint="@string/t_email"
+            android:inputType="textEmailAddress"
+            android:lineSpacingExtra="8sp"
+            android:textAlignment="viewStart"
+            android:textColor="#656565"
+            android:textSize="23sp" />
+
+        <EditText
+            android:id="@+id/editTextPasswordLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundrect"
+            android:backgroundTint="#F9F9F9"
+            android:ems="10"
+            android:fontFamily="@font/montserrat"
+            android:hint="@string/t_password"
+            android:inputType="textPassword"
+            android:textAlignment="viewStart"
+            android:textColor="#656565"
+            android:textSize="23sp" />
+
+        <CheckBox
+            android:id="@+id/rememberUserCheckBoxLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/t_remember_user"
+            android:textColor="#343333"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/forgotPasswordButtonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dip"
+            android:layout_marginTop="20dip"
+            android:layout_marginEnd="10dip"
+            android:background="@android:color/transparent"
+            android:backgroundTint="#F2F2F2"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/t_forgot_password"
+            android:textAlignment="textStart"
+            android:textColor="#1F5CB6"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/entryButtonLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/roundrect"
+            android:onClick="onEntryLoginButtonClicked"
+            android:text="@string/t_entry"
+            android:textColor="#F2F2F2"
+            app:cornerRadius="25dp" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/entryButtonLogin"
+        android:id="@+id/registrationButtonAccess"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="100dp"
-        android:onClick="onEntryLoginButtonClicked"
-        android:text="@string/t_entry" />
-
-    <Button
-        android:id="@+id/registrationButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_below="@id/login_layout"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="80dp"
+        android:background="@drawable/roundrect"
+        android:backgroundTint="#E0E0E0"
         android:onClick="onRegistrationButtonClicked"
         android:text="@string/t_registration" />
 
-</LinearLayout>
+</RelativeLayout>

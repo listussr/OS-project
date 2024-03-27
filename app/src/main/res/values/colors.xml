@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_theme">#3A343E</color>
+    <color name="mistake_text">#FF2323</color>
+    <color name="mistake_background">#80F8A6A6</color>
 </resources>

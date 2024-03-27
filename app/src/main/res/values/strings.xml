@@ -32,6 +32,17 @@
     <string name="t_entry">Войти</string>
     <string name="t_registration">Зарегистрироваться</string>
     <string name="t_continue">Продолжить</string>
-    <string name="t_email">Электронная почта</string>
+    <string name="t_email">   Почта</string>
+    <string name="t_password">   Пароль</string>
     <string name="t_was_registered">Уже зарегистрирован</string>
+    <string name="t_exit_button">Выйти из учётной записи</string>
+    <string name="t_plan">План</string>
+    <string name="t_report">Отчёт</string>
+    <string name="t_registration_page">Регистрация</string>
+    <string name="t_wealth_family">WealthFamily</string>
+    <string name="t_entry_wf">Войти в WealthFamily</string>
+    <string name="t_remember_user">Запомнить пользователя</string>
+    <string name="t_forgot_password">Забыли пароль?</string>
+    <string name="t_changing_profile_password">Смена пароля</string>
+    <string name="t_enter_code_from_letter">Введите код из письма</string>
 </resources>

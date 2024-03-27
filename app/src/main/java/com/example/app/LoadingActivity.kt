@@ -31,7 +31,7 @@ class LoadingActivity : ComponentActivity() {
             editor.putBoolean("ColorTheme", true)
             editor.commit()
         }
-        if(settings.contains("WasRegistered")){
+        if(!settings.contains("WasRegistered")){
             editor.putBoolean("WasRegistered", false)
             editor.commit()
         }

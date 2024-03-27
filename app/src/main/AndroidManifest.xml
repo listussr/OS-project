@@ -13,7 +13,19 @@
         android:theme="@style/Theme.App"
         tools:targetApi="31">
         <activity
+            android:name=".ChangingProfilePasswordAccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoadingActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,9 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true"/>
         <activity
             android:name=".RegistrationActivity"
             android:exported="false" />
@@ -40,7 +49,7 @@
             android:name=".PINCodeActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.App"/>
+            android:theme="@style/Theme.App" />
         <activity
             android:name=".MainAppPageActivity"
             android:exported="true"
