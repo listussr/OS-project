@@ -66,12 +66,7 @@ class ChangingPinActivity : ComponentActivity() {
     /**
      * Меняем флаг входа в приложение
      */
-    private fun changeWasRegisteredFlag() {
-        val settings: SharedPreferences = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        val editor = settings.edit()
-        editor.putBoolean("WasRegistered", true)
-        editor.commit()
-    }
+
 
     /**
      * Переходим в меню настроек
@@ -125,6 +120,15 @@ class ChangingPinActivity : ComponentActivity() {
             changeWasRegisteredFlag()
             changeActivityMain()
         }
+    }
+
+    /**
+     * Меняем флаг входа в приложение
+     */
+    private fun changeWasRegisteredFlag() {
+        val editor = settings.edit()
+        editor.putBoolean("WasRegistered", true)
+        editor.commit()
     }
 
     /**

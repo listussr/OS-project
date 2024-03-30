@@ -31,8 +31,12 @@ class LoadingActivity : ComponentActivity() {
             editor.putBoolean("ColorTheme", true)
             editor.commit()
         }
-        if(!settings.contains("WasRegistered")){
+        if(settings.contains("WasRegistered")){
             editor.putBoolean("WasRegistered", false)
+            editor.commit()
+        }
+        if(!settings.contains("RememberUser")){
+            editor.putBoolean("RememberUser", false)
             editor.commit()
         }
     }
@@ -44,6 +48,15 @@ class LoadingActivity : ComponentActivity() {
         val wasRegistered: Boolean = settings.getBoolean("WasRegistered", true)
         Toast.makeText(applicationContext, "Was registered, $wasRegistered", Toast.LENGTH_LONG).show()
         return wasRegistered
+    }
+
+    /**
+     * Получаем флаг запоминания пользователя из настроек
+     */
+    private fun getRememberUserFlag() : Boolean {
+        val rememberUserFlag: Boolean = settings.getBoolean("RememberUser", false)
+        Toast.makeText(applicationContext, "Was registered, $rememberUserFlag", Toast.LENGTH_LONG).show()
+        return rememberUserFlag
     }
 
     /**
@@ -59,7 +72,7 @@ class LoadingActivity : ComponentActivity() {
      * Переходим к регистрации в приложении
      */
     private fun toRegistration() {
-        val intent = Intent(this@LoadingActivity, RegistrationActivity::class.java)
+        val intent = Intent(this@LoadingActivity, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -68,7 +81,7 @@ class LoadingActivity : ComponentActivity() {
      * В зависимости от состояния флага входа в приложение переходим на следующую страницу
      */
     private fun processLoading() {
-        if(getWasRegisteredFlag()){
+        if(getWasRegisteredFlag() && getRememberUserFlag()){
             toPassword()
         } else {
             toRegistration()

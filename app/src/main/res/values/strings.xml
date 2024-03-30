@@ -45,4 +45,7 @@
     <string name="t_forgot_password">Забыли пароль?</string>
     <string name="t_changing_profile_password">Смена пароля</string>
     <string name="t_enter_code_from_letter">Введите код из письма</string>
+    <string name="t_enter_new_password">Введите новый пароль</string>
+    <string name="t_approve_new_password">Подтвердите новый пароль</string>
+    <string name="t_change_password">Сменить пароль</string>
 </resources>
