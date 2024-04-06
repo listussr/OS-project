@@ -28,13 +28,13 @@
     <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
     <string name="descr_enter_password">Введите пароль</string>
     <string name="descr_repeat_password">Повторите пароль</string>
-    <string name="t_email_input">Введите адрес электронной почты</string>
+    <string name="t_email_input">Укажите почту</string>
     <string name="t_entry">Войти</string>
     <string name="t_registration">Зарегистрироваться</string>
     <string name="t_continue">Продолжить</string>
-    <string name="t_email">   Почта</string>
-    <string name="t_password">   Пароль</string>
-    <string name="t_was_registered">Уже зарегистрирован</string>
+    <string name="t_email"> Почта</string>
+    <string name="t_password"> Пароль</string>
+    <string name="t_was_registered">Вход</string>
     <string name="t_exit_button">Выйти из учётной записи</string>
     <string name="t_plan">План</string>
     <string name="t_report">Отчёт</string>
@@ -48,4 +48,5 @@
     <string name="t_enter_new_password">Введите новый пароль</string>
     <string name="t_approve_new_password">Подтвердите новый пароль</string>
     <string name="t_change_password">Сменить пароль</string>
+    <string name="t_create_password">Придумайте пароль</string>
 </resources>
