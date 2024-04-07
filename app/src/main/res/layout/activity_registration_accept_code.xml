@@ -2,15 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#F9F9F9"
-    android:orientation="vertical"
-    tools:context=".RegistrationActivity">
+    android:layout_height="match_parent"
+    tools:context=".RegistrationAcceptCodeActivity">
 
     <TextView
-        android:id="@+id/wealthFamilyTextViewRegistration"
+        android:id="@+id/wealthFamilyTextViewRegistrationAccept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dip"
@@ -26,10 +23,10 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/RegistrationLayoutRegistration"
+        android:id="@+id/RegistrationLayoutRegistrationAccept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wealthFamilyTextViewRegistration"
+        android:layout_below="@id/wealthFamilyTextViewRegistrationAccept"
         android:layout_marginStart="20dip"
         android:layout_marginTop="70dip"
         android:layout_marginEnd="20dip"
@@ -52,46 +49,6 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextEmailAddressRegistration"
-            style="@style/Widget.AppCompat.AutoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dip"
-            android:layout_marginTop="30dip"
-            android:layout_marginEnd="20dip"
-            android:background="@drawable/roundrect"
-            android:backgroundTint="#F9F9F9"
-            android:breakStrategy="simple"
-            android:ems="10"
-            android:fontFamily="@font/montserrat"
-            android:hint="@string/t_email_input"
-            android:hyphenationFrequency="normal"
-            android:inputType="textEmailAddress"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#656565"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/editTextPasswordRegistration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dip"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dip"
-            android:background="@drawable/roundrect"
-            android:backgroundTint="#F9F9F9"
-            android:ems="10"
-            android:fontFamily="@font/montserrat"
-            android:hint="@string/t_create_password"
-            android:inputType="textPassword"
-            android:textAlignment="textStart"
-            android:textColor="#656565"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
             android:id="@+id/editTextEntryCodeRegistrationAccept"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +59,7 @@
             android:backgroundTint="#F9F9F9"
             android:ems="10"
             android:fontFamily="@font/montserrat"
-            android:hint="@string/t_approve_new_password"
+            android:hint="@string/t_enter_code_from_letter"
             android:inputType="textPassword"
             android:textAlignment="textStart"
             android:textColor="#656565"
@@ -128,12 +85,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/enterButton"
+        android:id="@+id/entryButtonRegistrationAccept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/RegistrationLayoutRegistration"
+        android:layout_below="@id/RegistrationLayoutRegistrationAccept"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="140dp"
         android:layout_marginEnd="70dp"
         android:background="@drawable/roundrect"
         android:backgroundTint="#F2F2F2"

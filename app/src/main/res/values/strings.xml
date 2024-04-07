@@ -49,4 +49,6 @@
     <string name="t_approve_new_password">Подтвердите новый пароль</string>
     <string name="t_change_password">Сменить пароль</string>
     <string name="t_create_password">Придумайте пароль</string>
+    <string name="t_imagine_password">Создайте пароль</string>
+    <string name="t_approve_pin">Подтвердите пароль</string>
 </resources>

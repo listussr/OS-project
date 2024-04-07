@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,15 +22,15 @@ class ChangingPinActivity : ComponentActivity() {
     private var password = arrayOf(0, 0, 0, 0, 0)
 
     /**
-     * Виджет для отображения изменений пароля приложения
+     * Массив виджетов для отображения количества введённых символов пароля
      */
-    private val passwordEdit = R.id.passwordEdit
+    private val widgetArray = arrayOf(R.id.circleOneAccept, R.id.circleTwoAccept, R.id.circleThreeAccept, R.id.circleFourAccept, R.id.circleFiveAccept)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_changing_pin)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        //setColorTheme(getColorTheme())
+        setColorTheme(getColorTheme())
     }
 
     /**
@@ -55,7 +55,7 @@ class ChangingPinActivity : ComponentActivity() {
      * @param colorTheme
      */
     private fun setColorTheme(colorTheme: Boolean) {
-        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayout = findViewById<RelativeLayout>(R.id.main_layout)
         if(colorTheme) {
             mainLayout.setBackgroundColor(Color.WHITE)
         } else {
@@ -87,6 +87,16 @@ class ChangingPinActivity : ComponentActivity() {
     }
 
     /**
+     * Переходим на страницу подтверждения пароля
+     */
+    private fun changeActivityApprovePin() {
+        val intent = Intent(this@ChangingPinActivity, ChangingPinAcceptActivity::class.java)
+        intent.putExtra("Password", passwordToString())
+        startActivity(intent)
+        finish()
+    }
+
+    /**
      * Сохраняем пароль в файл с настройками
      */
     private fun savePasswordToSettings() {
@@ -113,13 +123,14 @@ class ChangingPinActivity : ComponentActivity() {
      * Функция смены пароля и выхода со страницы
      */
     private fun saveNewPassword(){
-        savePasswordToSettings()
+        /*savePasswordToSettings()
         if(getWasRegisteredFlag()) {
             changeActivitySettings()
         } else {
             changeWasRegisteredFlag()
             changeActivityMain()
-        }
+        }*/
+        changeActivityApprovePin()
     }
 
     /**
@@ -132,16 +143,27 @@ class ChangingPinActivity : ComponentActivity() {
     }
 
     /**
+     * Методя для изменения отображения количества введённых символов пароля
+     * @param index
+     * @param paintTrue
+     */
+    private fun updateCircles(index: Int, paintTrue: Boolean) {
+        val circleToUpdate = findViewById<TextView>(widgetArray[index])
+        circleToUpdate.backgroundTintMode = null
+        if(paintTrue) {
+            circleToUpdate.setBackgroundResource(R.drawable.circle_on)
+        } else {
+            circleToUpdate.setBackgroundResource(R.drawable.circle_off)
+        }
+    }
+
+    /**
      * Метод для обработки нажатия кнопки 0
      */
     fun onZeroClicked(view: View) {
         val value: Int = 0
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -154,11 +176,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onOneClicked(view: View) {
         val value: Int = 1
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -171,11 +189,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onTwoClicked(view: View) {
         val value: Int = 2
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -188,11 +202,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onThreeClicked(view: View) {
         val value: Int = 3
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -205,11 +215,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onFourClicked(view: View) {
         val value: Int = 4
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -222,11 +228,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onFiveClicked(view: View) {
         val value: Int = 5
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -239,11 +241,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onSixClicked(view: View) {
         val value: Int = 6
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -256,11 +254,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onSevenClicked(view: View) {
         val value: Int = 7
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -273,11 +267,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onEightClicked(view: View) {
         val value: Int = 8
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -290,11 +280,7 @@ class ChangingPinActivity : ComponentActivity() {
     fun onNineClicked(view: View) {
         val value: Int = 9
         password[index] = value
-        val changingView = findViewById<TextView>(passwordEdit)
-        val passwordEntered = changingView.text.toString()
-        var amount = Integer.parseInt(passwordEntered)
-        ++amount
-        changingView.text = amount.toString()
+        updateCircles(index, true)
         ++index
         if(index == 5){
             saveNewPassword()
@@ -308,12 +294,8 @@ class ChangingPinActivity : ComponentActivity() {
     fun onBackSpaceClicked(view: View) {
         password[index] = -1
         if(index > 0) {
-            val changingView = findViewById<TextView>(passwordEdit)
-            val passwordEntered = changingView.text.toString()
-            var amount = Integer.parseInt(passwordEntered)
-            --amount
-            changingView.text = amount.toString()
             --index
         }
+        updateCircles(index, false)
     }
 }

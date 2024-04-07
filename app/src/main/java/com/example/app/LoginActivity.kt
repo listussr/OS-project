@@ -114,7 +114,7 @@ class LoginActivity : ComponentActivity() {
     /**
      * Обработка нажатия кнопки запомнить пользователя
      */
-    fun onRememberUserClicked() {
+    fun onRememberUserClicked(view: View) {
         val checkBox = findViewById<CheckBox>(R.id.rememberUserCheckBoxLogin)
         val rememberFlag: Boolean = checkBox.isChecked
         val editor = settings.edit()
@@ -134,8 +134,8 @@ class LoginActivity : ComponentActivity() {
     /**
      * Переход на главную страницу
      */
-    private fun toMainPage() {
-        val intent = Intent(this@LoginActivity, MainAppPageActivity::class.java)
+    private fun toEnteringPin() {
+        val intent = Intent(this@LoginActivity, PINCodeActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -161,7 +161,7 @@ class LoginActivity : ComponentActivity() {
         } else if(!getWasRegisteredFlag()){
             toSettingPIN()
         } else {
-            toMainPage()
+            toEnteringPin()
         }
     }
 

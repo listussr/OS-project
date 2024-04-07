@@ -13,6 +13,12 @@
         android:theme="@style/Theme.App"
         tools:targetApi="31">
         <activity
+            android:name=".ChangingPinAcceptActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegistrationAcceptCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChangingPasswordActivity"
             android:exported="false" />
         <activity
@@ -26,7 +32,7 @@
             android:exported="false" />
         <activity
             android:name=".LoadingActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,8 +41,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".RegistrationActivity"
             android:exported="false" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
@@ -8,119 +8,154 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/passwordInfoLayoutChange"
+    <TextView
+        android:id="@+id/wealthFamilyTextViewEnterPin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:background="#EBEDFA"
-        android:orientation="vertical"
-        android:paddingBottom="20dp">
+        android:layout_marginStart="20dip"
+        android:layout_marginTop="70dip"
+        android:layout_marginEnd="20dip"
+        android:background="@drawable/roundrect"
+        android:backgroundTint="#F9F9F9"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/t_wealth_family"
+        android:textAlignment="center"
+        android:textColor="#E61F5CB6"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginEnd="60dp"
-            android:layout_weight="1"
-            android:accessibilityLiveRegion="polite"
-            android:fontFamily="@font/b612_mono"
-            android:gravity="center"
-            android:text="@string/t_enter_password"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textAppearance="@android:style/TextAppearance.Material.Display1"
-            android:textColor="#26085C"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:visibility="visible" />
+    <LinearLayout
+        android:id="@+id/passwordEnteringLayoutChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wealthFamilyTextViewEnterPin"
+        android:layout_marginStart="20dip"
+        android:layout_marginTop="60dip"
+        android:layout_marginEnd="20dip"
+        android:background="@drawable/roundrect"
+        android:backgroundTint="#F2F2F2"
+        android:orientation="vertical"
+        android:paddingTop="0px">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="75dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginRight="60dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
+                android:id="@+id/textViewApproveEnterPin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/b612_mono"
-                android:text="Цифр введено:"
-                android:textColor="#E91E63"
-                android:textSize="20sp" />
+                android:layout_marginTop="20dip"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/t_enter_password"
+                android:textAlignment="center"
+                android:textColor="#E61F5CB6"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/passwordEdit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/b612_mono"
-                android:text="0"
-                android:textColor="#E91E63"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="70dip"
+                android:layout_marginTop="20dip"
+                android:layout_marginEnd="70dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/circleOneEnter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_off"
+                    android:backgroundTint="#D9D9D9" />
+
+                <TextView
+                    android:id="@+id/circleTwoEnter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_off"
+                    android:backgroundTint="#D9D9D9" />
+
+                <TextView
+                    android:id="@+id/circleThreeEnter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dip"
+                    android:layout_marginEnd="20dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_off"
+                    android:backgroundTint="#D9D9D9" />
+
+                <TextView
+                    android:id="@+id/circleFourEnter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_off"
+                    android:backgroundTint="#D9D9D9" />
+
+                <TextView
+                    android:id="@+id/circleFiveEnter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_off"
+                    android:backgroundTint="#D9D9D9" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75px"
-        android:orientation="vertical"
-        android:paddingTop="50px">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button1"
-                style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                android:id="@+id/button1Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onOneClicked"
                 android:text="@string/t_one"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button2"
-                style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                android:id="@+id/button2Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:alpha="90"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onTwoClicked"
                 android:text="@string/t_two"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button3"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:id="@+id/button3Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onThreeClicked"
                 android:text="@string/t_three"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -128,141 +163,136 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button4"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:id="@+id/button4Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onFourClicked"
                 android:text="@string/t_four"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button5"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:id="@+id/button5Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onFiveClicked"
                 android:text="@string/t_five"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button6"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:id="@+id/button6Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:clickable="true"
+                android:focusable="auto"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onSixClicked"
                 android:text="@string/t_six"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button7"
-                style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                android:id="@+id/button7Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onSevenClicked"
                 android:text="@string/t_seven"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button8"
-                style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                android:id="@+id/button8Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:alpha="90"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onEightClicked"
                 android:text="@string/t_eight"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button9"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:id="@+id/button9Enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onNineClicked"
                 android:text="@string/t_nine"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginStart="130dip"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="15dip"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/fingerPrint"
-                android:layout_width="55dp"
+            <Button
+                android:id="@+id/button0Enter"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#00F8F6F6"
-                android:contentDescription="@string/finger_print"
-                android:src="?android:attr/fingerprintAuthDrawable" />
-
-            <Button
-                android:id="@+id/button0"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="serif"
+                android:background="#F2F2F2"
+                android:fontFamily="@font/montserrat"
                 android:onClick="onZeroClicked"
                 android:text="@string/t_zero"
                 android:textAllCaps="false"
-                android:textSize="25sp"
+                android:textColor="#343333"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/buttonBackspace"
-                android:layout_width="wrap_content"
+                android:id="@+id/buttonBackspaceEnter"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:backgroundTint="#F8F6F6"
+                android:backgroundTint="#F2F2F2"
                 android:contentDescription="@string/delete"
                 android:onClick="onBackSpaceClicked"
-                android:src="?android:attr/actionModeCloseDrawable" />
-
-
+                android:src="@drawable/backspace" />
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

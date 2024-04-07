@@ -1,13 +1,12 @@
 package com.example.app
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 
 class RegistrationActivity : ComponentActivity() {
 
@@ -15,7 +14,7 @@ class RegistrationActivity : ComponentActivity() {
      * Id виджетов с информацией
      */
     private val passwordEdit     = R.id.editTextPasswordRegistration
-    private val passwordEditCopy = R.id.editTextPasswordRegistrationExtra
+    private val passwordEditCopy = R.id.editTextEntryCodeRegistrationAccept
     private val emailEdit        = R.id.editTextEmailAddressRegistration
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +68,33 @@ class RegistrationActivity : ComponentActivity() {
     /**
      * Переход на страницу задания PIN кода приложения
      */
-    private fun toSettingPIN() {
-        val intent = Intent(this@RegistrationActivity, ChangingPinActivity::class.java)
+    private fun toAcceptCode() {
+        val intent = Intent(this@RegistrationActivity, RegistrationAcceptCodeActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    /**
+     * Изменяем задний фон у полей ввода почты и пароля
+     */
+    private fun changeBackgroundLogin() {
+        val loginInput = findViewById<TextView>(R.id.editTextEmailAddressRegistration)
+        loginInput.setBackgroundResource(R.drawable.mistake_field)
+        loginInput.text = ""
+        loginInput.hint = "    Неправильная почта!"
+        loginInput.setHintTextColor(ContextCompat.getColor(this, R.color.mistake_text))
+        loginInput.backgroundTintMode = null
+    }
+
+    /**
+     * Изменяем задний фон у поля подтверждения пароля
+     */
+    private fun changeBackgroundPasswordApprove() {
+        val textView = findViewById<TextView>(R.id.editTextEntryCodeRegistrationAccept)
+        textView.text=""
+        textView.hint = "Неправильный пароль!"
+        textView.setBackgroundResource(R.drawable.mistake_field)
+        textView.backgroundTintMode = null
     }
 
     /**
@@ -87,15 +109,11 @@ class RegistrationActivity : ComponentActivity() {
             clearPassword(passwordEditCopy)
             Toast.makeText(applicationContext, "Пароль не может быть пустым!", Toast.LENGTH_LONG).show()
         } else if(!arePasswordsEqual(passwordString, passwordStringCopy)){
-            clearPassword(passwordEdit)
-            clearPassword(passwordEditCopy)
-            Toast.makeText(applicationContext, "Пароли не совпадают! Повторите ввод!", Toast.LENGTH_LONG).show()
-        } else if(emailString.isEmpty()) {
-            Toast.makeText(applicationContext, "Почта не может быть пустой!", Toast.LENGTH_LONG).show()
+            changeBackgroundPasswordApprove()
         } else if(!isEmailValid(emailString)){
-            Toast.makeText(applicationContext, "Некорректная почта!", Toast.LENGTH_LONG).show()
+            changeBackgroundLogin()
         } else {
-            toSettingPIN()
+            toAcceptCode()
         }
     }
 }
