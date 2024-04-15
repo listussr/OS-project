@@ -1,4 +1,4 @@
-package com.example.app.diagrams
+package com.example.app.piechart
 
 import android.os.Parcelable
 import android.view.View.BaseSavedState

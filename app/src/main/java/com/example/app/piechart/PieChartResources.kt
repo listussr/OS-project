@@ -1,6 +1,5 @@
-package com.example.app.diagrams
+package com.example.app.piechart
 import android.graphics.Color
-import com.example.app.*
 
 /*val colorArray = arrayOf(
     R.color.black,

@@ -2,16 +2,12 @@ package com.example.app
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.example.app.databinding.ActivityPlanBinding
-import com.example.app.diagrams.PieChart
 
 class PlanActivity : ComponentActivity() {
     /**
@@ -21,7 +17,9 @@ class PlanActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityPlanBinding
 
-    private val listOfInfo: List<Pair<Int, String>> = listOf(Pair(10, "Food"), Pair(10, "Car"), Pair(30, "GKH"), Pair(50, "For future"))
+    private val listOfInfoIncome: List<Pair<Int, String>> = listOf(Pair(80, "Job"), Pair(10, "Contribution"), Pair(10, "Friends"))
+
+    private val listOfInfoExpenses: List<Pair<Int, String>> = listOf(Pair(10, "Food"), Pair(10, "Car"), Pair(30, "GKH"), Pair(50, "For future"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +34,8 @@ class PlanActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        binding.pieChart.setInfoList(listOfInfo)
+        binding.IncomePieChartPlan.setInfoList(listOfInfoIncome)
+        binding.ExpensesPieChartPlan.setInfoList(listOfInfoExpenses)
     }
 
     /**

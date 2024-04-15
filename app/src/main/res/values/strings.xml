@@ -51,4 +51,10 @@
     <string name="t_create_password">Придумайте пароль</string>
     <string name="t_imagine_password">Создайте пароль</string>
     <string name="t_approve_pin">Подтвердите пароль</string>
+    <string name="t_income">Доходы</string>
+    <string name="t_expenses">Расходы</string>
+    <string name="t_3_months">3 мес.</string>
+    <string name="t_6_months">6 мес.</string>
+    <string name="t_2024">2024</string>
+    <string name="t_at_all">Всего</string>
 </resources>

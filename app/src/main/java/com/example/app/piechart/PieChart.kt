@@ -1,4 +1,4 @@
-package com.example.app.diagrams
+package com.example.app.piechart
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,20 +6,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import android.graphics.Color
-import android.graphics.CornerPathEffect
-import android.text.StaticLayout
-import androidx.core.graphics.toColor
-import java.util.jar.Attributes
-import com.example.app.diagrams.colorArray
-import android.animation.ValueAnimator
-import android.content.SharedPreferences
-import android.graphics.*
-import android.os.Bundle
 import android.os.Parcelable
-import android.text.*
-import android.util.Log
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.example.app.R
 
 
 /**

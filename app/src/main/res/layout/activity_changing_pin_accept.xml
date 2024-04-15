@@ -63,49 +63,44 @@
 
                 <TextView
                     android:id="@+id/circleOneAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
                     android:layout_marginStart="10dip"
                     android:layout_weight="1"
-                    android:background="@drawable/circle_off"
-                    android:backgroundTint="#D9D9D9" />
+                    android:background="@drawable/circle_off" />
 
                 <TextView
                     android:id="@+id/circleTwoAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
                     android:layout_marginStart="20dip"
                     android:layout_weight="1"
-                    android:background="@drawable/circle_off"
-                    android:backgroundTint="#D9D9D9" />
+                    android:background="@drawable/circle_off" />
 
                 <TextView
                     android:id="@+id/circleThreeAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
                     android:layout_marginStart="20dip"
                     android:layout_marginEnd="20dip"
                     android:layout_weight="1"
-                    android:background="@drawable/circle_off"
-                    android:backgroundTint="#D9D9D9" />
+                    android:background="@drawable/circle_off" />
 
                 <TextView
                     android:id="@+id/circleFourAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
                     android:layout_marginEnd="20dip"
                     android:layout_weight="1"
-                    android:background="@drawable/circle_off"
-                    android:backgroundTint="#D9D9D9" />
+                    android:background="@drawable/circle_off" />
 
                 <TextView
                     android:id="@+id/circleFiveAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
                     android:layout_marginEnd="10dip"
                     android:layout_weight="1"
-                    android:background="@drawable/circle_off"
-                    android:backgroundTint="#D9D9D9" />
+                    android:background="@drawable/circle_off" />
             </LinearLayout>
         </LinearLayout>
 

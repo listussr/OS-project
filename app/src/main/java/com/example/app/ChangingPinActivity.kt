@@ -24,7 +24,7 @@ class ChangingPinActivity : ComponentActivity() {
     /**
      * Массив виджетов для отображения количества введённых символов пароля
      */
-    private val widgetArray = arrayOf(R.id.circleOneAccept, R.id.circleTwoAccept, R.id.circleThreeAccept, R.id.circleFourAccept, R.id.circleFiveAccept)
+    private val widgetArray = arrayOf(R.id.circleOneChange, R.id.circleTwoChange, R.id.circleThreeChange, R.id.circleFourChange, R.id.circleFiveChange)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,7 +149,7 @@ class ChangingPinActivity : ComponentActivity() {
      */
     private fun updateCircles(index: Int, paintTrue: Boolean) {
         val circleToUpdate = findViewById<TextView>(widgetArray[index])
-        circleToUpdate.backgroundTintMode = null
+        //circleToUpdate.backgroundTintMode = null
         if(paintTrue) {
             circleToUpdate.setBackgroundResource(R.drawable.circle_on)
         } else {
@@ -161,10 +161,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 0
      */
     fun onZeroClicked(view: View) {
-        val value: Int = 0
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 0
         if(index == 5){
             saveNewPassword()
         }
@@ -174,10 +172,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 1
      */
     fun onOneClicked(view: View) {
-        val value: Int = 1
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 1
         if(index == 5){
             saveNewPassword()
         }
@@ -187,10 +183,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 2
      */
     fun onTwoClicked(view: View) {
-        val value: Int = 2
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 2
         if(index == 5){
             saveNewPassword()
         }
@@ -200,10 +194,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 3
      */
     fun onThreeClicked(view: View) {
-        val value: Int = 3
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 3
         if(index == 5){
             saveNewPassword()
         }
@@ -213,10 +205,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 4
      */
     fun onFourClicked(view: View) {
-        val value: Int = 4
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 4
         if(index == 5){
             saveNewPassword()
         }
@@ -226,10 +216,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 5
      */
     fun onFiveClicked(view: View) {
-        val value: Int = 5
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 5
         if(index == 5){
             saveNewPassword()
         }
@@ -239,10 +227,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 6
      */
     fun onSixClicked(view: View) {
-        val value: Int = 6
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 6
         if(index == 5){
             saveNewPassword()
         }
@@ -252,10 +238,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 7
      */
     fun onSevenClicked(view: View) {
-        val value: Int = 7
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 7
         if(index == 5){
             saveNewPassword()
         }
@@ -265,10 +249,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 8
      */
     fun onEightClicked(view: View) {
-        val value: Int = 8
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 8
         if(index == 5){
             saveNewPassword()
         }
@@ -278,10 +260,8 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки 9
      */
     fun onNineClicked(view: View) {
-        val value: Int = 9
-        password[index] = value
         updateCircles(index, true)
-        ++index
+        password[index++] = 9
         if(index == 5){
             saveNewPassword()
         }
@@ -292,7 +272,6 @@ class ChangingPinActivity : ComponentActivity() {
      * Метод для обработки нажатия кнопки backspace
      */
     fun onBackSpaceClicked(view: View) {
-        password[index] = -1
         if(index > 0) {
             --index
         }

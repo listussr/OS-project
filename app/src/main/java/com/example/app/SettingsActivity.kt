@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 
 class SettingsActivity : ComponentActivity() {
@@ -81,7 +82,7 @@ class SettingsActivity : ComponentActivity() {
      */
     private fun setColorTheme() {
         val lightAppTheme: Boolean = getColorTheme()
-        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayout = findViewById<RelativeLayout>(R.id.main_layout)
         if(lightAppTheme) {
             mainLayout.setBackgroundColor(Color.WHITE)
         } else {
