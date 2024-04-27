@@ -6,7 +6,9 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import android.graphics.Color
+import android.os.Build
 import android.os.Parcelable
+import com.example.app.R
 
 
 /**
@@ -63,12 +65,15 @@ class PieChart @JvmOverloads constructor(
 
         paintT.color = Color.BLACK
         paintT.style = Paint.Style.FILL
-        paintT.textSize = 25f
+        paintT.textSize = 30f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            paintT.typeface = resources.getFont(R.font.montserrat)
+        }
     }
 
     override fun onDraw(canvas: Canvas){
         super.onDraw(canvas)
-        if(listOfInfo != null) {
+        if(listOfInfo.isNotEmpty()) {
             drawRectangle(canvas)
             drawCircle(canvas)
             drawLegend(canvas)
@@ -114,6 +119,7 @@ class PieChart @JvmOverloads constructor(
         val xCoordinate = (width / 3).toFloat()
         val yCoordinate = (height / 2).toFloat()
         val radius = (width / 4).toFloat()
+        paintC.style = Paint.Style.STROKE
         for(i in listOfInfo.indices){
             paintC.color = colorArray[i]
             startAngle += sweepAngle
@@ -153,6 +159,16 @@ class PieChart @JvmOverloads constructor(
                 paintC
             )
         }
+    }
+
+    override fun invalidate() {
+        startAngle = 0f
+        sweepAngle = 0f
+        textStartPointX = 0f
+        textStartPointY = 0f
+        paintC.style = Paint.Style.STROKE
+
+        super.invalidate()
     }
 
     /**

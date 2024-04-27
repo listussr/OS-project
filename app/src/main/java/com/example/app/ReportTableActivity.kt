@@ -1,38 +1,31 @@
 package com.example.app
 
 import android.content.Context
-import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Bundle
+import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
-import com.example.app.databinding.ActivityPlanBinding
+import androidx.activity.ComponentActivity
+import com.example.app.databinding.ActivityReportBarChartBinding
+import com.example.app.databinding.ActivityReportBinding
+import com.example.app.databinding.ActivityReportTableBinding
 
-class PlanActivity : ComponentActivity() {
-    /**
-     * Файл с натсройками приложения
-     */
+class ReportTableActivity : ComponentActivity() {
     private lateinit var settings: SharedPreferences
 
-    private lateinit var binding: ActivityPlanBinding
-
-    private val listOfInfoIncome: List<Pair<Int, String>> = listOf(Pair(80, "Job"), Pair(10, "Contribution"), Pair(10, "Friends"))
-
-    private val listOfInfoExpenses: List<Pair<Int, String>> = listOf(Pair(10, "Food"), Pair(10, "Car"), Pair(30, "GKH"), Pair(50, "For future"))
+    private lateinit var binding: ActivityReportTableBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_plan)
+        setContentView(R.layout.activity_report_table)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme()
-        binding = ActivityPlanBinding.inflate(layoutInflater)
+        binding = ActivityReportTableBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-
-    override fun onStart() {
-        super.onStart()
     }
 
     /**
@@ -56,5 +49,17 @@ class PlanActivity : ComponentActivity() {
         } else {
             mainLayout.setBackgroundColor(Color.GRAY)
         }
+    }
+
+    fun onToBarChartButtonClicked(view: View) {
+        val intent = Intent(this@ReportTableActivity, ReportBarChartActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun onToPieChartButtonClicked(view: View) {
+        val intent = Intent(this@ReportTableActivity, ReportActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

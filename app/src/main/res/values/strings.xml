@@ -57,4 +57,11 @@
     <string name="t_6_months">6 мес.</string>
     <string name="t_2024">2024</string>
     <string name="t_at_all">Всего</string>
+    <string name="t_sum">Сумма</string>
+    <string name="t_category">Категория</string>
+    <string name="t_date">Дата</string>
+    <string name="t_time">Время</string>
+    <string name="t_recipient">Получатель</string>
+    <string name="t_type">Тип</string>
+    <string name="t_comment">Комментарий</string>
 </resources>

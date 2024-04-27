@@ -10,19 +10,35 @@ import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
+import com.example.app.databinding.ActivityReportBinding
 
 class ReportActivity : ComponentActivity() {
 
     /**
-     * Файл с натсройками приложения
+     * Файл с настройками приложения
      */
     private lateinit var settings: SharedPreferences
+
+    private lateinit var binding: ActivityReportBinding
+
+    private val listOfInfoIncome: List<Pair<Int, String>> = listOf(Pair(80, "Job"), Pair(10, "Contribution"), Pair(10, "Friends"))
+
+    private val listOfInfoExpenses: List<Pair<Int, String>> = listOf(Pair(10, "Food"), Pair(10, "Car"), Pair(30, "GKH"), Pair(50, "For future"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme()
+        binding = ActivityReportBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        binding.IncomePieChartPlan.setInfoList(listOfInfoIncome)
+        binding.ExpensesPieChartPlan.setInfoList(listOfInfoExpenses)
     }
 
     /**
@@ -46,5 +62,26 @@ class ReportActivity : ComponentActivity() {
         } else {
             mainLayout.setBackgroundColor(Color.GRAY)
         }
+    }
+
+    fun onToBarChartButtonClicked(view: View) {
+        val intent = Intent(this@ReportActivity, ReportBarChartActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun onToTableButtonClicked(view: View) {
+        val intent = Intent(this@ReportActivity, ReportTableActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun onLastMonthClicked(view: View) {
+        val currentIncome: List<Pair<Int, String>> = listOf(Pair(80, "Job"), Pair(20, "Contribution"))
+        val currentExpenses: List<Pair<Int, String>> = listOf(Pair(5, "Games"), Pair(20, "Car"), Pair(20, "Food"), Pair(30, "Gkh"), Pair(25, "Investments"))
+        binding.ExpensesPieChartPlan.setInfoList(currentExpenses)
+        binding.IncomePieChartPlan.setInfoList(currentIncome)
+        binding.IncomePieChartPlan.invalidate()
+        binding.ExpensesPieChartPlan.invalidate()
     }
 }

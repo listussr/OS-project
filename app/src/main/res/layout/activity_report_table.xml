@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReportTableActivity">
+
+    <TextView
+        android:id="@+id/planTextViewReportTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/t_report"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        tools:layout_editor_absoluteX="176dp"
+        tools:layout_editor_absoluteY="142dp" />
+
+    <LinearLayout
+        android:id="@+id/selectorOfAnalytics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/planTextViewReportTable"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imageButtonToPieChartReport"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:background="@drawable/roundrect"
+            android:backgroundTint="#AB673AB7"
+            android:onClick="onToPieChartButtonClicked"
+            android:src="@drawable/piechart" />
+
+        <ImageButton
+            android:id="@+id/imageButtonToBarChartReport"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dip"
+            android:background="@drawable/roundrect"
+            android:backgroundTint="#9203A9F4"
+            android:onClick="onToBarChartButtonClicked"
+            android:src="@drawable/barchart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/selectorOfPeriods"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectorOfAnalytics"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/t_at_all" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/t_expenses" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/t_income" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/selectorOfPeriods">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_right"
+                    android:text="@string/t_sum"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_left"
+                    android:text="@string/t_category"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_left"
+                    android:text="@string/t_date"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_left"
+                    android:text="@string/t_time"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_left"
+                    android:text="@string/t_type"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_row_left"
+                    android:text="@string/t_comment"
+                    android:textAlignment="center" />
+            </TableRow>
+        </TableLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

@@ -45,7 +45,7 @@ class BarChart @JvmOverloads constructor(
         paintColumnExpenses.color = Color.MAGENTA
         paintRect.color = Color.BLACK
         paintText.color = Color.BLACK
-        paintText.textSize = 10f
+        paintText.textSize = 25f
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -119,7 +119,7 @@ class BarChart @JvmOverloads constructor(
         var moneyPointY = height + 35f - dY
         for(i in 0..11){
             canvas.drawText(
-                months[i],
+                monthsDigit[i],
                 textStartPointX,
                 textPointY,
                 paintText
@@ -137,7 +137,7 @@ class BarChart @JvmOverloads constructor(
             value += dVal
         }
 
-        
+
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
