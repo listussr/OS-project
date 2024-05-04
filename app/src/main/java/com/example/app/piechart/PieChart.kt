@@ -26,13 +26,6 @@ class PieChart @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr){
 
-    companion object {
-        private val DEFAULT_MARGIN_TEXT_RIGHT: Int = 2
-        private val DEFAULT_MARGIN_TEXT_LEFT: Int = 10
-        private val DEFAULT_MARGIN_TEXT_BOTTOM: Int = 2
-        private val DEFAULT_MARGIN_TEXT_TOP: Int = 2
-    }
-
     private var marginTextLeft: Float = 0.0f
     private var marginTextRight: Float = 0.0f
     private var marginTextBottom: Float = 5.0f
@@ -74,14 +67,14 @@ class PieChart @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas){
         super.onDraw(canvas)
         if(listOfInfo.isNotEmpty()) {
-            drawRectangle(canvas)
+            //drawRectangle(canvas)
             drawCircle(canvas)
             drawLegend(canvas)
         } else {
             val xCoordinate = (width / 3).toFloat()
             val yCoordinate = (height / 2).toFloat()
-            val radius = (width / 4).toFloat()
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintR)
+            val radius = (2 * width / 7).toFloat()
+            //canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintR)
             canvas.drawCircle(xCoordinate, yCoordinate, radius, paintC)
             textStartPointY = marginTextTop
             textStartPointX = (width / 4) * 3f
@@ -118,8 +111,7 @@ class PieChart @JvmOverloads constructor(
     private fun drawCircle(canvas: Canvas) {
         val xCoordinate = (width / 3).toFloat()
         val yCoordinate = (height / 2).toFloat()
-        val radius = (width / 4).toFloat()
-        paintC.style = Paint.Style.STROKE
+        val radius = (2 * width / 9).toFloat()
         for(i in listOfInfo.indices){
             paintC.color = colorArray[i]
             startAngle += sweepAngle

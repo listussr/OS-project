@@ -23,8 +23,19 @@ class ReportBarChartActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityReportBarChartBinding
 
-    private val listOfInfoData: List<Pair<String, Pair<Int, Int>>> = listOf(
-
+    private val listOfInfoData: List<Pair<Int, Int>> = listOf(
+        Pair(10000, 9000),
+        Pair(11000, 8000),
+        Pair(12000, 10000),
+        Pair(7000, 13000),
+        Pair(11000, 12000),
+        Pair(8000, 9000),
+        Pair(10500, 8000),
+        Pair(6000, 2000),
+        Pair(14000, 12000),
+        Pair(10000, 9000),
+        Pair(15000, 11000),
+        Pair(5000, 20000),
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,5 +86,10 @@ class ReportBarChartActivity : ComponentActivity() {
         val intent = Intent(this@ReportBarChartActivity, ReportTableActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun onTwelveMonthsClicked(view: View) {
+        binding.barChart.setInfoList(listOfInfoData)
+        binding.barChart.invalidate()
     }
 }

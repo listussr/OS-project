@@ -12,28 +12,24 @@ class BarChart @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr){
 
-    companion object{
-        val neverUsed = 0
-    }
-
     private var paintColumnIncome: Paint = Paint()
     private var paintColumnExpenses: Paint = Paint()
     private var paintRect: Paint = Paint()
     private var paintText: Paint = Paint()
 
-    private var listOfInfo: List<Pair<String, Pair<Int, Int>>> = listOf(
-        Pair("Январь", Pair(10000, 9000)),
-        Pair("Февраль", Pair(11000, 8000)),
-        Pair("Март", Pair(12000, 10000)),
-        Pair("Апрель", Pair(10000, 9000)),
-        Pair("Май", Pair(10000, 9000)),
-        Pair("Июнь", Pair(10000, 9000)),
-        Pair("Июль", Pair(10000, 9000)),
-        Pair("Август", Pair(10000, 9000)),
-        Pair("Сентябрь", Pair(10000, 9000)),
-        Pair("Октябрь", Pair(10000, 9000)),
-        Pair("Ноябрь", Pair(10000, 9000)),
-        Pair("Декабрь", Pair(10000, 9000)),
+    private var listOfInfo: List<Pair<Int, Int>> = listOf(
+        Pair(10000, 9000),
+        Pair(11000, 8000),
+        Pair(12000, 10000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
+        Pair(10000, 9000),
     )
     init {
         paintColumnIncome.style = Paint.Style.FILL
@@ -41,11 +37,11 @@ class BarChart @JvmOverloads constructor(
         paintRect.style = Paint.Style.STROKE
         paintText.style = Paint.Style.FILL
 
-        paintColumnIncome.color = Color.BLUE
-        paintColumnExpenses.color = Color.MAGENTA
+        paintColumnIncome.color = Color.parseColor("#1F5CB6")
+        paintColumnExpenses.color = Color.parseColor("#F25757")
         paintRect.color = Color.BLACK
         paintText.color = Color.BLACK
-        paintText.textSize = 25f
+        paintText.textSize = 28f
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -55,10 +51,11 @@ class BarChart @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        drawRectangle(canvas)
+        //drawRectangle(canvas)
         drawCoordinates(canvas)
         drawColumns(canvas)
         drawText(canvas)
+        drawLegend(canvas)
     }
 
     private fun drawRectangle(canvas: Canvas) {
@@ -66,14 +63,14 @@ class BarChart @JvmOverloads constructor(
     }
 
     private fun drawCoordinates(canvas: Canvas) {
-        canvas.drawLine(40f, height.toFloat() - 20f, width.toFloat() - 40f, height.toFloat() - 20f, paintRect)
-        canvas.drawLine(40f, 20f, 40f, height.toFloat() - 20f, paintRect)
+        canvas.drawLine(110f, height.toFloat() - 65f, width.toFloat() - 40f, height.toFloat() - 65f, paintRect)
+        canvas.drawLine(110f, 20f, 110f, height.toFloat() - 65f, paintRect)
     }
 
     private fun findMaxValue() : Int {
         var maxValue = 0
         listOfInfo.forEach {month ->
-            maxValue = maxOf(maxValue, maxOf(month.second.second, month.second.first))
+            maxValue = maxOf(maxValue, maxOf(month.second, month.first))
         }
         return maxValue
     }
@@ -81,24 +78,24 @@ class BarChart @JvmOverloads constructor(
     private fun drawColumns(canvas: Canvas) {
         val maxValue = findMaxValue()
 
-        val dX = (width.toFloat() - 150f) / 14f
-        var startPointX = dX
+        val dX = (width.toFloat() - 250f) / 14f
+        var startPointX = 100 + dX
         var widthOfColumn = 15f
 
         for (i in listOfInfo.indices) {
-            val heightOfColumnIncome = listOfInfo[i].second.first * height / maxValue
+            val heightOfColumnIncome = listOfInfo[i].first * height / maxValue
             canvas.drawRect(
                 startPointX,
-                height.toFloat() - 20f,
+                height.toFloat() - 65f,
                 startPointX + widthOfColumn,
                 height - heightOfColumnIncome.toFloat(),
                 paintColumnIncome
             )
             startPointX += widthOfColumn
-            val heightOfColumnExpenses = listOfInfo[i].second.second * height / maxValue
+            val heightOfColumnExpenses = listOfInfo[i].second * height / maxValue
             canvas.drawRect(
                 startPointX,
-                height.toFloat() - 20f,
+                height.toFloat() - 65f,
                 startPointX + widthOfColumn,
                 height - heightOfColumnExpenses.toFloat(),
                 paintColumnExpenses
@@ -108,14 +105,14 @@ class BarChart @JvmOverloads constructor(
     }
 
     private fun drawText(canvas: Canvas) {
-        val dX = (width.toFloat()) / 14f
-        var textStartPointX = dX
-        val textPointY = height.toFloat() - 5f
+        val dX = (width.toFloat() - 250f) / 14f
+        var textStartPointX = 100 + dX
+        val textPointY = height.toFloat() - 35f
 
         val maxValue = findMaxValue()
         val dVal = maxValue / 10f
         var value = dVal
-        val dY = (height.toFloat() - 10f) / 10f
+        val dY = (height.toFloat() - 45f) / 10f
         var moneyPointY = height + 35f - dY
         for(i in 0..11){
             canvas.drawText(
@@ -124,7 +121,7 @@ class BarChart @JvmOverloads constructor(
                 textPointY,
                 paintText
             )
-            textStartPointX += dX
+            textStartPointX += dX + 15f
         }
         for (i in 0..9){
             canvas.drawText(
@@ -136,8 +133,31 @@ class BarChart @JvmOverloads constructor(
             moneyPointY -= dY
             value += dVal
         }
+    }
 
-
+    private fun drawLegend(canvas: Canvas) {
+        var startX = (width) / 3f
+        val startY = height - 20f
+        paintRect.style = Paint.Style.FILL
+        paintRect.color = Color.parseColor("#1F5CB6")
+        canvas.drawRect(startX, startY, startX + 20f, startY + 20f, paintRect)
+        startX += 40f
+        canvas.drawText(
+            "Доходы",
+            startX,
+            startY + 20f,
+            paintText
+        )
+        startX += 250f
+        paintRect.color = Color.parseColor("#F25757")
+        canvas.drawRect(startX, startY, startX + 20f, startY + 20f, paintRect)
+        startX += 40f
+        canvas.drawText(
+            "Расходы",
+            startX,
+            startY + 20f,
+            paintText
+        )
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
@@ -152,7 +172,12 @@ class BarChart @JvmOverloads constructor(
         return BarChartState(superState, listOfInfo)
     }
 
-    fun setInfoList(list: List<Pair<String, Pair<Int, Int>>>) {
+    override fun invalidate() {
+        paintRect.color = Color.BLACK
+        super.invalidate()
+    }
+
+    fun setInfoList(list: List<Pair<Int, Int>>) {
         listOfInfo = list
     }
 }

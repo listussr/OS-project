@@ -8,6 +8,6 @@ import android.view.View.BaseSavedState
  */
 class BarChartState(
     private val superSavedState: Parcelable?,
-    val dataList: List<Pair<String, Pair<Int, Int>>>
+    val dataList: List<Pair<Int, Int>>
 ) : BaseSavedState(superSavedState), Parcelable {
 }

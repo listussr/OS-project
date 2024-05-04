@@ -42,13 +42,46 @@
             android:backgroundTint="#8BC34A"
             android:onClick="onToTableButtonClicked"
             android:src="@drawable/table" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/selectorOfPeriods"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectorOfAnalytics"
+        android:layout_marginTop="20dip"
+        android:layout_marginBottom="20dip"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onTwelveMonthsClicked"
+            android:text="12 мес." />
+
+        <Button
+            android:id="@+id/button13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2022" />
+
+        <Button
+            android:id="@+id/button14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2023" />
     </LinearLayout>
 
     <com.example.app.barchart.BarChart
         android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_below="@id/selectorOfAnalytics"
+        android:layout_below="@id/selectorOfPeriods"
         android:layout_marginTop="30dip" />
 
 </RelativeLayout>
