@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Parcelable
 import com.example.app.R
+import kotlin.random.Random
 
 
 /**
@@ -113,7 +114,7 @@ class PieChart @JvmOverloads constructor(
         val yCoordinate = (height / 2).toFloat()
         val radius = (2 * width / 9).toFloat()
         for(i in listOfInfo.indices){
-            paintC.color = colorArray[i]
+            paintC.color = colorArray[i % 4]
             startAngle += sweepAngle
             sweepAngle = 360f * listOfInfo[i].first / 100f
             canvas.drawArc(
@@ -142,7 +143,7 @@ class PieChart @JvmOverloads constructor(
                 textStartPointY,
                 paintT
             )
-            paintC.color = colorArray[i]
+            paintC.color = colorArray[i % 4]
             paintC.style = Paint.Style.FILL
             canvas.drawCircle(
                 textStartPointX - 30f,

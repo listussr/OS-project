@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PieChartFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectorOfAnalytics">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/IncomeTextViewPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dip"
+                    android:fontFamily="@font/montserrat"
+                    android:text="@string/t_income"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <com.example.app.piechart.PieChart
+                    android:id="@+id/pieChartIncome"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dip" />
+
+                <TextView
+                    android:id="@+id/ExpensesTextViewPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dip"
+                    android:fontFamily="@font/montserrat"
+                    android:text="@string/t_expenses"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <com.example.app.piechart.PieChart
+                    android:id="@+id/pieChartExpenses"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dip" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dip"
+                    android:layout_marginTop="15dip"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonCurrentMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onCurrentMonthClicked"
+                        android:text="Апрель" />
+
+                    <Button
+                        android:id="@+id/buttonLastMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Декабрь" />
+
+                    <Button
+                        android:id="@+id/buttonThreeMonths"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_3_months" />
+
+                    <Button
+                        android:id="@+id/buttonCurrentYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_2024" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>

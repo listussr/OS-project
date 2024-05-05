@@ -10,9 +10,10 @@ import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.app.databinding.ActivityReportBinding
 
-class ReportActivity : ComponentActivity() {
+class ReportActivity : AppCompatActivity() {
 
     /**
      * Файл с настройками приложения
@@ -37,8 +38,8 @@ class ReportActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        binding.IncomePieChartPlan.setInfoList(listOfInfoIncome)
-        binding.ExpensesPieChartPlan.setInfoList(listOfInfoExpenses)
+        //binding.IncomePieChartPlan.setInfoList(listOfInfoIncome)
+        //binding.ExpensesPieChartPlan.setInfoList(listOfInfoExpenses)
     }
 
     /**
@@ -70,7 +71,7 @@ class ReportActivity : ComponentActivity() {
         finish()
     }
 
-    fun onToTableButtonClicked(view: View) {
+    /*fun onToTableButtonClicked(view: View) {
         val intent = Intent(this@ReportActivity, ReportTableActivity::class.java)
         startActivity(intent)
         finish()
@@ -79,9 +80,9 @@ class ReportActivity : ComponentActivity() {
     fun onLastMonthClicked(view: View) {
         val currentIncome: List<Pair<Int, String>> = listOf(Pair(80, "Job"), Pair(20, "Contribution"))
         val currentExpenses: List<Pair<Int, String>> = listOf(Pair(5, "Games"), Pair(20, "Car"), Pair(20, "Food"), Pair(30, "Gkh"), Pair(25, "Investments"))
-        binding.ExpensesPieChartPlan.setInfoList(currentExpenses)
-        binding.IncomePieChartPlan.setInfoList(currentIncome)
-        binding.IncomePieChartPlan.invalidate()
-        binding.ExpensesPieChartPlan.invalidate()
-    }
+        //binding.ExpensesPieChartPlan.setInfoList(currentExpenses)
+        //binding.IncomePieChartPlan.setInfoList(currentIncome)
+        //binding.IncomePieChartPlan.invalidate()
+        //binding.ExpensesPieChartPlan.invalidate()
+    }*/
 }
