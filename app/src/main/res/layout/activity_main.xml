@@ -51,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onTableClicked"
             android:src="@drawable/table" />
 
         <ImageButton
@@ -58,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onReportButtonClicked"
             android:src="@android:drawable/btn_star" />
 
         <ImageButton
@@ -65,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@android:drawable/btn_star" />
+            android:src="@drawable/plus__1_" />
 
         <ImageButton
             android:id="@+id/imageButton6"
