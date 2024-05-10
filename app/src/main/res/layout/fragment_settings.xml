@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#F7F7F7"
     tools:context=".SettingsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragmentLayoutSettings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTint="#F7F7F7">

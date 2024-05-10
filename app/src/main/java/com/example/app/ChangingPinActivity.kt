@@ -10,8 +10,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 
-class ChangingPinActivity : ComponentActivity() {
+class ChangingPinActivity : AppCompatActivity() {
 
     /**
      * Файл с настройками приложения

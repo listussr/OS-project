@@ -27,6 +27,8 @@
         android:id="@+id/reportFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:backgroundTint="#80E0E0E0"
+        app:layout_constraintBottom_toTopOf="@+id/addingFieldsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +61,7 @@
             android:layout_weight="1"
             android:background="@drawable/circle_off"
             android:backgroundTint="#E61F5CB6"
+            android:onClick="onAddIncomeClicked"
             android:text="Добавить расход" />
 
         <Button
@@ -71,6 +74,7 @@
             android:layout_weight="1"
             android:background="@drawable/circle_off"
             android:backgroundTint="#E61F5CB6"
+            android:onClick="onAddIncomeClicked"
             android:text="Добавить доход" />
     </LinearLayout>
 
@@ -109,6 +113,7 @@
                 android:fontFamily="@font/montserrat"
                 android:text="Операции"
                 android:textAlignment="center"
+                android:textColor="#000000"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -128,7 +133,7 @@
                 android:layout_weight="1"
                 android:background="#80E0E0E0"
                 android:onClick="onReportButtonClicked"
-                android:src="@android:drawable/btn_star" />
+                android:src="@drawable/usage" />
 
             <TextView
                 android:id="@+id/textViewReportNav"
@@ -177,7 +182,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onPlanButtonClicked"
-                android:src="@android:drawable/btn_star" />
+                android:src="@drawable/data_96285" />
 
             <TextView
                 android:id="@+id/textViewPlanNav"
@@ -188,6 +193,7 @@
                 android:text="План"
                 android:textAlignment="center"
                 android:textAllCaps="false"
+                android:textColor="#000000"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -207,7 +213,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onSettingsButtonClicked"
-                android:src="@android:drawable/btn_star" />
+                android:src="@drawable/settings" />
 
             <TextView
                 android:id="@+id/textViewSettingsNav"
@@ -217,10 +223,115 @@
                 android:fontFamily="@font/montserrat"
                 android:text="Настройки"
                 android:textAlignment="center"
+                android:textColor="#000000"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addingFieldsLayout"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/navigationLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_border"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:text="Сумма"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTextNumberDecimal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:hint="Сумма"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_border"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:text="Категория"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:completionThreshold="0"
+                android:fontFamily="@font/montserrat"
+                android:hint="Категория"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/table_border"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:text="Дата"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="date" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

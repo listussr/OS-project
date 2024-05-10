@@ -6,9 +6,10 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-class RegistrationActivity : ComponentActivity() {
+class RegistrationActivity : AppCompatActivity() {
 
     /**
      * Id виджетов с информацией

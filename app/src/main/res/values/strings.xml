@@ -10,6 +10,62 @@
     <string name="t_eight">8</string>
     <string name="t_nine">9</string>
     <string name="t_zero">0</string>
+
+
+    <string name="t_enter_password_eng">Enter password</string>
+    <string name="finger_print_eng">Fingerprint</string>
+    <string name="delete_eng">Delete last symbol</string>
+    <string name="accept_eng">Accept</string>
+    <string name="settings_page_eng">Settings page</string>
+    <string name="one_page_higher_eng">One page higher</string>
+    <string name="title_activity_choosing_themes_eng">ChoosingThemsActivity</string>
+    <string name="t_light_theme_eng">Light</string>
+    <string name="t_dark_theme_eng">Dark</string>
+    <string name="t_change_pin_eng">Change password</string>
+    <string name="t_enter_new_pin_eng">Enter new password</string>
+    <string name="t_settings_page_eng">App settings</string>
+    <string name="msg_incorrect_password_t">Incorrect code</string>
+    <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
+    <string name="descr_enter_password_eng">Enter password</string>
+    <string name="descr_repeat_password_eng">Repeat password</string>
+    <string name="t_email_input_eng">Define email</string>
+    <string name="t_entry_eng">Entry</string>
+    <string name="t_registration_eng">Register</string>
+    <string name="t_continue_eng">Continue</string>
+    <string name="t_email_eng"> Email</string>
+    <string name="t_password_eng"> Password</string>
+    <string name="t_was_registered_eng">Entry</string>
+    <string name="t_exit_button_eng">Log out of account</string>
+    <string name="t_plan_eng">Plan</string>
+    <string name="t_report_eng">Report</string>
+    <string name="t_registration_page_eng">Registration</string>
+    <string name="t_wealth_family">WealthFamily</string>
+    <string name="t_entry_wf_eng">Entry into WealthFamily</string>
+    <string name="t_remember_user_eng">Remember user</string>
+    <string name="t_forgot_password_eng">Forgot password?</string>
+    <string name="t_changing_profile_password_eng">Change password</string>
+    <string name="t_enter_code_from_letter_eng">Enter code from the message</string>
+    <string name="t_enter_new_password_eng">Enter new password</string>
+    <string name="t_approve_new_password_eng">Confirm mew password</string>
+    <string name="t_change_password_eng">Change password</string>
+    <string name="t_create_password_eng">Imagine password</string>
+    <string name="t_imagine_password_eng">Create password</string>
+    <string name="t_approve_pin_eng">Create password</string>
+    <string name="t_income_eng">Income</string>
+    <string name="t_expenses_eng">Expenses</string>
+    <string name="t_3_months_eng">3 months</string>
+    <string name="t_6_months_eng">6 months</string>
+    <string name="t_2024">2024</string>
+    <string name="t_at_all_eng">At all</string>
+    <string name="t_sum_eng">Sum</string>
+    <string name="t_category_eng">Category</string>
+    <string name="t_date_eng">Date</string>
+    <string name="t_time_eng">Time</string>
+    <string name="t_recipient_eng">Recipient</string>
+    <string name="t_type_eng">Type</string>
+    <string name="t_comment_eng">Comment</string>
+
+
     <string name="t_enter_password">Введите пароль</string>
     <string name="finger_print">Отпечаток пальца</string>
     <string name="delete">Удалить последний символ</string>
@@ -25,7 +81,6 @@
     <string name="t_enter_new_pin">Введите новый пароль</string>
     <string name="t_settings_page">Настройки приложения</string>
     <string name="msg_incorrect_password">Некорректный код безопасности</string>
-    <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
     <string name="descr_enter_password">Введите пароль</string>
     <string name="descr_repeat_password">Повторите пароль</string>
     <string name="t_email_input">Укажите почту</string>
@@ -39,7 +94,6 @@
     <string name="t_plan">План</string>
     <string name="t_report">Отчёт</string>
     <string name="t_registration_page">Регистрация</string>
-    <string name="t_wealth_family">WealthFamily</string>
     <string name="t_entry_wf">Войти в WealthFamily</string>
     <string name="t_remember_user">Запомнить пользователя</string>
     <string name="t_forgot_password">Забыли пароль?</string>
@@ -55,7 +109,6 @@
     <string name="t_expenses">Расходы</string>
     <string name="t_3_months">3 мес.</string>
     <string name="t_6_months">6 мес.</string>
-    <string name="t_2024">2024</string>
     <string name="t_at_all">Всего</string>
     <string name="t_sum">Сумма</string>
     <string name="t_category">Категория</string>
@@ -64,6 +117,4 @@
     <string name="t_recipient">Получатель</string>
     <string name="t_type">Тип</string>
     <string name="t_comment">Комментарий</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

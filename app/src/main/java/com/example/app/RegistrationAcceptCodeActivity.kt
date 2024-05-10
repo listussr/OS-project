@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-class RegistrationAcceptCodeActivity : ComponentActivity() {
+class RegistrationAcceptCodeActivity : AppCompatActivity() {
     private val acceptCode = "12345"
 
     override fun onCreate(savedInstanceState: Bundle?) {

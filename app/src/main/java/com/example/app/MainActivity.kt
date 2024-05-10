@@ -1,39 +1,53 @@
 package com.example.app
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.example.app.databinding.ActivityMainBinding
 import com.example.app.databinding.ActivityReportBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private var fragmentNum = 2
+    private var fragmentNum: Int = 2
     private lateinit var binding: ActivityMainBinding
+    private lateinit var settings: SharedPreferences
+    private var autocompleteList: Array<String> = arrayOf(
+        "Еда",
+        "Транспорт",
+        "Бензин",
+        "Бытовые расходы",
+        "Food",
+        "Transport",
+        "House",
+        "Entertainments"
+    )
+    private var outOfDictionaryFlag: Boolean = false
+    private var word: String = ""
+    //private lateinit var adapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.v("App", "CreatedView1")
-
         super.onCreate(savedInstanceState)
-        Log.v("App", "CreatedView2")
         binding = ActivityMainBinding.inflate(layoutInflater)
-        Log.v("App", "CreatedView3")
         setContentView(binding.root)
-        //setContentView(R.layout.activity_main)
-        Log.v("App", "CreatedView4")
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.reportFrameLayout, PieChartFragment.newInstance())
             .commit()
+        setAutoCompleteList()
     }
 
     fun onTableClicked(view: View) {
@@ -52,7 +66,50 @@ class MainActivity : AppCompatActivity() {
         fragmentNum = 1
     }
 
+    private fun lookForAutocompletes() {
+        binding.autoCompleteTextView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                /**
+                 * TODO (Сделать кнопку на месте выкидного списка при отсутствии подсовпадений у ввода и списка)
+                 */
+                word.plus(p0)
+                if(!outOfDictionaryFlag) {
+                    var wordInDictionaryFlag: Boolean = false
+                    for (i in autocompleteList) {
+                        wordInDictionaryFlag = wordInDictionaryFlag || i.contains(word)
+                    }
+                    if (!wordInDictionaryFlag) {
+                        outOfDictionaryFlag = true
+                        /*
+                        val addValue = arrayOf("Добавить категорию")
+                        adapter = ArrayAdapter<String>(
+                            this, android.R.layout.simple_dropdown_item_1line, addValue
+                        )
+                        binding.autoCompleteTextView.setAdapter(adapter)
+                        */
+                        binding.autoCompleteTextView.completionHint = "Добавить категорию"
+
+                    }
+                }
+            }
+
+        })
+    }
+
+    private fun setAutoCompleteList() {
+        val adapter = ArrayAdapter<String>(
+            this, android.R.layout.simple_dropdown_item_1line, autocompleteList
+        )
+        binding.autoCompleteTextView.setAdapter(adapter)
+    }
 
     fun onReportButtonClicked(view: View) {
         supportFragmentManager
@@ -115,6 +172,15 @@ class MainActivity : AppCompatActivity() {
             val layout = findViewById<ConstraintLayout>(R.id.main_layout)
             panel.visibility = View.GONE
             layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        }
+    }
+
+    fun onAddIncomeClicked(view: View) {
+        val layout = findViewById<LinearLayout>(R.id.addingFieldsLayout)
+        layout.visibility = View.VISIBLE
+        findViewById<LinearLayout>(R.id.addingPanel).visibility = View.GONE
+        findViewById<ConstraintLayout>(R.id.main_layout).setOnClickListener{
+            layout.visibility = View.GONE
         }
     }
 }

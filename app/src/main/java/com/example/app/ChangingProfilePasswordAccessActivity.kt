@@ -6,9 +6,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-class ChangingProfilePasswordAccessActivity : ComponentActivity() {
+class ChangingProfilePasswordAccessActivity : AppCompatActivity() {
     private val password: String = "12345"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

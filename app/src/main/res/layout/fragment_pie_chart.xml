@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PieChartFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/selectorOfAnalytics">
@@ -28,12 +29,13 @@
                     android:fontFamily="@font/montserrat"
                     android:text="@string/t_income"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <com.example.app.piechart.PieChart
                     android:id="@+id/pieChartIncome"
                     android:layout_width="match_parent"
-                    android:layout_height="220dip" />
+                    android:layout_height="200dip" />
 
                 <TextView
                     android:id="@+id/ExpensesTextViewPlan"
@@ -43,54 +45,68 @@
                     android:fontFamily="@font/montserrat"
                     android:text="@string/t_expenses"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <com.example.app.piechart.PieChart
                     android:id="@+id/pieChartExpenses"
                     android:layout_width="match_parent"
-                    android:layout_height="220dip" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dip"
-                    android:layout_marginTop="15dip"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/buttonCurrentMonth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onCurrentMonthClicked"
-                        android:text="Апрель" />
-
-                    <Button
-                        android:id="@+id/buttonLastMonth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Декабрь" />
-
-                    <Button
-                        android:id="@+id/buttonThreeMonths"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/t_3_months" />
-
-                    <Button
-                        android:id="@+id/buttonCurrentYear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/t_2024" />
-
-                </LinearLayout>
+                    android:layout_height="200dip" />
 
             </LinearLayout>
         </ScrollView>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+
+            <Button
+                android:id="@+id/buttonCurrentMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/half_roundrect_left_on"
+                android:onClick="onCurrentMonthClicked"
+                android:text="Апрель"
+                android:textColor="#F1F1F1" />
+
+            <Button
+                android:id="@+id/buttonLastMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/rect"
+                android:text="Декабрь"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/buttonThreeMonths"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/rect"
+                android:text="@string/t_3_months"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/buttonCurrentYear"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="00dp"
+                android:layout_weight="1"
+                android:background="@drawable/half_roundrect_right_off"
+                android:text="@string/t_2024"
+                android:textColor="#000000" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

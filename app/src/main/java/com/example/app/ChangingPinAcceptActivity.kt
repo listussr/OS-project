@@ -10,8 +10,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 
-class ChangingPinAcceptActivity : ComponentActivity() {
+class ChangingPinAcceptActivity : AppCompatActivity() {
 
     /**
      * Файл с настройками приложения
@@ -70,7 +71,7 @@ class ChangingPinAcceptActivity : ComponentActivity() {
      * Переходим в меню настроек
      */
     private fun changeActivitySettings() {
-        val intent = Intent(this@ChangingPinAcceptActivity, SettingsActivity::class.java)
+        val intent = Intent(this@ChangingPinAcceptActivity, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

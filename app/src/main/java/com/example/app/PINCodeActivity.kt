@@ -11,10 +11,11 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import java.io.IOException
 import java.nio.charset.Charset
 
-class PINCodeActivity : ComponentActivity() {
+class PINCodeActivity : AppCompatActivity() {
 
     /**
      * Пароль приложения из настроек
@@ -155,7 +156,7 @@ class PINCodeActivity : ComponentActivity() {
      * Метод для переключения между страницами
      */
     private fun changeActivity() {
-        val intent = Intent(this@PINCodeActivity, MainAppPageActivity::class.java)
+        val intent = Intent(this@PINCodeActivity, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
