@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -12,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.app.databinding.ActivityLoginBinding
+import com.example.app.databinding.ActivityMainBinding
 
 class LoginActivity : AppCompatActivity() {
 
@@ -23,13 +26,17 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var settings: SharedPreferences
 
+    private lateinit var binding: ActivityLoginBinding
+
     private val password: String = "1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         updateCheckbox()
+        setLanguageInViews()
     }
 
     /**
@@ -37,6 +44,29 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun isEmailValid(email: String) : Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    /**
+     * Устанавливаем язык во всех виджетах на activity
+     */
+    private fun setLanguageInViews() {
+        val language = getLanguageFlag()
+        if(!language){
+            binding.textViewEntryWealthFamilyLogin.text = getString(R.string.t_entry_wf_eng)
+            binding.editTextEmailAddressLogin.hint = getString(R.string.t_email_eng)
+            binding.editTextPasswordLogin.hint = getString(R.string.t_password_eng)
+            binding.rememberUserCheckBoxLogin.text = getString(R.string.t_remember_user_eng)
+            binding.entryButtonLogin.text = getString(R.string.t_entry_eng)
+            binding.registrationButtonAccess.text = getString(R.string.t_registration_eng)
+            binding.forgotPasswordButtonLogin.text = getString(R.string.t_forgot_password_eng)
+        }
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", true)
     }
 
     /**
@@ -90,13 +120,21 @@ class LoginActivity : AppCompatActivity() {
         val loginInput = findViewById<TextView>(R.id.editTextEmailAddressLogin)
         loginInput.setBackgroundResource(R.drawable.mistake_field)
         loginInput.text = ""
-        loginInput.hint = "    Неправильная почта!"
+        if(!getLanguageFlag()){
+            loginInput.hint = "    Неправильная почта!"
+        } else {
+            loginInput.hint = "    Incorrect email!"
+        }
         loginInput.setHintTextColor(ContextCompat.getColor(this, R.color.mistake_text))
         loginInput.backgroundTintMode = null
         val passwordInput = findViewById<TextView>(R.id.editTextPasswordLogin)
         passwordInput.setBackgroundResource(R.drawable.mistake_field)
         passwordInput.text = ""
-        passwordInput.hint = "    Пароль"
+        if(!getLanguageFlag()){
+            passwordInput.hint = "    Неправильный Пароль"
+        } else {
+            passwordInput.hint = "    Incorrect Password"
+        }
         passwordInput.backgroundTintMode = null
     }
 
@@ -107,7 +145,11 @@ class LoginActivity : AppCompatActivity() {
         val passwordInput = findViewById<TextView>(R.id.editTextPasswordLogin)
         passwordInput.setBackgroundResource(R.drawable.mistake_field)
         passwordInput.text = ""
-        passwordInput.hint = "    Неправильный Пароль!"
+        if(!getLanguageFlag()){
+            passwordInput.hint = "    Неправильный Пароль!"
+        } else {
+            passwordInput.hint = "    Incorrect password!"
+        }
         passwordInput.setHintTextColor(ContextCompat.getColor(this, R.color.mistake_text))
         passwordInput.backgroundTintMode = null
     }

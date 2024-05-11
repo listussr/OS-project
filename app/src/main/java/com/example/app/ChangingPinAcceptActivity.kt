@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import com.example.app.databinding.ActivityChangingPinAcceptBinding
+import com.example.app.databinding.ActivityChangingPinBinding
 
 class ChangingPinAcceptActivity : AppCompatActivity() {
 
@@ -21,6 +23,7 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
 
     private var index: Int = 0
     private var password = arrayOf(0, 0, 0, 0, 0)
+    private lateinit var binding: ActivityChangingPinAcceptBinding
 
     /**
      * Массив виджетов для отображения количества введённых символов пароля
@@ -31,10 +34,29 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_changing_pin_accept)
+        binding = ActivityChangingPinAcceptBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         passwordEntered = intent.getStringExtra("Password").toString()
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme(getColorTheme())
+        setLanguageInViews()
+    }
+
+    /**
+     * Устанавливаем язык во всех виджетах на activity
+     */
+    private fun setLanguageInViews() {
+        val language = getLanguageFlag()
+        if(!language){
+            binding.textViewApproveChangePinAccept.text = getString(R.string.t_approve_pin_eng)
+        }
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", false)
     }
 
     /**
@@ -72,6 +94,7 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
      */
     private fun changeActivitySettings() {
         val intent = Intent(this@ChangingPinAcceptActivity, MainActivity::class.java)
+        intent.putExtra("PageNumber", 4)
         startActivity(intent)
         finish()
     }
@@ -80,7 +103,7 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
      * Переходим на главную страницу приложения
      */
     private fun changeActivityMain() {
-        val intent = Intent(this@ChangingPinAcceptActivity, MainAppPageActivity::class.java)
+        val intent = Intent(this@ChangingPinAcceptActivity, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

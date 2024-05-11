@@ -4,17 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F7F7F7"
     tools:context=".PieChartFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:backgroundTint="#F7F7F7">
 
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/selectorOfAnalytics">
+            android:layout_below="@id/selectorOfAnalytics"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,6 +34,7 @@
                     android:fontFamily="@font/montserrat"
                     android:text="@string/t_income"
                     android:textAlignment="center"
+                    android:textColor="#454545"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -45,6 +51,7 @@
                     android:fontFamily="@font/montserrat"
                     android:text="@string/t_expenses"
                     android:textAlignment="center"
+                    android:textColor="#454545"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

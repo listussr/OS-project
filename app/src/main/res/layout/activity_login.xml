@@ -67,6 +67,7 @@
             android:lineSpacingExtra="8sp"
             android:textAlignment="viewStart"
             android:textColor="#656565"
+            android:textColorHint="#BF454545"
             android:textSize="23sp" />
 
         <EditText
@@ -84,6 +85,7 @@
             android:inputType="textPassword"
             android:textAlignment="viewStart"
             android:textColor="#656565"
+            android:textColorHint="#B3454545"
             android:textSize="23sp" />
 
         <CheckBox
@@ -144,6 +146,7 @@
         android:background="@drawable/roundrect"
         android:backgroundTint="#E0E0E0"
         android:onClick="onRegistrationButtonClicked"
-        android:text="@string/t_registration" />
+        android:text="@string/t_registration"
+        android:textColor="#000000" />
 
 </RelativeLayout>

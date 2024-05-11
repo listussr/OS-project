@@ -9,6 +9,7 @@ import android.view.View
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import com.example.app.databinding.FragmentSettingsBinding
 import com.example.app.databinding.FragmentTableBinding
@@ -34,10 +35,76 @@ class SettingsFragment : Fragment() {
         binding.darkThemeButton.setOnClickListener{ onDarkThemeButtonClicked() }
         binding.lightThemeButton.setOnClickListener { onLightThemeButtonClicked() }
         binding.changePasswordButton.setOnClickListener { onChangePINButtonClicked() }
+        binding.englishLanguageButton.setOnClickListener { onEnglishClicked() }
+        binding.russianLanguageButton.setOnClickListener { onRussianClicked() }
         setThemeButtonsState()
+        setLanguage()
         return binding.root
     }
 
+    /**
+     * Переводим надписи на View при входе на fragment
+     */
+    private fun setLanguage() {
+        if(getLanguageFlag()){
+            translateToRussian()
+        } else {
+            translateToEnglish()
+        }
+    }
+
+    /**
+     * Переводим все View на английский язык
+     */
+    private fun translateToEnglish() {
+        binding.textViewThemeSettings.text = getString(R.string.t_theme_eng)
+        binding.darkThemeButton.text = getString(R.string.t_dark_theme_eng)
+        binding.lightThemeButton.text = getString(R.string.t_light_theme_eng)
+        binding.changePasswordButton.text = getString(R.string.t_change_password_eng)
+        binding.leaveProfileButton.text = getString(R.string.t_exit_button_eng)
+        requireActivity().findViewById<TextView>(R.id.reportTextViewMain)
+            .text = getString(R.string.t_settings_page_eng)
+        requireActivity().findViewById<TextView>(R.id.textViewOperationNav)
+            .text = getString(R.string.t_operations_eng)
+        requireActivity().findViewById<TextView>(R.id.textViewReportNav)
+            .text = getString(R.string.t_report_eng)
+        requireActivity().findViewById<TextView>(R.id.textViewPlanNav)
+            .text = getString(R.string.t_plan_eng)
+        requireActivity().findViewById<TextView>(R.id.textViewSettingsNav)
+            .text = getString(R.string.t_settings_page_eng)
+    }
+
+    /**
+     * Переводим все View на русский язык
+     */
+    private fun translateToRussian() {
+        binding.textViewThemeSettings.text = getString(R.string.t_theme)
+        binding.darkThemeButton.text = getString(R.string.t_dark_theme)
+        binding.lightThemeButton.text = getString(R.string.t_light_theme)
+        binding.changePasswordButton.text = getString(R.string.t_change_password)
+        binding.leaveProfileButton.text = getString(R.string.t_exit_button)
+        requireActivity().findViewById<TextView>(R.id.reportTextViewMain)
+            .text = getString(R.string.t_settings_page)
+        requireActivity().findViewById<TextView>(R.id.textViewOperationNav)
+            .text = getString(R.string.t_operations)
+        requireActivity().findViewById<TextView>(R.id.textViewReportNav)
+            .text = getString(R.string.t_report)
+        requireActivity().findViewById<TextView>(R.id.textViewPlanNav)
+            .text = getString(R.string.t_plan)
+        requireActivity().findViewById<TextView>(R.id.textViewSettingsNav)
+            .text = getString(R.string.t_settings_page)
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", true)
+    }
+
+    /**
+     * Устанавливаем кнопки тем в правильное положение согласно настройкам
+     */
     private fun setThemeButtonsState() {
         val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
         Toast.makeText(context, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
@@ -54,6 +121,9 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Обработка нажатия кнопки светлой темы
+     */
     private fun onLightThemeButtonClicked() {
         binding.darkThemeButton.setBackgroundResource(R.drawable.half_roundrect_right_off)
         binding.lightThemeButton.setTextColor(Color.parseColor("#F1F1F1"))
@@ -63,6 +133,9 @@ class SettingsFragment : Fragment() {
         binding.fragmentLayoutSettings.setBackgroundColor(Color.parseColor("#F1F1F1"))
     }
 
+    /**
+     * Обработка нажатия кнопки тёмной темы
+     */
     private fun onDarkThemeButtonClicked() {
         binding.lightThemeButton.setBackgroundResource(R.drawable.half_roundrect_left_off)
         binding.darkThemeButton.setTextColor(Color.parseColor("#F1F1F1"))
@@ -72,6 +145,9 @@ class SettingsFragment : Fragment() {
         binding.fragmentLayoutSettings.setBackgroundColor(Color.parseColor("#1E1E1E"))
     }
 
+    /**
+     * Обработка нажатия на кнопку смены пароля
+     */
     private fun onChangePINButtonClicked() {
         val intent = Intent(this.context, ChangingPinActivity::class.java)
         startActivity(intent)
@@ -85,6 +161,26 @@ class SettingsFragment : Fragment() {
         val editor = settings.edit()
         editor.putBoolean("ColorTheme", lightThemeFlag)
         editor.commit()
+    }
+
+    /**
+     * Выставляем английский язык в настройках приложения
+     */
+    private fun onEnglishClicked() {
+        val editor = settings.edit()
+        editor.putBoolean("Language", false)
+            .commit()
+        translateToEnglish()
+    }
+
+    /**
+     * ставим русский язык в настройках приложения
+     */
+    private fun onRussianClicked() {
+        val editor = settings.edit()
+        editor.putBoolean("Language", true)
+            .commit()
+        translateToRussian()
     }
 
     companion object {

@@ -18,12 +18,12 @@
     <string name="accept_eng">Accept</string>
     <string name="settings_page_eng">Settings page</string>
     <string name="one_page_higher_eng">One page higher</string>
-    <string name="title_activity_choosing_themes_eng">ChoosingThemsActivity</string>
+    <string name="title_activity_choosing_themes_eng">ChoosingThemes Activity</string>
     <string name="t_light_theme_eng">Light</string>
     <string name="t_dark_theme_eng">Dark</string>
     <string name="t_change_pin_eng">Change password</string>
     <string name="t_enter_new_pin_eng">Enter new password</string>
-    <string name="t_settings_page_eng">App settings</string>
+    <string name="t_settings_page_eng">Settings</string>
     <string name="msg_incorrect_password_t">Incorrect code</string>
     <string name="name_sp_settings">SETTINGS_PREFERENCES</string>
     <string name="descr_enter_password_eng">Enter password</string>
@@ -46,11 +46,11 @@
     <string name="t_changing_profile_password_eng">Change password</string>
     <string name="t_enter_code_from_letter_eng">Enter code from the message</string>
     <string name="t_enter_new_password_eng">Enter new password</string>
-    <string name="t_approve_new_password_eng">Confirm mew password</string>
+    <string name="t_approve_new_password_eng">Confirm new password</string>
     <string name="t_change_password_eng">Change password</string>
     <string name="t_create_password_eng">Imagine password</string>
     <string name="t_imagine_password_eng">Create password</string>
-    <string name="t_approve_pin_eng">Create password</string>
+    <string name="t_approve_pin_eng">Confirm password</string>
     <string name="t_income_eng">Income</string>
     <string name="t_expenses_eng">Expenses</string>
     <string name="t_3_months_eng">3 months</string>
@@ -64,7 +64,8 @@
     <string name="t_recipient_eng">Recipient</string>
     <string name="t_type_eng">Type</string>
     <string name="t_comment_eng">Comment</string>
-
+    <string name="t_theme_eng">Theme</string>
+    <string name="t_operations_eng">Operations</string>
 
     <string name="t_enter_password">Введите пароль</string>
     <string name="finger_print">Отпечаток пальца</string>
@@ -79,7 +80,7 @@
     <string name="change_theme_button">Изменить темы оформления приложения</string>
     <string name="change_pin">Изменить код входа</string>
     <string name="t_enter_new_pin">Введите новый пароль</string>
-    <string name="t_settings_page">Настройки приложения</string>
+    <string name="t_settings_page">Настройки</string>
     <string name="msg_incorrect_password">Некорректный код безопасности</string>
     <string name="descr_enter_password">Введите пароль</string>
     <string name="descr_repeat_password">Повторите пароль</string>
@@ -116,5 +117,7 @@
     <string name="t_time">Время</string>
     <string name="t_recipient">Получатель</string>
     <string name="t_type">Тип</string>
+    <string name="t_theme">Тема</string>
     <string name="t_comment">Комментарий</string>
+    <string name="t_operations">Операции</string>
 </resources>

@@ -27,16 +27,16 @@
             android:exported="false" />
         <activity
             android:name=".ChangingPinAcceptActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".RegistrationAcceptCodeActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChangingPasswordActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChangingProfilePasswordAccessActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".PlanActivity"
             android:exported="true" />

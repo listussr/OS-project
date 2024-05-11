@@ -5,6 +5,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#F7F7F7"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#80E0E0E0"
+        android:backgroundTint="#80E0E0E0"
         android:fontFamily="@font/montserrat"
         android:text="@string/t_report"
         android:textAlignment="center"
@@ -27,7 +29,7 @@
         android:id="@+id/reportFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:backgroundTint="#80E0E0E0"
+        android:backgroundTint="#F7F7F7"
         app:layout_constraintBottom_toTopOf="@+id/addingFieldsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -93,6 +95,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#80E0E0E0"
+            android:onClick="onTableClicked"
             android:orientation="vertical">
 
             <ImageButton
@@ -101,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#80E0E0E0"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="onTableClicked"
                 android:src="@drawable/table" />
 
@@ -111,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat"
+                android:onClick="onTableClicked"
                 android:text="Операции"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -123,6 +127,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#80E0E0E0"
+            android:onClick="onReportButtonClicked"
             android:orientation="vertical">
 
             <ImageButton
@@ -131,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#80E0E0E0"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="onReportButtonClicked"
                 android:src="@drawable/usage" />
 
@@ -140,8 +145,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:fontFamily="@font/montserrat"
                 android:gravity="center_horizontal|center_vertical"
+                android:onClick="onReportButtonClicked"
                 android:text="Отчёт"
                 android:textAlignment="center"
                 android:textColor="#346BBC"
@@ -162,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onAddButtonClicked"
                 android:src="@drawable/plus__1_" />
@@ -172,6 +180,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#80E0E0E0"
+            android:onClick="onPlanButtonClicked"
             android:orientation="vertical">
 
             <ImageButton
@@ -180,6 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onPlanButtonClicked"
                 android:src="@drawable/data_96285" />
@@ -190,6 +200,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat"
+                android:onClick="onPlanButtonClicked"
                 android:text="План"
                 android:textAlignment="center"
                 android:textAllCaps="false"
@@ -203,6 +214,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#80E0E0E0"
+            android:onClick="onSettingsButtonClicked"
             android:orientation="vertical">
 
             <ImageButton
@@ -211,6 +223,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onSettingsButtonClicked"
                 android:src="@drawable/settings" />
@@ -221,6 +234,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat"
+                android:onClick="onSettingsButtonClicked"
                 android:text="Настройки"
                 android:textAlignment="center"
                 android:textColor="#000000"

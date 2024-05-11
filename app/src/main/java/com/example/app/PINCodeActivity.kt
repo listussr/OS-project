@@ -12,6 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.app.databinding.ActivityPinCodeEnteringBinding
 import java.io.IOException
 import java.nio.charset.Charset
 
@@ -42,13 +43,33 @@ class PINCodeActivity : AppCompatActivity() {
      */
     private val widgetArray = arrayOf(R.id.circleOneEnter, R.id.circleTwoEnter, R.id.circleThreeEnter, R.id.circleFourEnter, R.id.circleFiveEnter)
 
+    private lateinit var binding: ActivityPinCodeEnteringBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pin_code_entering)
+        binding = ActivityPinCodeEnteringBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme(getColorTheme())
+        setLanguageInViews()
         appPassword = unmaskPassword(getAppPassword())
+    }
 
+    /**
+     * Устанавливаем язык во всех виджетах на activity
+     */
+    private fun setLanguageInViews() {
+        val language = getLanguageFlag()
+        if(!language){
+            binding.textViewApproveEnterPin.text = getString(R.string.t_enter_password_eng)
+        }
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", false)
     }
 
     /**

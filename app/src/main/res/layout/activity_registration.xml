@@ -38,7 +38,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/textViewRegistrationReg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="80dp"
@@ -70,6 +70,7 @@
             android:textAlignment="textStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="#656565"
+            android:textColorHint="#B3656565"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -88,6 +89,7 @@
             android:inputType="textPassword"
             android:textAlignment="textStart"
             android:textColor="#656565"
+            android:textColorHint="#B3656565"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -106,6 +108,7 @@
             android:inputType="textPassword"
             android:textAlignment="textStart"
             android:textColor="#656565"
+            android:textColorHint="#B3656565"
             android:textSize="18sp"
             android:textStyle="bold" />
 

@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import com.example.app.databinding.ActivityChangingPinBinding
+import com.example.app.databinding.ActivityLoginBinding
 
 class ChangingPinActivity : AppCompatActivity() {
 
@@ -22,6 +24,8 @@ class ChangingPinActivity : AppCompatActivity() {
     private var index: Int = 0
     private var password = arrayOf(0, 0, 0, 0, 0)
 
+    private lateinit var binding: ActivityChangingPinBinding
+
     /**
      * Массив виджетов для отображения количества введённых символов пароля
      */
@@ -29,9 +33,28 @@ class ChangingPinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_changing_pin)
+        binding = ActivityChangingPinBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
         setColorTheme(getColorTheme())
+        setLanguageInViews()
+    }
+
+    /**
+     * Устанавливаем язык во всех виджетах на activity
+     */
+    private fun setLanguageInViews() {
+        val language = getLanguageFlag()
+        if(!language){
+            binding.textViewApproveChangePinAccept.text = getString(R.string.t_imagine_password_eng)
+        }
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", false)
     }
 
     /**

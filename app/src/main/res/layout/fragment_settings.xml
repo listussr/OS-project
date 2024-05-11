@@ -14,7 +14,7 @@
         android:backgroundTint="#F7F7F7">
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/textViewThemeSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
@@ -36,7 +36,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19">
+            app:layout_constraintTop_toBottomOf="@+id/textViewThemeSettings">
 
             <Button
                 android:id="@+id/lightThemeButton"

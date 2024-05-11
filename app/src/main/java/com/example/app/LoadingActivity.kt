@@ -40,6 +40,10 @@ class LoadingActivity : AppCompatActivity() {
             editor.putBoolean("RememberUser", false)
             editor.commit()
         }
+        if(!settings.contains("Language")){
+            editor.putBoolean("Language", false)
+            editor.commit()
+        }
     }
 
     /**
