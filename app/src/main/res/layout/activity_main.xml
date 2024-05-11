@@ -106,7 +106,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="onTableClicked"
-                android:src="@drawable/table" />
+                android:src="@drawable/_844437_hamburger_list_menu_more_navigation_110311" />
 
             <TextView
                 android:id="@+id/textViewOperationNav"
@@ -226,7 +226,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:backgroundTint="#80E0E0E0"
                 android:onClick="onSettingsButtonClicked"
-                android:src="@drawable/settings" />
+                android:src="@drawable/_849830_gear_interface_multimedia_options_setting_settings_107986" />
 
             <TextView
                 android:id="@+id/textViewSettingsNav"

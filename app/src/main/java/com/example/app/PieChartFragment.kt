@@ -1,6 +1,8 @@
 package com.example.app
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +22,13 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
 
     private var _binding : FragmentPieChartBinding? = null
     private val binding get() = _binding!!
+    private lateinit var settings: SharedPreferences
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settings = context?.getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)!!
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +43,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         onLastMonthClicked()
         onThreeMonthsClicked()
         onCurrentYearClicked()
+        translateViews()
     }
 
     override fun onStart() {
@@ -41,6 +51,25 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         binding.pieChartExpenses.setInfoList(listOfInfoExpenses)
         binding.pieChartIncome.setInfoList(listOfInfoIncome)
     }
+
+    private fun translateViews() {
+        if(!getLanguageFlag()) {
+            binding.IncomeTextViewPlan.text = getString(R.string.t_income_eng)
+            binding.ExpensesTextViewPlan.text = getString(R.string.t_expenses_eng)
+            binding.buttonCurrentMonth.text = "April"
+            binding.buttonLastMonth.text = "March"
+            binding.buttonThreeMonths.text = getString(R.string.t_3_months_eng)
+            binding.buttonCurrentYear.text = getString(R.string.t_2024)
+        }
+    }
+
+    /**
+     * Получаем из настроек язык приложения
+     */
+    private fun getLanguageFlag() : Boolean {
+        return settings.getBoolean("Language", true)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

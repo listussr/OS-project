@@ -67,6 +67,19 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+
+    // Coroutines to make the HTTP requests asynchronous(In the background thread)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Okhttp3 for the POST requests
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
+    // Gson to convert raw JSON to pretty JSON
+    implementation("com.google.code.gson:gson:2.8.9")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
