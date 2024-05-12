@@ -44,6 +44,14 @@ class LoadingActivity : AppCompatActivity() {
             editor.putBoolean("Language", false)
             editor.commit()
         }
+        if(!settings.contains("LastExpenses")){
+            editor.putString("LastExpenses", "null")
+            editor.commit()
+        }
+        if(!settings.contains("LastIncomes")){
+            editor.putString("LastIncomes", "null")
+            editor.commit()
+        }
     }
 
     /**

@@ -16,12 +16,16 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.example.app.databinding.ActivityMainBinding
 import com.example.app.databinding.ActivityReportBinding
+import com.example.app.dataprocessing.APIServer
+import com.example.app.dataprocessing.JsonToRawDataClass
+import com.example.app.dataprocessing.ServerInteraction
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     private var fragmentNum: Int = 2
     private lateinit var binding: ActivityMainBinding
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var outOfDictionaryFlag: Boolean = false
     private var word: String = ""
 
+    private val dataModel: DataModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -47,6 +52,13 @@ class MainActivity : AppCompatActivity() {
         chooseStartFragment()
         setLanguageView()
         setAutoCompleteList()
+        //JsonToRawDataClass.testJson()
+        //ServerInteraction.Category.apiGetEmployee()
+        dataModel.message.observe(this) {
+            settings.edit().putString("LastExpenses", it[0]).commit()
+            settings.edit().putString("LastIncomes", it[1]).commit()
+            Log.v("App", "Updated settings with pie chart")
+        }
     }
 
     /**
@@ -254,4 +266,5 @@ class MainActivity : AppCompatActivity() {
             layout.visibility = View.GONE
         }
     }
+
 }

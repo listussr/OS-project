@@ -8,7 +8,9 @@ import android.view.View
 import android.graphics.Color
 import android.os.Build
 import android.os.Parcelable
+import android.util.Log
 import com.example.app.R
+import com.example.app.dataprocessing.MoneyInteractionClass
 import kotlin.random.Random
 
 
@@ -32,7 +34,7 @@ class PieChart @JvmOverloads constructor(
     private var marginTextBottom: Float = 5.0f
     private var marginTextTop: Float = 55.0f
     private var rectangleColor: String = "#000000"
-    private lateinit var listOfInfo: List<Pair<Int, String>>
+    private lateinit var listOfInfo: Array<MoneyInteractionClass>
     private var rectangleType: Boolean = true
     private var paintR: Paint = Paint()
     private var paintC: Paint = Paint()
@@ -45,7 +47,6 @@ class PieChart @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = MeasureSpec.makeMeasureSpec(widthMeasureSpec, MeasureSpec.UNSPECIFIED)
     }
 
     init {
@@ -68,14 +69,17 @@ class PieChart @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas){
         super.onDraw(canvas)
         if(listOfInfo.isNotEmpty()) {
-            //drawRectangle(canvas)
+            for(i in listOfInfo){
+                Log.v("App", i.toString())
+            }
             drawCircle(canvas)
+            Log.v("App", "Draw circle")
             drawLegend(canvas)
         } else {
+            Log.v("App", "List is empty")
             val xCoordinate = (width / 3).toFloat()
             val yCoordinate = (height / 2).toFloat()
-            val radius = (2 * width / 7).toFloat()
-            //canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintR)
+            val radius = (2 * width / 9).toFloat()
             canvas.drawCircle(xCoordinate, yCoordinate, radius, paintC)
             textStartPointY = marginTextTop
             textStartPointX = (width / 4) * 3f
@@ -94,7 +98,7 @@ class PieChart @JvmOverloads constructor(
         val pieChartState = state as? PieChartState
         super.onRestoreInstanceState(state)
 
-        listOfInfo = pieChartState?.dataList ?: listOf()
+        listOfInfo = pieChartState?.dataList ?: arrayOf()
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -102,8 +106,29 @@ class PieChart @JvmOverloads constructor(
         return PieChartState(superState, listOfInfo)
     }
 
-    fun setInfoList(list: List<Pair<Int, String>>) {
+    /**
+     * Устанавливаем значение внутри круговой диаграммы
+     */
+    fun setInfoList(list: Array<MoneyInteractionClass>) {
         listOfInfo = list
+    }
+
+    /**
+     * Считаем сколько процентов от диаграммы занимает конкретный раздел
+     */
+    private fun countPercentage() : ArrayList<Float> {
+        var sum = 0f
+        for(i in listOfInfo.indices){
+            sum += listOfInfo[i].value
+        }
+        Log.d("App", "Sum: $sum")
+        val listOfPercents = ArrayList<Float>()
+        for(i in listOfInfo.indices){
+            Log.d("App", "Element: ${listOfInfo[i]}")
+            listOfPercents.add((listOfInfo[i].value / sum) * 100f)
+            Log.v("App", "Percents: ${(listOfInfo[i].value / sum).toFloat()}")
+        }
+        return listOfPercents
     }
 
     /**
@@ -113,10 +138,12 @@ class PieChart @JvmOverloads constructor(
         val xCoordinate = (width / 3).toFloat()
         val yCoordinate = (height / 2).toFloat()
         val radius = (2 * width / 9).toFloat()
-        for(i in listOfInfo.indices){
+        val percentageList = countPercentage()
+        Log.v("App", "Counted percents")
+        for(i in percentageList.indices){
             paintC.color = colorArray[i % 4]
             startAngle += sweepAngle
-            sweepAngle = 360f * listOfInfo[i].first / 100f
+            sweepAngle = 360f * percentageList[i] / 100f
             canvas.drawArc(
                 xCoordinate - radius,
                 yCoordinate - radius,
@@ -138,7 +165,7 @@ class PieChart @JvmOverloads constructor(
             textStartPointY += marginTextTop + if (i > 0) marginTextBottom else 0f
             textStartPointX = (width / 4) * 3f
             canvas.drawText(
-                listOfInfo[i].second,
+                listOfInfo[i].category.name,
                 textStartPointX,
                 textStartPointY,
                 paintT
