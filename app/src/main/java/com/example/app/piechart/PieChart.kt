@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Parcelable
 import android.util.Log
 import com.example.app.R
+import com.example.app.dataprocessing.CategoryClass
 import com.example.app.dataprocessing.MoneyInteractionClass
 import kotlin.random.Random
 
@@ -35,6 +36,7 @@ class PieChart @JvmOverloads constructor(
     private var marginTextTop: Float = 55.0f
     private var rectangleColor: String = "#000000"
     private lateinit var listOfInfo: Array<MoneyInteractionClass>
+    private lateinit var listOfCategory: Array<CategoryClass>
     private var rectangleType: Boolean = true
     private var paintR: Paint = Paint()
     private var paintC: Paint = Paint()
@@ -44,6 +46,7 @@ class PieChart @JvmOverloads constructor(
     private var sweepAngle = 0f
     private var textStartPointX = 0f
     private var textStartPointY = 0f
+    private var categorySum: ArrayList<Float> = ArrayList()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -68,7 +71,7 @@ class PieChart @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas){
         super.onDraw(canvas)
-        if(listOfInfo.isNotEmpty()) {
+        if(listOfInfo.isNotEmpty() && listOfCategory.isNotEmpty()) {
             for(i in listOfInfo){
                 Log.v("App", i.toString())
             }
@@ -76,7 +79,7 @@ class PieChart @JvmOverloads constructor(
             Log.v("App", "Draw circle")
             drawLegend(canvas)
         } else {
-            Log.v("App", "List is empty")
+            Log.e("App", "ListOfInfo empty: ${listOfInfo.isEmpty()}, ListOfCategory empty: ${listOfCategory.isEmpty()}")
             val xCoordinate = (width / 3).toFloat()
             val yCoordinate = (height / 2).toFloat()
             val radius = (2 * width / 9).toFloat()
@@ -99,18 +102,20 @@ class PieChart @JvmOverloads constructor(
         super.onRestoreInstanceState(state)
 
         listOfInfo = pieChartState?.dataList ?: arrayOf()
+        listOfCategory = pieChartState?.categoryList ?: arrayOf()
     }
 
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
-        return PieChartState(superState, listOfInfo)
+        return PieChartState(superState, listOfInfo, listOfCategory)
     }
 
     /**
      * Устанавливаем значение внутри круговой диаграммы
      */
-    fun setInfoList(list: Array<MoneyInteractionClass>) {
+    fun setInfoList(list: Array<MoneyInteractionClass>, categoryList: Array<CategoryClass>) {
         listOfInfo = list
+        listOfCategory = categoryList
     }
 
     /**
@@ -118,17 +123,37 @@ class PieChart @JvmOverloads constructor(
      */
     private fun countPercentage() : ArrayList<Float> {
         var sum = 0f
-        for(i in listOfInfo.indices){
-            sum += listOfInfo[i].value
+        countSumInEveryCategory()
+        for(i in categorySum.indices) {
+            Log.w("App", "i=${i}, categorySum.size=${categorySum.size}, listOfCategory.size=${listOfCategory.size}")
+//            Log.v("App", "Category ${listOfCategory[i].name}: sum inside = ${categorySum[i]}")
+            sum += categorySum[i]
         }
         Log.d("App", "Sum: $sum")
         val listOfPercents = ArrayList<Float>()
-        for(i in listOfInfo.indices){
-            Log.d("App", "Element: ${listOfInfo[i]}")
-            listOfPercents.add((listOfInfo[i].value / sum) * 100f)
-            Log.v("App", "Percents: ${(listOfInfo[i].value / sum).toFloat()}")
+        for(i in categorySum.indices) {
+            listOfPercents.add((categorySum[i] / sum) * 100f)
+            Log.e("App", "Percents for ${listOfCategory[i].name}: ${(categorySum[i] / sum).toFloat()}")
         }
         return listOfPercents
+    }
+
+    /**
+     * Считаем суммарные расходы в каждой категории
+     */
+    private fun countSumInEveryCategory() {
+        Log.v("App", "List of category size = ${listOfCategory.size}")
+        for(category in listOfCategory){
+            var sum = 0f
+            for(moneyInteraction in listOfInfo){
+                if(moneyInteraction.category.name == category.name){
+                    Log.w("App", "Category: ${category.name}, money: categ. ${moneyInteraction.category.name}, val. ${moneyInteraction.value}")
+                    sum += moneyInteraction.value
+                    Log.w("App", "Sum = $sum")
+                }
+            }
+            categorySum.add(sum)
+        }
     }
 
     /**
@@ -141,19 +166,21 @@ class PieChart @JvmOverloads constructor(
         val percentageList = countPercentage()
         Log.v("App", "Counted percents")
         for(i in percentageList.indices){
-            paintC.color = colorArray[i % 4]
-            startAngle += sweepAngle
-            sweepAngle = 360f * percentageList[i] / 100f
-            canvas.drawArc(
-                xCoordinate - radius,
-                yCoordinate - radius,
-                xCoordinate + radius,
-                yCoordinate + radius,
-                startAngle,
-                sweepAngle,
-                false,
-                paintC
-            )
+            if(categorySum[i] != 0f) {
+                paintC.color = colorArray[i % 4]
+                startAngle += sweepAngle
+                sweepAngle = 360f * percentageList[i] / 100f
+                canvas.drawArc(
+                    xCoordinate - radius,
+                    yCoordinate - radius,
+                    xCoordinate + radius,
+                    yCoordinate + radius,
+                    startAngle,
+                    sweepAngle,
+                    false,
+                    paintC
+                )
+            }
         }
     }
 
@@ -161,23 +188,26 @@ class PieChart @JvmOverloads constructor(
      * Функция отрисовки текста "легенды"
      */
     private fun drawLegend(canvas: Canvas) {
-        for(i in listOfInfo.indices) {
-            textStartPointY += marginTextTop + if (i > 0) marginTextBottom else 0f
-            textStartPointX = (width / 4) * 3f
-            canvas.drawText(
-                listOfInfo[i].category.name,
-                textStartPointX,
-                textStartPointY,
-                paintT
-            )
-            paintC.color = colorArray[i % 4]
-            paintC.style = Paint.Style.FILL
-            canvas.drawCircle(
-                textStartPointX - 30f,
-                textStartPointY,
-                15f,
-                paintC
-            )
+        Log.v("App", "Drawing legend")
+        for(i in listOfCategory.indices) {
+            if(categorySum[i] != 0f) {
+                textStartPointY += marginTextTop + if (i > 0) marginTextBottom else 0f
+                textStartPointX = (width / 4) * 3f
+                canvas.drawText(
+                    listOfInfo[i].category.name,
+                    textStartPointX,
+                    textStartPointY,
+                    paintT
+                )
+                paintC.color = colorArray[i % 4]
+                paintC.style = Paint.Style.FILL
+                canvas.drawCircle(
+                    textStartPointX - 30f,
+                    textStartPointY,
+                    15f,
+                    paintC
+                )
+            }
         }
     }
 
@@ -187,7 +217,7 @@ class PieChart @JvmOverloads constructor(
         textStartPointX = 0f
         textStartPointY = 0f
         paintC.style = Paint.Style.STROKE
-
+        categorySum.clear()
         super.invalidate()
     }
 

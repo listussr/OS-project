@@ -48,8 +48,20 @@ class LoadingActivity : AppCompatActivity() {
             editor.putString("LastExpenses", "null")
             editor.commit()
         }
-        if(!settings.contains("LastIncomes")){
-            editor.putString("LastIncomes", "null")
+        if(!settings.contains("LastIncome")){
+            editor.putString("LastIncome", "null")
+            editor.commit()
+        }
+        if(!settings.contains("AnalyticsPeriod")){
+            editor.putInt("LastIncomes", 1)
+            editor.commit()
+        }
+        if(!settings.contains("LastExpensesCategory")){
+            editor.putString("LastExpensesCategory", "null")
+            editor.commit()
+        }
+        if(!settings.contains("LastIncomeCategory")){
+            editor.putString("LastIncomeCategory", "null")
             editor.commit()
         }
     }
@@ -59,7 +71,7 @@ class LoadingActivity : AppCompatActivity() {
      */
     private fun getWasRegisteredFlag() : Boolean {
         val wasRegistered: Boolean = settings.getBoolean("WasRegistered", true)
-        Toast.makeText(applicationContext, "Was registered, $wasRegistered", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Was registered, $wasRegistered", Toast.LENGTH_LONG).show()
         return wasRegistered
     }
 
@@ -68,7 +80,7 @@ class LoadingActivity : AppCompatActivity() {
      */
     private fun getRememberUserFlag() : Boolean {
         val rememberUserFlag: Boolean = settings.getBoolean("RememberUser", false)
-        Toast.makeText(applicationContext, "Was registered, $rememberUserFlag", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Was registered, $rememberUserFlag", Toast.LENGTH_LONG).show()
         return rememberUserFlag
     }
 

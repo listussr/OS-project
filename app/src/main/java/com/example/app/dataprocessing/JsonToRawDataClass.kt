@@ -156,4 +156,9 @@ object JsonToRawDataClass {
         val gson : String = Gson().toJson(arr)
         return gson
     }
+
+    fun toCategoryArrayJson(arr: Array<CategoryClass>): String {
+        val gson : String = Gson().toJson(arr)
+        return gson
+    }
 }

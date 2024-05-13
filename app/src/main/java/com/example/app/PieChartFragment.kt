@@ -25,6 +25,8 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
 
     private var expensesArray: Array<MoneyInteractionClass> = arrayOf()
     private var incomesArray: Array<MoneyInteractionClass> = arrayOf()
+    private var expenseCategoryArray: Array<CategoryClass> = arrayOf()
+    private var incomeCategoryArray: Array<CategoryClass> = arrayOf()
 
     private var periodNum = 1
 
@@ -51,9 +53,13 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         onLastMonthClicked()
         onThreeMonthsClicked()
         onCurrentYearClicked()
+        setStartButton()
         translateViews()
+        //Log.d("App", "Before get Expenses")
         getLastExpenses()
+        //Log.d("App", "Got expenses")
         getLastIncomes()
+        //Log.d("App", "Starting setButton")
     }
 
     /**
@@ -68,8 +74,86 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      * Установка новых данных в круговые диаграммы
      */
     private fun updatePieCharts() {
-        binding.pieChartExpenses.setInfoList(expensesArray)
-        binding.pieChartIncome.setInfoList(incomesArray)
+        binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
+        binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
+    }
+
+    /**
+     * Задаём начальное положение для кнопки выбора периода
+     */
+    private fun setStartButton() {
+        periodNum = settings.getInt("AnalyticsPeriod", 1)
+        when(periodNum){
+            1 -> {
+                setCurrentMonthButtonOn()
+            }
+            2 -> {
+                setLastMonthButtonOn()
+            }
+            3 -> {
+                setThreeMonthButtonOn()
+            }
+            4 -> {
+                setCurrentYearButtonOn()
+            }
+        }
+        Log.d("App", "Ended button setting")
+    }
+
+    /**
+     * Устанавливаем видимость нажатия на кнопку с текущим месяцем
+     */
+    private fun setCurrentMonthButtonOn() {
+        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
+        binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
+        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+        binding.buttonLastMonth.setTextColor(Color.BLACK)
+        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+        binding.buttonThreeMonths.setTextColor(Color.BLACK)
+        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+    }
+
+    /**
+     * Устанавливаем видимость нажатия на кнопку с прошлым месяцем
+     */
+    private fun setLastMonthButtonOn() {
+        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
+        binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
+        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+        binding.buttonThreeMonths.setTextColor(Color.BLACK)
+        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+    }
+
+    /**
+     * Устанавливаем видимость нажатия на кнопку с прошлыми 3 месяцами
+     */
+    private fun setThreeMonthButtonOn() {
+        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+        binding.buttonLastMonth.setTextColor(Color.BLACK)
+        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_on)
+        binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F1F1"))
+        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+    }
+
+    /**
+     * Устанавливаем видимость нажатия на кнопку с текущим годом
+     */
+    private fun setCurrentYearButtonOn() {
+        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+        binding.buttonLastMonth.setTextColor(Color.BLACK)
+        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+        binding.buttonThreeMonths.setTextColor(Color.BLACK)
+        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_on)
+        binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F1F1"))
     }
 
     /**
@@ -82,26 +166,40 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         } else {
             arrayOf()
         }
-    }
-
-    /**
-     * Получаем последнюю версию диаграммы с доходами
-     */
-    private fun getLastIncomes() {
-        val incomesString = settings.getString("LastIncomes", "")
-        incomesArray = if(incomesString!! != "null") {
-            JsonToRawDataClass.moneyInteractionListJson(incomesString)!!
+        val expenseCategoryString = settings.getString("LastExpensesCategory", "")
+        expenseCategoryArray = if(expenseCategoryString != "null") {
+            JsonToRawDataClass.categoriesListJson(expenseCategoryString)!!
         } else {
             arrayOf()
         }
     }
 
     /**
-     * Сохраняем в настройки посленднюю версию диаграммы с расходами
+     * Получаем последнюю версию диаграммы с доходами
+     */
+    private fun getLastIncomes() {
+        val incomesString = settings.getString("LastIncome", "")
+        //Log.e("App", "Get last Incomes: $incomesString")
+        incomesArray = if(incomesString!! != "null") {
+            JsonToRawDataClass.moneyInteractionListJson(incomesString)!!
+        } else {
+            arrayOf()
+        }
+        val incomesCategoryString = settings.getString("LastIncomeCategory", "")
+        Log.v("App", "Income category: $incomesCategoryString")
+        incomeCategoryArray = if(incomesCategoryString != "null") {
+            JsonToRawDataClass.categoriesListJson(incomesCategoryString)!!
+        } else {
+            arrayOf()
+        }
+    }
+
+    /**
+     * Сохраняем в настройки последнюю версию диаграммы с расходами
      */
     private fun getLastExpensesString() : String {
         val strArray: String = if(expensesArray.isNotEmpty()) {
-            Log.v("App", "Expenses: ${expensesArray.toString()}")
+            //Log.v("App", "Expenses: ${expensesArray.toString()}")
             JsonToRawDataClass.toMoneyInteractionArrayJson(expensesArray)
         } else {
             "null"
@@ -114,7 +212,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastIncomesString() : String {
         val strArray: String = if(incomesArray.isNotEmpty()) {
-            Log.v("App", "Expenses: ${expensesArray.toString()}")
+            //Log.v("App", "Incomes: ${expensesArray.toString()}")
             JsonToRawDataClass.toMoneyInteractionArrayJson(incomesArray)
         } else {
             "null"
@@ -123,15 +221,46 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     }
 
     /**
+     * Сохраняем в настройки последнюю версию диаграммы с расходами
+     */
+    private fun getLastExpensesCategoryString() : String {
+        val strArray: String = if(expenseCategoryArray.isNotEmpty()) {
+            //Log.v("App", "Expenses: ${expenseCategoryArray.toString()}")
+            JsonToRawDataClass.toCategoryArrayJson(expenseCategoryArray)
+        } else {
+            "null"
+        }
+        return strArray
+    }
+
+    /**
+     * Сохраняем в настройки посленднюю версию диаграммы с доходами
+     */
+    private fun getLastIncomesCategoryString() : String {
+        val strArray: String = if(incomeCategoryArray.isNotEmpty()) {
+            Log.v("App", "Incomes: ${incomeCategoryArray.toString()}")
+            JsonToRawDataClass.toCategoryArrayJson(incomeCategoryArray)
+        } else {
+            "null"
+        }
+        return strArray
+    }
+
+
+    /**
      * Отмечаем изменения данных для круговых диаграмм
      */
     private fun sendUpdatesToActivity() {
-        Log.v("App", "Expenses: ${getLastExpensesString()}")
-        Log.v("App", "Incomes: ${getLastIncomesString()}")
+        //Log.v("App", "Expenses: ${getLastExpensesString()}")
+        //Log.v("App", "Incomes: ${getLastIncomesString()}")
         dataModel.message.value = listOf(
             getLastExpensesString(),
             getLastIncomesString()
         )
+        settings.edit().putString("LastExpenses", getLastExpensesString()).commit()
+        settings.edit().putString("LastIncome", getLastIncomesString()).commit()
+        settings.edit().putString("LastExpensesCategory", getLastExpensesCategoryString()).commit()
+        settings.edit().putString("LastIncomeCategory", getLastIncomesCategoryString()).commit()
     }
 
     /**
@@ -154,7 +283,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLanguageFlag() : Boolean {
         return settings.getBoolean("Language", true)
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -230,8 +358,15 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     )
                 )
             )
-            binding.pieChartExpenses.setInfoList(expensesArray)
-            binding.pieChartIncome.setInfoList(incomesArray)
+            incomeCategoryArray = arrayOf(
+                CategoryClass(
+                    "food",
+                    "1243"
+                )
+            )
+            expenseCategoryArray = incomeCategoryArray
+            binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
+            binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
             binding.pieChartIncome.invalidate()
             changeButtonsCurrentMonth()
@@ -308,8 +443,28 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     )
                 )
             )
-            binding.pieChartExpenses.setInfoList(expensesArray)
-            binding.pieChartIncome.setInfoList(incomesArray)
+            incomeCategoryArray = arrayOf(
+                CategoryClass(
+                    "Еда",
+                    "1243"
+                ),
+                CategoryClass(
+                    "Дом",
+                    "1000"
+                )
+            )
+            expenseCategoryArray = arrayOf(
+                CategoryClass(
+                    "Еда",
+                    "1243"
+                ),
+                CategoryClass(
+                    "Авто",
+                    "1000"
+                )
+            )
+            binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
+            binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
             binding.pieChartIncome.invalidate()
             changeButtonsLastMonth()
@@ -381,13 +536,29 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                         "list@mail.ru"
                     ),
                     CategoryClass(
-                        "food",
+                        "Авто",
                         "bknl"
                     )
                 )
             )
-            binding.pieChartExpenses.setInfoList(expensesArray)
-            binding.pieChartIncome.setInfoList(incomesArray)
+            incomeCategoryArray = arrayOf(
+                CategoryClass(
+                    "food",
+                    "1243"
+                )
+            )
+            expenseCategoryArray = arrayOf(
+                CategoryClass(
+                    "food",
+                    "1243"
+                ),
+                CategoryClass(
+                    "Авто",
+                    "1000"
+                )
+            )
+            binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
+            binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
             binding.pieChartIncome.invalidate()
             changeButtonsThreeMonths()
@@ -445,7 +616,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                         "list@mail.ru"
                     ),
                     CategoryClass(
-                        "food",
+                        "Дом",
                         "bknl"
                     )
                 ),
@@ -465,13 +636,38 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     )
                 )
             )
-            binding.pieChartExpenses.setInfoList(expensesArray)
-            binding.pieChartIncome.setInfoList(incomesArray)
+            incomeCategoryArray = arrayOf(
+                CategoryClass(
+                    "food",
+                    "1243"
+                )
+            )
+            expenseCategoryArray = arrayOf(
+                CategoryClass(
+                    "food",
+                    "1243"
+                ),
+                CategoryClass(
+                    "Дом",
+                    "1000"
+                )
+            )
+            binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
+            binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
             binding.pieChartIncome.invalidate()
             sendUpdatesToActivity()
             changeButtonsCurrentYear()
         }
+    }
+
+    /**
+     * Сохраняем состояние кнопки
+     */
+    private fun saveButtonState() {
+        settings.edit()
+            .putInt("AnalyticsPeriod", periodNum)
+            .commit()
     }
 
     /**
@@ -481,6 +677,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
         binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
         when(periodNum){
+            1 -> {}
             2 -> {
                 binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
                 binding.buttonLastMonth.setTextColor(Color.BLACK)
@@ -495,13 +692,14 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
             }
         }
         periodNum = 1
+        saveButtonState()
     }
 
     /**
      * Меняем внешний вид кнопок по нажатию на кнопку с последним месяцем
      */
     private fun changeButtonsLastMonth() {
-        Log.v("App", "On last month clicked")
+        //Log.v("App", "On last month clicked")
         binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
         binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
         when(periodNum){
@@ -509,6 +707,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                 binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
                 binding.buttonCurrentMonth.setTextColor(Color.BLACK)
             }
+            2 -> {}
             3 -> {
                 binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
                 binding.buttonThreeMonths.setTextColor(Color.BLACK)
@@ -519,6 +718,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
             }
         }
         periodNum = 2
+        saveButtonState()
     }
 
     /**
@@ -536,12 +736,14 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                 binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
                 binding.buttonLastMonth.setTextColor(Color.BLACK)
             }
+            3 -> {}
             4 -> {
                 binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
                 binding.buttonCurrentYear.setTextColor(Color.BLACK)
             }
         }
         periodNum = 3
+        saveButtonState()
     }
 
     /**
@@ -563,8 +765,10 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                 binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
                 binding.buttonThreeMonths.setTextColor(Color.BLACK)
             }
+            4 -> {}
         }
         periodNum = 4
+        saveButtonState()
     }
 
     companion object {

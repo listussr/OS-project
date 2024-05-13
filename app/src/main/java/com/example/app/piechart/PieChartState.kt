@@ -2,6 +2,7 @@ package com.example.app.piechart
 
 import android.os.Parcelable
 import android.view.View.BaseSavedState
+import com.example.app.dataprocessing.CategoryClass
 import com.example.app.dataprocessing.MoneyInteractionClass
 
 /**
@@ -9,6 +10,7 @@ import com.example.app.dataprocessing.MoneyInteractionClass
  */
 class PieChartState(
     private val superSavedState: Parcelable?,
-    val dataList: Array<MoneyInteractionClass>
+    val dataList: Array<MoneyInteractionClass>,
+    val categoryList: Array<CategoryClass>
 ) : BaseSavedState(superSavedState), Parcelable {
 }

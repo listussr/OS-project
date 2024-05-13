@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity(){
         chooseStartFragment()
         setLanguageView()
         setAutoCompleteList()
-        //JsonToRawDataClass.testJson()
-        //ServerInteraction.Category.apiGetEmployee()
         dataModel.message.observe(this) {
             settings.edit().putString("LastExpenses", it[0]).commit()
             settings.edit().putString("LastIncomes", it[1]).commit()

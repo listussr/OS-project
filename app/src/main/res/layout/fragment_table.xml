@@ -40,6 +40,7 @@
                         android:layout_marginStart="30dip"
                         android:fontFamily="@font/montserrat"
                         android:text="Категория"
+                        android:textColor="#454545"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
@@ -50,6 +51,7 @@
                         android:layout_marginStart="70dip"
                         android:fontFamily="@font/montserrat"
                         android:text="Дата"
+                        android:textColor="#454545"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
@@ -60,6 +62,7 @@
                         android:layout_marginStart="70dip"
                         android:fontFamily="@font/montserrat"
                         android:text="Сумма"
+                        android:textColor="#454545"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
