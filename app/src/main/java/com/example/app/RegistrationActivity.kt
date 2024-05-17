@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.databinding.ActivityRegistrationBinding
+import com.example.app.dataprocessing.ServerInteraction
+import com.example.app.dataprocessing.UserRegClass
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -111,10 +113,12 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * Переход на страницу задания PIN кода приложения
      */
-    private fun toAcceptCode() {
+    private fun toAcceptCode(email: String, password: String) {
         val intent = Intent(this@RegistrationActivity, RegistrationAcceptCodeActivity::class.java)
+        intent.putExtra("Email", email)
+        intent.putExtra("Password", password)
         startActivity(intent)
-        finish()
+        //finish()
     }
 
     /**
@@ -163,12 +167,14 @@ class RegistrationActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, "Password can't be empty!", Toast.LENGTH_LONG).show()
             }
-        } else if(!arePasswordsEqual(passwordString, passwordStringCopy)){
-            changeBackgroundPasswordApprove()
         } else if(!isEmailValid(emailString)){
             changeBackgroundLogin()
+        } else if(!arePasswordsEqual(passwordString, passwordStringCopy)){
+            changeBackgroundPasswordApprove()
+        } else if(passwordString.length < 8){
+            Toast.makeText(applicationContext, "Минимальная длина пароля составляет 8 символов", Toast.LENGTH_LONG).show()
         } else {
-            toAcceptCode()
+            toAcceptCode(emailString, passwordString)
         }
     }
 }

@@ -2,8 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#F9F9F9"
+    android:orientation="vertical"
     tools:context=".RegistrationAcceptCodeActivity">
 
     <TextView
@@ -63,6 +66,7 @@
             android:inputType="textPassword"
             android:textAlignment="textStart"
             android:textColor="#656565"
+            android:textColorHint="#B3656565"
             android:textSize="18sp"
             android:textStyle="bold" />
 

@@ -53,7 +53,7 @@ class LoadingActivity : AppCompatActivity() {
             editor.commit()
         }
         if(!settings.contains("AnalyticsPeriod")){
-            editor.putInt("LastIncomes", 1)
+            editor.putInt("AnalyticsPeriod", 1)
             editor.commit()
         }
         if(!settings.contains("LastExpensesCategory")){
@@ -62,6 +62,14 @@ class LoadingActivity : AppCompatActivity() {
         }
         if(!settings.contains("LastIncomeCategory")){
             editor.putString("LastIncomeCategory", "null")
+            editor.commit()
+        }
+        if(!settings.contains("UsersUUID")){
+            editor.putString("UsersUUID", "null")
+            editor.commit()
+        }
+        if(!settings.contains("UserPassword")){
+            editor.putString("UserPassword", "12345")
             editor.commit()
         }
     }

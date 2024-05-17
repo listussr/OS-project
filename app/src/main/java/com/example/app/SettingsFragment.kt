@@ -37,6 +37,7 @@ class SettingsFragment : Fragment() {
         binding.changePasswordButton.setOnClickListener { onChangePINButtonClicked() }
         binding.englishLanguageButton.setOnClickListener { onEnglishClicked() }
         binding.russianLanguageButton.setOnClickListener { onRussianClicked() }
+        binding.leaveProfileButton.setOnClickListener { onLeaveProfileClicked() }
         setThemeButtonsState()
         setLanguage()
         return binding.root
@@ -100,6 +101,32 @@ class SettingsFragment : Fragment() {
      */
     private fun getLanguageFlag() : Boolean {
         return settings.getBoolean("Language", true)
+    }
+
+    /**
+     * Переходим на страницу регистрации
+     */
+    private fun changeActivity() {
+        val intent = Intent(requireActivity().applicationContext, RegistrationActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
+    /**
+     * Выходим из учётной записи
+     */
+    private fun onLeaveProfileClicked() {
+        val text = binding.leaveProfileButton.text
+        if(text == "Уверены?" || text == "Sure?"){
+            changeActivity()
+        } else {
+            if (getLanguageFlag()) {
+                binding.leaveProfileButton.text = "Уверены?"
+            } else {
+                binding.leaveProfileButton.text = "Sure?"
+            }
+        }
+        settings.edit().putBoolean("RememberUser", false).commit()
     }
 
     /**

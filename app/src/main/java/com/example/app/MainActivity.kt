@@ -3,27 +3,37 @@ package com.example.app
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.opengl.Visibility
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.example.app.databinding.ActivityMainBinding
-import com.example.app.databinding.ActivityReportBinding
 import com.example.app.dataprocessing.APIServer
-import com.example.app.dataprocessing.JsonToRawDataClass
+import com.example.app.dataprocessing.FilterClass
+import com.example.app.dataprocessing.JsonConverter
+import com.example.app.dataprocessing.MoneyInteractionClass
+import com.example.app.dataprocessing.MoneyInteractionPostClass
 import com.example.app.dataprocessing.ServerInteraction
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity(){
 
@@ -40,8 +50,41 @@ class MainActivity : AppCompatActivity(){
         "House",
         "Entertainments"
     )
+    private var userId = ""
     private var outOfDictionaryFlag: Boolean = false
     private var word: String = ""
+
+    private val deferredResult: Deferred<String> = CoroutineScope(Dispatchers.IO).async {
+        val url = "http://10.0.2.2:8080"
+        val retrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .build()
+        val service = retrofit.create(APIServer::class.java)
+        var successFlag: Boolean = true
+        val requestBody = JsonConverter.ToJson.toFilterClassArrayJson(
+            arrayOf(FilterClass("name", "Бензин", "EQUAL"))
+        ).toRequestBody("application/json".toMediaTypeOrNull())
+        val response = service.getCategoryByFilter(requestBody)
+        Log.v("AppJson", "Response: ${response.toString()}")
+        val gsonStr = ""
+        withContext(Dispatchers.IO) {
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val prettyJson = gson.toJson(
+                JsonParser.parseString(
+                    response.body()
+                        ?.string()
+                )
+            )
+            successFlag = if (response.isSuccessful) {
+                Log.w("App", prettyJson)
+                true
+            } else {
+                Log.e("App", response.code().toString())
+                false
+            }
+            return@withContext prettyJson
+        }
+    }
 
     private val dataModel: DataModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +95,73 @@ class MainActivity : AppCompatActivity(){
         chooseStartFragment()
         setLanguageView()
         setAutoCompleteList()
-        dataModel.message.observe(this) {
-            settings.edit().putString("LastExpenses", it[0]).commit()
-            settings.edit().putString("LastIncomes", it[1]).commit()
-            Log.v("App", "Updated settings with pie chart")
+        getUUID()
+        var response: String? = ""
+        runBlocking {
+            response = ServerInteraction.Category.apiGetCategoryByFilter(
+                JsonConverter.ToJson.toFilterClassArrayJson(
+                    arrayOf(FilterClass("name", "Еда", ">=")
+                )
+            ))
+            //Log.w("ApplicationJson", response!!)
         }
+        if(response != null)
+            Log.d("AppJson", "After coroutine: $response")
+        else{
+            Log.e("AppJson", "No elements")
+        }
+        //val categoryStr = JsonConverter.FromJson.categoriesListJson(response)!![0].id
+        /*
+        val response = ServerInteraction.Category.apiGetCategoryByFilter(
+            JsonConverter.ToJson.toFilterClassArrayJson(
+                arrayOf(FilterClass("name", "Бензин", "EQUAL"))
+            )
+        )
+        Log.d("ApplicationJson", "Response: $response")
+        */
+        /*val categoryStr = ServerInteraction.Category.apiGetCategoryByFilter(
+            JsonConverter.ToJson.toFilterClassArrayJson(
+                arrayOf(FilterClass("name", "Бензин", "EQUAL"))
+            )
+        )*/
+        val categoryStr = response
+        Log.v("AppJson", "Id: $categoryStr")
+        /*
+        if (categoryStr == null) {
+            Log.v("ApplicationJson", categoryStr)
+            val categoryId = JsonConverter.FromJson.categoriesListJson(categoryStr)!![0].id
+            var response2: String?
+            runBlocking {
+                val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(
+                    MoneyInteractionPostClass(
+                        "test expense",
+                        20000,
+                        categoryId,
+                        userId,
+                        "25.03.24 00:00:00"
+                    )
+                )
+                Log.d("AppJson", request)
+                response2 = ServerInteraction.Expense.apiPostExpensesTest(
+                    request
+                )
+                Log.e("AppJson", "Got response: $response2")
+            }
+            if(response2 != null)
+                Log.w("AppJson", "Response: $response2")
+            else
+                Log.e("AppJson", "Response is null")
+        } else {
+            Log.e("AppJson", "Impossible to connect to server")
+        }
+         */
+    }
+
+    /**
+     * Получаем ID пользователя на сайте из настроек приложения
+     */
+    private fun getUUID() {
+        userId = settings.getString("UserUUID", "").toString()
     }
 
     /**
@@ -125,44 +230,6 @@ class MainActivity : AppCompatActivity(){
      */
     private fun getLanguageFlag() : Boolean {
         return settings.getBoolean("Language", true)
-    }
-
-    private fun lookForAutocompletes() {
-        binding.autoCompleteTextView.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                /**
-                 * TODO (Сделать кнопку на месте выкидного списка при отсутствии подсовпадений у ввода и списка)
-                 */
-                word.plus(p0)
-                if(!outOfDictionaryFlag) {
-                    var wordInDictionaryFlag: Boolean = false
-                    for (i in autocompleteList) {
-                        wordInDictionaryFlag = wordInDictionaryFlag || i.contains(word)
-                    }
-                    if (!wordInDictionaryFlag) {
-                        outOfDictionaryFlag = true
-                        /*
-                        val addValue = arrayOf("Добавить категорию")
-                        adapter = ArrayAdapter<String>(
-                            this, android.R.layout.simple_dropdown_item_1line, addValue
-                        )
-                        binding.autoCompleteTextView.setAdapter(adapter)
-                        */
-                        binding.autoCompleteTextView.completionHint = "Добавить категорию"
-
-                    }
-                }
-            }
-
-        })
     }
 
     private fun setAutoCompleteList() {
@@ -256,6 +323,9 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Обработка нажатия на кнопку добавления дохода
+     */
     fun onAddIncomeClicked(view: View) {
         val layout = findViewById<LinearLayout>(R.id.addingFieldsLayout)
         layout.visibility = View.VISIBLE

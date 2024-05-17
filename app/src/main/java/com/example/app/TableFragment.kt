@@ -21,7 +21,7 @@ import androidx.core.view.marginStart
 import com.example.app.databinding.FragmentPieChartBinding
 import com.example.app.databinding.FragmentTableBinding
 import com.example.app.dataprocessing.CategoryClass
-import com.example.app.dataprocessing.JsonToRawDataClass
+import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.MoneyInteractionClass
 import com.example.app.dataprocessing.TableInfoClass
 import com.example.app.dataprocessing.UserClass
@@ -74,7 +74,7 @@ class TableFragment : Fragment() {
     private fun getLastExpenses(): Array<MoneyInteractionClass> {
         val expensesString = settings.getString("LastExpenses", "")
         val expensesArray = if(expensesString!! != "null") {
-            JsonToRawDataClass.moneyInteractionListJson(expensesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(expensesString)!!
         } else {
             arrayOf()
         }
@@ -88,7 +88,7 @@ class TableFragment : Fragment() {
         val incomesString = settings.getString("LastIncome", "")
         //Log.e("App", "Get last Incomes: $incomesString")
         val incomesArray = if(incomesString!! != "null") {
-            JsonToRawDataClass.moneyInteractionListJson(incomesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(incomesString)
         } else {
             arrayOf()
         }

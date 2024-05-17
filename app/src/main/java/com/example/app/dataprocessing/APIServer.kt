@@ -2,6 +2,7 @@ package com.example.app.dataprocessing
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -20,11 +21,17 @@ interface APIServer {
 
 
 
+    //@POST("/categories")
+    //suspend fun postCategory(@Body requestBody: RequestBody) : Response<ResponseBody>
+
     @POST("/categories")
     suspend fun postCategory(@Body requestBody: RequestBody) : Response<ResponseBody>
 
-    @GET("/categories")
-    suspend fun getCategory() : Response<ResponseBody>
+    @POST("/categories/pagination")
+    suspend fun getCategoryPagination(@Body requestBody: RequestBody) : Response<ResponseBody>
+
+    @POST("/categories/getByFilter")
+    suspend fun getCategoryByFilter(@Body requestBody: RequestBody) : Response<ResponseBody>
 
     @GET("/categories/categoryById/{Id}")
     suspend fun getCategoryById(@Path("Id") id: String) : Response<ResponseBody>
@@ -41,8 +48,14 @@ interface APIServer {
     @GET("/category/expensesById/{Id}")
     suspend fun getExpensesByIdCategory(@Path("Id") id: String) : Response<ResponseBody>
 
-    @GET("/expenses")
-    suspend fun getExpenses() : Response<ResponseBody>
+    //@GET("/expenses")
+    //suspend fun getExpenses() : Response<ResponseBody>
+
+    @POST("/expenses/pagination")
+    suspend fun getExpensesPagination(@Body requestBody: RequestBody) : Response<ResponseBody>
+
+    @POST("/expenses/getByFilter")
+    suspend fun getExpensesGetByFilter(@Body requestBody: RequestBody) : Response<ResponseBody>
 
     @POST("/expenses")
     suspend fun postExpenses(@Body requestBody: RequestBody) : Response<ResponseBody>
@@ -55,8 +68,15 @@ interface APIServer {
 
     @DELETE("/expenses/expensesById/{Id}")
     suspend fun deleteExpenseById(@Path("Id") id: String) : Response<ResponseBody>
-    @GET("/incomes")
-    suspend fun getIncomes() : Response<ResponseBody>
+
+    //@GET("/incomes")
+    //suspend fun getIncomes() : Response<ResponseBody>
+
+    @POST("/incomes/pagination")
+    suspend fun getIncomesPagination(@Body requestBody: RequestBody) : Response<ResponseBody>
+
+    @POST("/incomes/getByFilter")
+    suspend fun getIncomesGetByFilter(@Body requestBody: RequestBody) : Response<ResponseBody>
 
     @POST("/incomes")
     suspend fun postIncomes(@Body requestBody: RequestBody) : Response<ResponseBody>
@@ -70,8 +90,14 @@ interface APIServer {
     @DELETE("/incomes/incomesById/{Id}")
     suspend fun deleteIncomeById(@Path("Id") id: String) : Response<ResponseBody>
 
-    @GET("/users")
-    suspend fun getUser() : Response<ResponseBody>
+    //@GET("/users")
+    //suspend fun getUser() : Response<ResponseBody>
+
+    @POST("/users/pagination")
+    suspend fun getUserPagination(@Body requestBody: RequestBody) : Response<ResponseBody>
+
+    @POST("/users/getByFilter")
+    suspend fun getUserGetByFilter(@Body requestBody: RequestBody) : Response<ResponseBody>
 
     @POST("/users")
     suspend fun postUser(@Body requestBody: RequestBody) : Response<ResponseBody>

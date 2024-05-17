@@ -15,6 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.databinding.ActivityMainBinding
+import com.example.app.dataprocessing.FilterClass
+import com.example.app.dataprocessing.JsonConverter
+import com.example.app.dataprocessing.ServerInteraction
+import kotlinx.coroutines.runBlocking
 
 class LoginActivity : AppCompatActivity() {
 
@@ -184,6 +188,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
+     * Образаемся к серверу с запросом о существовании пользователя с такой почтой
+     */
+    private fun getUserExistenceFlag(): Boolean {
+        var response: String?
+        runBlocking {
+            response = ServerInteraction.User.apiGetUserByFilter(
+                JsonConverter.ToJson.toFilterClassJson(
+                    FilterClass(
+                        "email",
+                        binding.editTextEmailAddressLogin.text.toString(),
+                        "EQUAL"
+                    )
+                )
+            )
+        }
+        return if(response == null) {
+            Toast.makeText(applicationContext, "Пользователя с таким email не существует. Пройдите регистрацию.", Toast.LENGTH_LONG).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    /**
      * Обработка нажатия на кнопку "Войти"
      */
     fun onEntryLoginButtonClicked(view: View) {
@@ -201,6 +229,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Некорректная почта!", Toast.LENGTH_LONG).show()
             changeBackgroundLogin()
             changeVisibility()
+        } else if(getUserExistenceFlag()) {
+            changeBackgroundLogin()
         } else if(!getWasRegisteredFlag()){
             toSettingPIN()
         } else {

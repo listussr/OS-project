@@ -91,21 +91,11 @@ class ChangingPinActivity : AppCompatActivity() {
      * Меняем флаг входа в приложение
      */
 
-
-    /**
-     * Переходим в меню настроек
-     */
-    private fun changeActivitySettings() {
-        val intent = Intent(this@ChangingPinActivity, SettingsActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
     /**
      * Переходим на главную страницу приложения
      */
     private fun changeActivityMain() {
-        val intent = Intent(this@ChangingPinActivity, MainAppPageActivity::class.java)
+        val intent = Intent(this@ChangingPinActivity, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

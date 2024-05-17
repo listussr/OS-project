@@ -1,8 +1,6 @@
 package com.example.app
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -11,13 +9,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import com.example.app.databinding.FragmentPieChartBinding
 import com.example.app.dataprocessing.CategoryClass
-import com.example.app.dataprocessing.JsonToRawDataClass
+import com.example.app.dataprocessing.FilterClass
+import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.MoneyInteractionClass
+import com.example.app.dataprocessing.ServerInteraction
 import com.example.app.dataprocessing.UserClass
+import kotlinx.coroutines.runBlocking
 
 class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
 
@@ -162,13 +162,13 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastExpenses() {
         val expensesString = settings.getString("LastExpenses", "")
         expensesArray = if(expensesString!! != "null") {
-            JsonToRawDataClass.moneyInteractionListJson(expensesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(expensesString)!!
         } else {
             arrayOf()
         }
         val expenseCategoryString = settings.getString("LastExpensesCategory", "")
         expenseCategoryArray = if(expenseCategoryString != "null") {
-            JsonToRawDataClass.categoriesListJson(expenseCategoryString)!!
+            JsonConverter.FromJson.categoriesListJson(expenseCategoryString)!!
         } else {
             arrayOf()
         }
@@ -181,14 +181,14 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         val incomesString = settings.getString("LastIncome", "")
         //Log.e("App", "Get last Incomes: $incomesString")
         incomesArray = if(incomesString!! != "null") {
-            JsonToRawDataClass.moneyInteractionListJson(incomesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(incomesString)!!
         } else {
             arrayOf()
         }
         val incomesCategoryString = settings.getString("LastIncomeCategory", "")
         Log.v("App", "Income category: $incomesCategoryString")
         incomeCategoryArray = if(incomesCategoryString != "null") {
-            JsonToRawDataClass.categoriesListJson(incomesCategoryString)!!
+            JsonConverter.FromJson.categoriesListJson(incomesCategoryString)!!
         } else {
             arrayOf()
         }
@@ -200,7 +200,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastExpensesString() : String {
         val strArray: String = if(expensesArray.isNotEmpty()) {
             //Log.v("App", "Expenses: ${expensesArray.toString()}")
-            JsonToRawDataClass.toMoneyInteractionArrayJson(expensesArray)
+            JsonConverter.ToJson.toMoneyInteractionArrayJson(expensesArray)
         } else {
             "null"
         }
@@ -213,7 +213,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastIncomesString() : String {
         val strArray: String = if(incomesArray.isNotEmpty()) {
             //Log.v("App", "Incomes: ${expensesArray.toString()}")
-            JsonToRawDataClass.toMoneyInteractionArrayJson(incomesArray)
+            JsonConverter.ToJson.toMoneyInteractionArrayJson(incomesArray)
         } else {
             "null"
         }
@@ -226,7 +226,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastExpensesCategoryString() : String {
         val strArray: String = if(expenseCategoryArray.isNotEmpty()) {
             //Log.v("App", "Expenses: ${expenseCategoryArray.toString()}")
-            JsonToRawDataClass.toCategoryArrayJson(expenseCategoryArray)
+            JsonConverter.ToJson.toCategoryArrayJson(expenseCategoryArray)
         } else {
             "null"
         }
@@ -239,7 +239,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastIncomesCategoryString() : String {
         val strArray: String = if(incomeCategoryArray.isNotEmpty()) {
             Log.v("App", "Incomes: ${incomeCategoryArray.toString()}")
-            JsonToRawDataClass.toCategoryArrayJson(incomeCategoryArray)
+            JsonConverter.ToJson.toCategoryArrayJson(incomeCategoryArray)
         } else {
             "null"
         }
@@ -287,6 +287,52 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    /**
+     * Получаем расходы за определённый промежуток времени
+     *
+     * @param date дата и время в формате: "25.03.2024 12:42:41"
+     */
+    private fun getExpensesInDate(date: String) {
+        var response: String?
+        runBlocking {
+            response = ServerInteraction.Expense.apiGetExpensesByFilter(
+                JsonConverter.ToJson.toFilterClassArrayJson(
+                    arrayOf(
+                        FilterClass(
+                            "getDate",
+                            date,
+                            "GREATER_THAN_OR_EQUAL"
+                        )
+                    )
+                )
+            )
+        }
+        expensesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
+    }
+
+    /**
+     * Получаем доходы за определённый промежуток времени
+     *
+     * @param date дата и время в формате: "25.03.2024 12:42:41"
+     */
+    private fun getIncomesInDate(date: String) {
+        var response: String?
+        runBlocking {
+            response = ServerInteraction.Income.apiGetIncomesByFilter(
+                JsonConverter.ToJson.toFilterClassArrayJson(
+                    arrayOf(
+                        FilterClass(
+                            "getDate",
+                            date,
+                            "GREATER_THAN_OR_EQUAL"
+                        )
+                    )
+                )
+            )
+        }
+        incomesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
     }
 
     /**
