@@ -72,6 +72,10 @@ class LoadingActivity : AppCompatActivity() {
             editor.putString("UserPassword", "12345")
             editor.commit()
         }
+        if(settings.contains("Recipients")){
+            editor.putString("Recipients", "null")
+            editor.commit()
+        }
     }
 
     /**

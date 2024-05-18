@@ -3,11 +3,9 @@ package com.example.app
 import android.os.Bundle
 import android.view.View
 import android.content.Context
-import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -87,7 +85,7 @@ class PINCodeActivity : AppCompatActivity() {
      * @param colorTheme
      */
     private fun setColorTheme(colorTheme: Boolean) {
-        val mainLayout = findViewById<RelativeLayout>(R.id.main_layout)
+        val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
         if(colorTheme) {
             mainLayout.setBackgroundColor(Color.WHITE)
         } else {

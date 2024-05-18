@@ -9,10 +9,8 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.example.app.databinding.ActivityChangingPinAcceptBinding
-import com.example.app.databinding.ActivityChangingPinBinding
 
 class ChangingPinAcceptActivity : AppCompatActivity() {
 
@@ -81,7 +79,7 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
      * @param colorTheme
      */
     private fun setColorTheme(colorTheme: Boolean) {
-        val mainLayout = findViewById<RelativeLayout>(R.id.main_layout)
+        val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
         if(colorTheme) {
             mainLayout.setBackgroundColor(Color.WHITE)
         } else {

@@ -1,14 +1,12 @@
 package com.example.app
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,7 +18,6 @@ import com.example.app.databinding.ActivityMainBinding
 import com.example.app.dataprocessing.APIServer
 import com.example.app.dataprocessing.FilterClass
 import com.example.app.dataprocessing.JsonConverter
-import com.example.app.dataprocessing.MoneyInteractionClass
 import com.example.app.dataprocessing.MoneyInteractionPostClass
 import com.example.app.dataprocessing.ServerInteraction
 import com.google.gson.GsonBuilder
@@ -34,6 +31,11 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
+
+/*
+"a94d85c7-75a2-41d3-b267-58a0c86a500d"
+"5d9009ba-7c75-4c7e-a5ea-92da55eab16c"
+ */
 
 class MainActivity : AppCompatActivity(){
 
@@ -94,7 +96,6 @@ class MainActivity : AppCompatActivity(){
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)!!
         chooseStartFragment()
         setLanguageView()
-        setAutoCompleteList()
         getUUID()
         var response: String? = ""
         runBlocking {
@@ -103,29 +104,32 @@ class MainActivity : AppCompatActivity(){
                     arrayOf(FilterClass("name", "Еда", ">=")
                 )
             ))
-            //Log.w("ApplicationJson", response!!)
         }
         if(response != null)
             Log.d("AppJson", "After coroutine: $response")
         else{
             Log.e("AppJson", "No elements")
         }
-        //val categoryStr = JsonConverter.FromJson.categoriesListJson(response)!![0].id
-        /*
-        val response = ServerInteraction.Category.apiGetCategoryByFilter(
-            JsonConverter.ToJson.toFilterClassArrayJson(
-                arrayOf(FilterClass("name", "Бензин", "EQUAL"))
-            )
-        )
-        Log.d("ApplicationJson", "Response: $response")
-        */
-        /*val categoryStr = ServerInteraction.Category.apiGetCategoryByFilter(
-            JsonConverter.ToJson.toFilterClassArrayJson(
-                arrayOf(FilterClass("name", "Бензин", "EQUAL"))
-            )
-        )*/
         val categoryStr = response
-        Log.v("AppJson", "Id: $categoryStr")
+        val categoryId = JsonConverter.FromJson.categoriesListJson(categoryStr)!![0].id
+        Log.v("AppJson", "Id: $categoryId")
+        userId = settings.getString("UsersUUID", "")!!
+        runBlocking {
+            val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(
+                MoneyInteractionPostClass(
+                    "test expenses",
+                    2000,
+                    categoryId,
+                    userId,
+                    "27.03.2024 12:42:50"
+                )
+            )
+            Log.d("AppJson", "Request: $request")
+            val response1 = ServerInteraction.Expense.apiPostExpenses(
+                request
+            )
+            Log.d("AppJson", "Response: $response1")
+        }
         /*
         if (categoryStr == null) {
             Log.v("ApplicationJson", categoryStr)
@@ -232,13 +236,6 @@ class MainActivity : AppCompatActivity(){
         return settings.getBoolean("Language", true)
     }
 
-    private fun setAutoCompleteList() {
-        val adapter = ArrayAdapter<String>(
-            this, android.R.layout.simple_dropdown_item_1line, autocompleteList
-        )
-        binding.autoCompleteTextView.setAdapter(adapter)
-    }
-
     /**
      * Обработка нажатия на кнопку "Отчёт"
      */
@@ -300,7 +297,7 @@ class MainActivity : AppCompatActivity(){
         if(panel.visibility == View.GONE) {
             panel.visibility = View.VISIBLE
             val darkColor = Color.parseColor("#80000000")
-            val layout = findViewById<ConstraintLayout>(R.id.main_layout)
+            val layout = findViewById<ConstraintLayout>(R.id.mainLayout)
             layout.setBackgroundColor(darkColor)
             layout.setOnClickListener {
                 panel.visibility = View.GONE
@@ -317,7 +314,7 @@ class MainActivity : AppCompatActivity(){
                 layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         } else {
-            val layout = findViewById<ConstraintLayout>(R.id.main_layout)
+            val layout = findViewById<ConstraintLayout>(R.id.mainLayout)
             panel.visibility = View.GONE
             layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
         }
@@ -327,12 +324,10 @@ class MainActivity : AppCompatActivity(){
      * Обработка нажатия на кнопку добавления дохода
      */
     fun onAddIncomeClicked(view: View) {
-        val layout = findViewById<LinearLayout>(R.id.addingFieldsLayout)
-        layout.visibility = View.VISIBLE
         findViewById<LinearLayout>(R.id.addingPanel).visibility = View.GONE
-        findViewById<ConstraintLayout>(R.id.main_layout).setOnClickListener{
-            layout.visibility = View.GONE
-        }
+        val intent = Intent(this@MainActivity, CreateMoneyInteractionActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

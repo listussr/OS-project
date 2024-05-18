@@ -100,24 +100,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getCategoryPagination(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getCategoryPagination(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -400,9 +398,10 @@ object ServerInteraction {
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var successFlag = false
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
             var gsonRes: String = ""
             val response = service.postExpenses(requestBody)
+            Log.d("AppJson", "Response inside interaction: $response")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -434,7 +433,7 @@ object ServerInteraction {
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             val response = service.postExpenses(requestBody)
-            Log.v("AppJson", "Response: ${response.toString()}")
+            Log.v("AppJson", "Response: $response")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(

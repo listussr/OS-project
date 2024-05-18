@@ -193,15 +193,18 @@ class LoginActivity : AppCompatActivity() {
     private fun getUserExistenceFlag(): Boolean {
         var response: String?
         runBlocking {
-            response = ServerInteraction.User.apiGetUserByFilter(
-                JsonConverter.ToJson.toFilterClassJson(
-                    FilterClass(
-                        "email",
-                        binding.editTextEmailAddressLogin.text.toString(),
-                        "EQUAL"
-                    )
+            val request = JsonConverter.ToJson.toFilterClassJson(
+                FilterClass(
+                    "email",
+                    binding.editTextEmailAddressLogin.text.toString(),
+                    "EQUAL"
                 )
             )
+            Log.d("AppJson", request)
+            response = ServerInteraction.User.apiGetUserByFilter(
+                request
+            )
+            Log.d("AppJson", "Response login: $response")
         }
         return if(response == null) {
             Toast.makeText(applicationContext, "Пользователя с таким email не существует. Пройдите регистрацию.", Toast.LENGTH_LONG).show()
