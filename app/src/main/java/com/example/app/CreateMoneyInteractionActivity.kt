@@ -13,10 +13,13 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.app.databinding.ActivityCreateMoneyInteractionBinding
+import com.example.app.dataprocessing.CategoryClass
 import com.example.app.dataprocessing.JsonConverter
+import com.example.app.dataprocessing.MoneyInteractionPostClass
 import com.example.app.dataprocessing.ServerInteraction
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
+import java.util.Calendar
 
 class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var settings: SharedPreferences
@@ -31,12 +34,18 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
     private var type: String = ""
     private var comment: String = ""
     private var recipientsArray = ArrayList<String>()
+    private var uuid = ""
+    private var categoryArray = arrayOf<CategoryClass>()
+    private var expenseFlag: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateMoneyInteractionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        expenseFlag = intent.getBooleanExtra("ExpenseFlag", true)
+        Log.v("Set", "ExpensesFlag = $expenseFlag")
+        getUUID()
     }
 
     private fun getCategories() : ArrayList<String> {
@@ -47,15 +56,21 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
         val categoryClassArray = JsonConverter.FromJson.categoriesListJson(response)
         val arrayOfCategory = if (categoryClassArray != null){
+            categoryArray = categoryClassArray
             val arrayList = ArrayList<String>()
             for(i in categoryClassArray)
                 arrayList.add(i.name)
             arrayList.add("Добавить новую категорию")
             arrayList
         } else {
+            categoryArray = arrayOf()
             arrayListOf("Добавить новую категорию")
         }
         return arrayOfCategory
+    }
+
+    private fun getUUID(){
+        uuid = settings.getString("UsersUUID", "").toString()
     }
 
     private fun setCategoriesAdapter() {
@@ -68,8 +83,13 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
             ItemAdapter.OnClickListener {
             override fun onClick(position: Int, model: String) {
                 if(model != "Добавить новую категорию"){
-                    category = model
-                    binding.categoryButton.text = category
+                    for(i in categoryArray){
+                        if(i.name == model) {
+                            category = i.id
+                            break
+                        }
+                    }
+                    binding.categoryButton.text = model
                     binding.addingLayout.visibility = View.VISIBLE
                     binding.categoriesSelector.visibility = View.GONE
                 } else {
@@ -139,10 +159,12 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
             }
             if (response != null) {
                 Log.d("AppJson", "Category has been added successfully! Id: $response")
+                category = response
+                category = category.replace("\"", "")
             } else {
                 Log.e("AppJson", "Failure in adding category")
             }
-            binding.categoryButton.text = category
+            binding.categoryButton.text = binding.newCategoryField.text.toString()
         } else {
             Toast.makeText(applicationContext, "Введите название категории!", Toast.LENGTH_LONG).show()
         }
@@ -153,10 +175,81 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         binding.categoriesSelector.visibility = View.VISIBLE
     }
 
+    fun getDate(view: View) {
+        binding.addingLayout.visibility = View.GONE
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{
+                _, mYear, mMonth, mDay -> date = "$mDay.$mMonth.$mYear"
+            binding.dateButton.text = date
+            binding.addingLayout.visibility = View.VISIBLE
+        }, year, month, day)
+        dpd.show()
+    }
+
+    private fun getDataFromFields() {
+        comment = binding.commentField.text.toString()
+        val sumStr = binding.sumField.text.toString()
+        sum = if(sumStr.isNotEmpty()){
+            sumStr.toInt()
+        } else {
+            -1
+        }
+    }
+
+    private fun postMoneyInteraction() {
+        if(date[1] == '.'){
+            date = "0$date"
+        }
+        if(date[4] == '.'){
+            date = date.replaceRange(3, 3, "0")
+        }
+        Log.d("Set", "Date: $date")
+        val getDate = "$date $time"
+        val moneyInteractionPost = MoneyInteractionPostClass(
+            comment = comment,
+            value = sum,
+            categoryId = category,
+            userId = uuid,
+            getDate = getDate
+        )
+        val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(moneyInteractionPost)
+        val response: String?
+        runBlocking {
+            response = if(expenseFlag){
+                ServerInteraction.Expense.apiPostExpenses(request)
+            } else {
+                ServerInteraction.Income.apiPostIncomes(request)
+            }
+        }
+        if(response != null) {
+            Log.w("AppJson", "Response Post Interaction: $response")
+        } else {
+            Log.e("AppJson", "NotPosted")
+        }
+        Log.w("AppJson", "Post request json: $request")
+    }
+
     fun onCreateMoneyInteractionClicked(view: View) {
-        val intent = Intent(this@CreateMoneyInteractionActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        getDataFromFields()
+        if(sum <= 0) {
+            Toast.makeText(applicationContext, "Сумма не может быть отрицательной", Toast.LENGTH_LONG).show()
+        } else if(comment.isEmpty()){
+            Toast.makeText(applicationContext, "Комментарий не может быть пустым", Toast.LENGTH_LONG).show()
+        } else if (date.isEmpty()) {
+            Toast.makeText(applicationContext, "Дата не может быть пустой!", Toast.LENGTH_LONG).show()
+        } else if(category.isEmpty()){
+            Toast.makeText(applicationContext, "Категория не может быть пустой!", Toast.LENGTH_LONG).show()
+        } else if(recipient.isEmpty()){
+            Toast.makeText(applicationContext, "Получатель не может быть не указан!", Toast.LENGTH_LONG).show()
+        } else {
+            postMoneyInteraction()
+            val intent = Intent(this@CreateMoneyInteractionActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     fun onCategoriesPickerButtonClicked(view: View) {
@@ -181,7 +274,7 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
     }
 
     fun onOkRecipientButtonClicked(view: View) {
-        val recipient = binding.newRecipientField.text.toString()
+        recipient = binding.newRecipientField.text.toString()
         if(recipient.isNotEmpty()){
             binding.recipientButton.text = recipient
             binding.addingLayout.visibility = View.VISIBLE

@@ -63,7 +63,7 @@
             android:layout_weight="1"
             android:background="@drawable/circle_off"
             android:backgroundTint="#E61F5CB6"
-            android:onClick="onAddIncomeClicked"
+            android:onClick="onAddMoneyInteractionClicked"
             android:text="Добавить расход" />
 
         <Button
@@ -76,7 +76,7 @@
             android:layout_weight="1"
             android:background="@drawable/circle_off"
             android:backgroundTint="#E61F5CB6"
-            android:onClick="onAddIncomeClicked"
+            android:onClick="onAddMoneyInteractionClicked"
             android:text="Добавить доход" />
     </LinearLayout>
 

@@ -97,39 +97,6 @@ class MainActivity : AppCompatActivity(){
         chooseStartFragment()
         setLanguageView()
         getUUID()
-        var response: String? = ""
-        runBlocking {
-            response = ServerInteraction.Category.apiGetCategoryByFilter(
-                JsonConverter.ToJson.toFilterClassArrayJson(
-                    arrayOf(FilterClass("name", "Еда", ">=")
-                )
-            ))
-        }
-        if(response != null)
-            Log.d("AppJson", "After coroutine: $response")
-        else{
-            Log.e("AppJson", "No elements")
-        }
-        val categoryStr = response
-        val categoryId = JsonConverter.FromJson.categoriesListJson(categoryStr)!![0].id
-        Log.v("AppJson", "Id: $categoryId")
-        userId = settings.getString("UsersUUID", "")!!
-        runBlocking {
-            val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(
-                MoneyInteractionPostClass(
-                    "test expenses",
-                    2000,
-                    categoryId,
-                    userId,
-                    "27.03.2024 12:42:50"
-                )
-            )
-            Log.d("AppJson", "Request: $request")
-            val response1 = ServerInteraction.Expense.apiPostExpenses(
-                request
-            )
-            Log.d("AppJson", "Response: $response1")
-        }
         /*
         if (categoryStr == null) {
             Log.v("ApplicationJson", categoryStr)
@@ -330,4 +297,18 @@ class MainActivity : AppCompatActivity(){
         finish()
     }
 
+    /**
+     * Обработка нажатия на кнопки добавления расхода и дохода
+     */
+    fun onAddMoneyInteractionClicked(view: View) {
+        binding.addingPanel.visibility = View.GONE
+        val intent = Intent(this@MainActivity, CreateMoneyInteractionActivity::class.java)
+        if(view == binding.addExpensButton){
+            intent.putExtra("ExpensesFlag", true)
+        } else {
+            intent.putExtra("ExpensesFlag", false)
+        }
+        startActivity(intent)
+        finish()
+    }
 }

@@ -73,13 +73,13 @@ class PieChart @JvmOverloads constructor(
         super.onDraw(canvas)
         if(listOfInfo.isNotEmpty() && listOfCategory.isNotEmpty()) {
             for(i in listOfInfo){
-                Log.v("App", i.toString())
+                Log.v("PieChart", i.toString())
             }
             drawCircle(canvas)
-            Log.v("App", "Draw circle")
+            Log.v("PieChart", "Draw circle")
             drawLegend(canvas)
         } else {
-            Log.e("App", "ListOfInfo empty: ${listOfInfo.isEmpty()}, ListOfCategory empty: ${listOfCategory.isEmpty()}")
+            Log.e("PieChart", "ListOfInfo empty: ${listOfInfo.isEmpty()}, ListOfCategory empty: ${listOfCategory.isEmpty()}")
             val xCoordinate = (width / 3).toFloat()
             val yCoordinate = (height / 2).toFloat()
             val radius = (2 * width / 9).toFloat()
@@ -125,15 +125,15 @@ class PieChart @JvmOverloads constructor(
         var sum = 0f
         countSumInEveryCategory()
         for(i in categorySum.indices) {
-            Log.w("App", "i=${i}, categorySum.size=${categorySum.size}, listOfCategory.size=${listOfCategory.size}")
+            Log.w("PieChart", "i=${i}, categorySum.size=${categorySum.size}, listOfCategory.size=${listOfCategory.size}")
 //            Log.v("App", "Category ${listOfCategory[i].name}: sum inside = ${categorySum[i]}")
             sum += categorySum[i]
         }
-        Log.d("App", "Sum: $sum")
+        Log.d("PieChart", "Sum: $sum")
         val listOfPercents = ArrayList<Float>()
         for(i in categorySum.indices) {
             listOfPercents.add((categorySum[i] / sum) * 100f)
-            Log.e("App", "Percents for ${listOfCategory[i].name}: ${(categorySum[i] / sum).toFloat()}")
+            Log.e("PieChart", "Percents for ${listOfCategory[i].name}: ${(categorySum[i] / sum).toFloat()}")
         }
         return listOfPercents
     }
@@ -142,14 +142,14 @@ class PieChart @JvmOverloads constructor(
      * Считаем суммарные расходы в каждой категории
      */
     private fun countSumInEveryCategory() {
-        Log.v("App", "List of category size = ${listOfCategory.size}")
+        Log.v("PieChart", "List of category size = ${listOfCategory.size}")
         for(category in listOfCategory){
             var sum = 0f
             for(moneyInteraction in listOfInfo){
                 if(moneyInteraction.category.name == category.name){
-                    Log.w("App", "Category: ${category.name}, money: categ. ${moneyInteraction.category.name}, val. ${moneyInteraction.value}")
+                    Log.w("PieChart", "Category: ${category.name}, money: categ. ${moneyInteraction.category.name}, val. ${moneyInteraction.value}")
                     sum += moneyInteraction.value
-                    Log.w("App", "Sum = $sum")
+                    Log.w("PieChart", "Sum = $sum")
                 }
             }
             categorySum.add(sum)
@@ -164,7 +164,7 @@ class PieChart @JvmOverloads constructor(
         val yCoordinate = (height / 2).toFloat()
         val radius = (2 * width / 9).toFloat()
         val percentageList = countPercentage()
-        Log.v("App", "Counted percents")
+        Log.v("PieChart", "Counted percents")
         for(i in percentageList.indices){
             if(categorySum[i] != 0f) {
                 paintC.color = colorArray[i % 4]
@@ -188,13 +188,13 @@ class PieChart @JvmOverloads constructor(
      * Функция отрисовки текста "легенды"
      */
     private fun drawLegend(canvas: Canvas) {
-        Log.v("App", "Drawing legend")
+        Log.v("PieChart", "Drawing legend")
         for(i in listOfCategory.indices) {
             if(categorySum[i] != 0f) {
                 textStartPointY += marginTextTop + if (i > 0) marginTextBottom else 0f
                 textStartPointX = (width / 4) * 3f
                 canvas.drawText(
-                    listOfInfo[i].category.name,
+                    listOfCategory[i].name,
                     textStartPointX,
                     textStartPointY,
                     paintT

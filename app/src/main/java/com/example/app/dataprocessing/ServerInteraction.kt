@@ -25,38 +25,6 @@ import retrofit2.create
 object ServerInteraction {
     private const val url = "http://10.0.2.2:8080"
     object Category {
-
-        val apiGetCategoryByFilter: Deferred<String> = CoroutineScope(Dispatchers.IO).async {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(url)
-                .build()
-            val service = retrofit.create(APIServer::class.java)
-            var successFlag: Boolean = true
-            val requestBody = JsonConverter.ToJson.toFilterClassArrayJson(
-                arrayOf(FilterClass("name", "Бензин", "EQUAL"))
-            ).toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getCategoryByFilter(requestBody)
-            Log.v("AppJson", "Response: ${response.toString()}")
-            val gsonStr = ""
-            withContext(Dispatchers.IO) {
-                val gson = GsonBuilder().setPrettyPrinting().create()
-                val prettyJson = gson.toJson(
-                    JsonParser.parseString(
-                        response.body()
-                            ?.string()
-                    )
-                )
-                successFlag = if (response.isSuccessful) {
-                    Log.w("App", prettyJson)
-                    true
-                } else {
-                    Log.e("App", response.code().toString())
-                    false
-                }
-                return@withContext prettyJson
-            }
-        }
-
         suspend fun apiGetCategoryByFilter(jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
@@ -132,24 +100,22 @@ object ServerInteraction {
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.postCategory(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.postCategory(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -165,24 +131,22 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getCategoryById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getCategoryById(id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -199,23 +163,21 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.putCategoryById(requestBody, id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.putCategoryById(requestBody, id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                    } else {
-                        Log.e("App", response.code().toString())
-                        successFlag = false
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                } else {
+                    Log.e("App", response.code().toString())
+                    successFlag = false
                 }
             }
             if(successFlag){
@@ -231,24 +193,22 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.deleteCategoryById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.deleteCategoryById(id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -296,23 +256,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getExpensesByIdCategory(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getExpensesByIdCategory(id)
+            withContext(Dispatchers.Main) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -332,24 +290,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getExpensesGetByFilter(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getExpensesGetByFilter(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -366,24 +322,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getExpensesPagination(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getExpensesPagination(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("ApplicationJson", prettyJson)
-                        true
-                    } else {
-                        Log.e("ApplicationJson", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("ApplicationJson", prettyJson)
+                    true
+                } else {
+                    Log.e("ApplicationJson", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -398,6 +352,7 @@ object ServerInteraction {
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var successFlag = false
+            Log.v("AppJson", "Request Post Expenses: $jsonObjectString")
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
             var gsonRes: String = ""
             val response = service.postExpenses(requestBody)
@@ -424,16 +379,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPostExpensesTest(jsonObjectString: String): String? {
+        suspend fun apiGetExpenseById(id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
-            var successFlag: Boolean = true
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.postExpenses(requestBody)
-            Log.v("AppJson", "Response: $response")
+            var successFlag = false
+            val response = service.getExpenseById(id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -442,46 +395,12 @@ object ServerInteraction {
                             ?.string()
                     )
                 )
-                gsonRes = java.lang.String(prettyJson.toString()).toString()
-                successFlag = if (response.isSuccessful) {
-                    Log.w("App", gsonRes)
-                    true
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
                 } else {
                     Log.e("App", response.code().toString())
-                    false
-                }
-            }
-            if(successFlag){
-                return gsonRes
-            }
-            return null
-        }
-
-
-        suspend fun apiGetExpenseById(id: String): String? {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(url)
-                .build()
-            val service = retrofit.create(APIServer::class.java)
-            var gsonRes: String = ""
-            var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getExpenseById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
-                    )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
                 }
             }
             if(successFlag){
@@ -498,23 +417,21 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.putExpenseById(requestBody, id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.putExpenseById(requestBody, id)
+            withContext(Dispatchers.Main) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -565,24 +482,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getIncomesGetByFilter(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getIncomesGetByFilter(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -599,24 +514,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getIncomesPagination(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getIncomesPagination(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("ApplicationJson", prettyJson)
-                        true
-                    } else {
-                        Log.e("ApplicationJson", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("ApplicationJson", prettyJson)
+                    true
+                } else {
+                    Log.e("ApplicationJson", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -633,23 +546,21 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.postIncomes(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.postIncomes(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -665,23 +576,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getIncomeById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getIncomeById(id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -698,23 +607,21 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.putIncomeById(requestBody, id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.putIncomeById(requestBody, id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -730,23 +637,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.deleteIncomeById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.deleteIncomeById(id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -765,25 +670,23 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getUserGetByFilter(requestBody)
-                Log.v("AppJson", "Response: ${response.toString()}")
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getUserGetByFilter(requestBody)
+            Log.v("AppJson", "Response: ${response.toString()}")
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -800,24 +703,22 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getUserPagination(requestBody)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getUserPagination(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    successFlag = if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        true
-                    } else {
-                        Log.e("App", response.code().toString())
-                        false
-                    }
+                )
+                gsonRes = prettyJson
+                successFlag = if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    true
+                } else {
+                    Log.e("App", response.code().toString())
+                    false
                 }
             }
             if(successFlag){
@@ -842,7 +743,6 @@ object ServerInteraction {
             Log.d("AppJson", "UserPost responsebody: ${response.body()}")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
-                //Log.v("AppJson", "Is response successful: ${response.isSuccessful}")
                 if(response.body() == null){
                     Log.e("AppJson", "UserPost not working")
                 } else {
@@ -874,23 +774,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getUserById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getUserById(id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -907,23 +805,21 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.putUserById(requestBody, id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.putUserById(requestBody, id)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -939,23 +835,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.deleteCategoryById(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.deleteCategoryById(id)
+            withContext(Dispatchers.Main) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -971,23 +865,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getIncomesByIdUser(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getIncomesByIdUser(id)
+            withContext(Dispatchers.Main) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){
@@ -1003,23 +895,21 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getExpensesByIdUser(id)
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
+            val response = service.getExpensesByIdUser(id)
+            withContext(Dispatchers.Main) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
                     )
-                    gsonRes = prettyJson
-                    if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
-                    } else {
-                        Log.e("App", response.code().toString())
-                    }
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
                 }
             }
             if(successFlag){

@@ -3,12 +3,15 @@ package com.example.app
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.text.substring
 import androidx.fragment.app.activityViewModels
 import com.example.app.databinding.FragmentPieChartBinding
 import com.example.app.dataprocessing.CategoryClass
@@ -29,6 +32,8 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private var incomeCategoryArray: Array<CategoryClass> = arrayOf()
 
     private var periodNum = 1
+
+    private var dateCur: String = ""
 
     private var _binding : FragmentPieChartBinding? = null
     private val binding get() = _binding!!
@@ -55,11 +60,13 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         onCurrentYearClicked()
         setStartButton()
         translateViews()
-        //Log.d("App", "Before get Expenses")
         getLastExpenses()
-        //Log.d("App", "Got expenses")
         getLastIncomes()
-        //Log.d("App", "Starting setButton")
+        getLocalTime()
+        getDateInBorderCurMonth()
+        getDateInBorderLastMonth()
+        getDateInBorderThreeMonths()
+        getDateInBorderCurYear()
     }
 
     /**
@@ -68,6 +75,13 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     override fun onStart() {
         super.onStart()
         updatePieCharts()
+    }
+
+    private fun getLocalTime() {
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("dd.MM.yyyy")
+        dateCur = formatter.format(time).toString()
+        Log.d("AppJson", "Current time = $dateCur")
     }
 
     /**
@@ -162,7 +176,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun getLastExpenses() {
         val expensesString = settings.getString("LastExpenses", "")
         expensesArray = if(expensesString!! != "null") {
-            JsonConverter.FromJson.moneyInteractionListJson(expensesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(expensesString)
         } else {
             arrayOf()
         }
@@ -246,7 +260,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         return strArray
     }
 
-
     /**
      * Отмечаем изменения данных для круговых диаграмм
      */
@@ -290,26 +303,100 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     }
 
     /**
+     * Преобразуем дату, с которой будем делать запрос по фильтру
+     */
+    private fun getDateInBorderCurMonth() : String {
+        var date = dateCur
+        date = "01${dateCur.substring(2)}"
+        return date
+    }
+
+    /**
+     * Получаем дату начала прошлого месяца
+     */
+    private fun getDateInBorderLastMonth() : String {
+        var date = dateCur
+        date = "01${date.substring(2)}"
+        date = when("${dateCur[3]}${dateCur[4]}"){
+            "01" -> {
+                "${date.substring(0, 3)}12.20${dateCur[8]}${dateCur[9].toString().toInt() - 1}"
+            }
+
+            "10" -> {
+                "${date.substring(0, 3)}09${dateCur.substring(5)}"
+            }
+
+            else -> {
+                "${date.substring(0, 3)}${dateCur[3]}${dateCur[4].toString().toInt() - 1}${date.substring(5)}"
+            }
+        }
+        Log.d("Date", "Date: $date")
+        return date
+    }
+
+    /**
+     * Получаем дату начала прошлого месяца
+     */
+    private fun getDateInBorderThreeMonths() : String {
+        var date = dateCur
+        date = when("${dateCur[3]}${dateCur[4]}"){
+            "01" -> {
+                "${date.substring(0, 3)}10.20${dateCur[8]}${dateCur[9].toString().toInt() - 1}"
+            }
+            "02" -> {
+                "${date.substring(0, 3)}11.20${dateCur[8]}${dateCur[9].toString().toInt() - 1}"
+            }
+            "03" -> {
+                "${date.substring(0, 3)}12.20${dateCur[8]}${dateCur[9].toString().toInt() - 1}"
+            }
+            "10" -> {
+                "${date.substring(0, 3)}07${dateCur.substring(5)}"
+            }
+            "11" -> {
+                "${date.substring(0, 3)}08${dateCur.substring(5)}"
+            }
+            "12" -> {
+                "${date.substring(0, 3)}09${dateCur.substring(5)}"
+            }
+            else -> {
+                "${date.substring(0, 3)}${dateCur[3]}${dateCur[4].toString().toInt() - 3}${date.substring(5)}"
+            }
+        }
+        Log.d("Date", "Date: $date")
+        return date
+    }
+
+    /**
+     * Преобразуем дату, с которой будем делать запрос по фильтру
+     */
+    private fun getDateInBorderCurYear() : String {
+        var date = dateCur
+        date = "01.01.20${dateCur[9]}${dateCur[9]}"
+        return date
+    }
+
+    /**
      * Получаем расходы за определённый промежуток времени
      *
      * @param date дата и время в формате: "25.03.2024 12:42:41"
      */
     private fun getExpensesInDate(date: String) {
         var response: String?
-        runBlocking {
-            response = ServerInteraction.Expense.apiGetExpensesByFilter(
-                JsonConverter.ToJson.toFilterClassArrayJson(
-                    arrayOf(
-                        FilterClass(
-                            "getDate",
-                            date,
-                            "GREATER_THAN_OR_EQUAL"
-                        )
-                    )
+        val request = JsonConverter.ToJson.toFilterClassArrayJson(
+            arrayOf(
+                FilterClass(
+                    "getDate",
+                    date,
+                    "GREATER_THAN_OR_EQUAL"
                 )
             )
+        )
+        Log.d("AppJson", "getExpensesInDate request: $request")
+        runBlocking {
+            response = ServerInteraction.Expense.apiGetExpensesByFilter(request)
         }
         expensesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
+        Log.d("AppJson", "Response getExpenses: $response")
     }
 
     /**
@@ -319,20 +406,34 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getIncomesInDate(date: String) {
         var response: String?
-        runBlocking {
-            response = ServerInteraction.Income.apiGetIncomesByFilter(
-                JsonConverter.ToJson.toFilterClassArrayJson(
-                    arrayOf(
-                        FilterClass(
-                            "getDate",
-                            date,
-                            "GREATER_THAN_OR_EQUAL"
-                        )
-                    )
+        val request = JsonConverter.ToJson.toFilterClassArrayJson(
+            arrayOf(
+                FilterClass(
+                    "getDate",
+                    date,
+                    "GREATER_THAN_OR_EQUAL"
                 )
             )
+        )
+        Log.d("AppJson", "getIncomesInDate request: $request")
+        runBlocking {
+            response = ServerInteraction.Income.apiGetIncomesByFilter(request)
         }
         incomesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
+        Log.d("AppJson", "Response getIncomes: $response")
+    }
+
+    /**
+     * Получаем категории
+     */
+    private fun getCategories() {
+        val request = "{\"size\": \"100\", \"page\": \"0\"}"
+        val response: String?
+        runBlocking {
+            response = ServerInteraction.Category.apiGetCategoryPagination(request)
+        }
+        expenseCategoryArray = JsonConverter.FromJson.categoriesListJson(response) ?: arrayOf()
+        incomeCategoryArray = expenseCategoryArray
     }
 
     /**
@@ -340,6 +441,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onCurrentMonthClicked() {
         binding.buttonCurrentMonth.setOnClickListener{
+            /*
             incomesArray = arrayOf(
                 MoneyInteractionClass(
                     "1",
@@ -404,13 +506,12 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     )
                 )
             )
-            incomeCategoryArray = arrayOf(
-                CategoryClass(
-                    "food",
-                    "1243"
-                )
-            )
-            expenseCategoryArray = incomeCategoryArray
+            */
+            getCategories()
+            Log.d("AppJson", "Got categories")
+            getExpensesInDate("${getDateInBorderCurMonth()} 00:00:00")
+            Log.d("AppJson", "Got expenses")
+            getIncomesInDate("${getDateInBorderCurMonth()} 00:00:00")
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -425,6 +526,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onLastMonthClicked() {
         binding.buttonLastMonth.setOnClickListener{
+            /*
             incomesArray = arrayOf(
                 MoneyInteractionClass(
                     "1",
@@ -509,6 +611,12 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     "1000"
                 )
             )
+            */
+            getCategories()
+            Log.d("AppJson", "Got categories")
+            getExpensesInDate("${getDateInBorderLastMonth()} 00:00:00")
+            Log.d("AppJson", "Got expenses")
+            getIncomesInDate("${getDateInBorderLastMonth()} 00:00:00")
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -523,6 +631,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onThreeMonthsClicked() {
         binding.buttonThreeMonths.setOnClickListener{
+            /*
             incomesArray = arrayOf(
                 MoneyInteractionClass(
                     "1",
@@ -603,6 +712,12 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     "1000"
                 )
             )
+            */
+            getCategories()
+            Log.d("AppJson", "Got categories")
+            getExpensesInDate("${getDateInBorderThreeMonths()} 00:00:00")
+            Log.d("AppJson", "Got expenses")
+            getIncomesInDate("${getDateInBorderThreeMonths()} 00:00:00")
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -617,7 +732,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onCurrentYearClicked() {
         binding.buttonCurrentYear.setOnClickListener{
-
+            /*
             incomesArray = arrayOf(
                 MoneyInteractionClass(
                     "1",
@@ -698,6 +813,12 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                     "1000"
                 )
             )
+            */
+            getCategories()
+            Log.d("AppJson", "Got categories")
+            getExpensesInDate("${getDateInBorderCurYear()} 00:00:00")
+            Log.d("AppJson", "Got expenses")
+            getIncomesInDate("${getDateInBorderCurYear()} 00:00:00")
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
