@@ -164,10 +164,11 @@ class PieChart @JvmOverloads constructor(
         val yCoordinate = (height / 2).toFloat()
         val radius = (2 * width / 9).toFloat()
         val percentageList = countPercentage()
+        var counter = 0
         Log.v("PieChart", "Counted percents")
         for(i in percentageList.indices){
             if(categorySum[i] != 0f) {
-                paintC.color = colorArray[i % 4]
+                paintC.color = colorArray[counter % (colorArray.size - 1)]
                 startAngle += sweepAngle
                 sweepAngle = 360f * percentageList[i] / 100f
                 canvas.drawArc(
@@ -180,6 +181,7 @@ class PieChart @JvmOverloads constructor(
                     false,
                     paintC
                 )
+                counter++
             }
         }
     }
@@ -188,6 +190,7 @@ class PieChart @JvmOverloads constructor(
      * Функция отрисовки текста "легенды"
      */
     private fun drawLegend(canvas: Canvas) {
+        var counter = 0
         Log.v("PieChart", "Drawing legend")
         for(i in listOfCategory.indices) {
             if(categorySum[i] != 0f) {
@@ -199,7 +202,7 @@ class PieChart @JvmOverloads constructor(
                     textStartPointY,
                     paintT
                 )
-                paintC.color = colorArray[i % 4]
+                paintC.color = colorArray[counter % (colorArray.size - 1)]
                 paintC.style = Paint.Style.FILL
                 canvas.drawCircle(
                     textStartPointX - 30f,
@@ -207,6 +210,7 @@ class PieChart @JvmOverloads constructor(
                     15f,
                     paintC
                 )
+                counter += 1
             }
         }
     }

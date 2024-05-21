@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    private val password: String = "1"
+    private val password: String = "12345678"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,16 +192,17 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun getUserExistenceFlag(): Boolean {
         var response: String?
-        runBlocking {
-            val request = JsonConverter.ToJson.toFilterClassJson(
-                FilterClass(
-                    "email",
-                    binding.editTextEmailAddressLogin.text.toString(),
-                    "EQUAL"
-                )
+        /*val request = JsonConverter.ToJson.toFilterClassJson(
+            FilterClass(
+                "email",
+                binding.editTextEmailAddressLogin.text.toString(),
+                "EQUAL"
             )
+        )*/
+        val request = "{\"name\": \"user1\", \"password\":\"$password\"}"
+        runBlocking {
             Log.d("AppJson", request)
-            response = ServerInteraction.User.apiGetUserByFilter(
+            response = ServerInteraction.User.apiLogin(
                 request
             )
             Log.d("AppJson", "Response login: $response")
@@ -210,6 +211,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Пользователя с таким email не существует. Пройдите регистрацию.", Toast.LENGTH_LONG).show()
             false
         } else {
+            Log.d("AppJson", "Login response: $response")
+            settings.edit().putString("Token", response).commit()
             true
         }
     }
@@ -232,7 +235,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Некорректная почта!", Toast.LENGTH_LONG).show()
             changeBackgroundLogin()
             changeVisibility()
-        } else if(getUserExistenceFlag()) {
+        } else if(!getUserExistenceFlag()) {
             changeBackgroundLogin()
         } else if(!getWasRegisteredFlag()){
             toSettingPIN()

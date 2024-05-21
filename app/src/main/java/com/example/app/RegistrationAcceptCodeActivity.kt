@@ -47,21 +47,21 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
      */
     private fun registerUser() {
         var response: String?
+        val request = JsonConverter.ToJson.toUserRegClassJson(
+            UserRegClass(
+                name="user",
+                email=email,
+                password=password
+            )
+        )
         runBlocking {
             Log.d("AppJson", "In runBlocking")
-            response = ServerInteraction.User.apiPostUser(
-                JsonConverter.ToJson.toUserRegClassJson(
-                    UserRegClass(
-                        name="user",
-                        email=email,
-                        password=password
-                    )
-                )
-            )
+            response = ServerInteraction.User.apiRegister(request)
         }
         Log.d("ApplicationJson", response!!.toString())
         settings.edit().putString("UsersUUID", response).commit()
         settings.edit().putString("UserPassword", password).commit()
+        settings.edit().putString("Token", response).commit()
     }
 
     /**

@@ -16,16 +16,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
+import java.io.IOException
 
 object ServerInteraction {
     private const val url = "http://10.0.2.2:8080"
     object Category {
-        suspend fun apiGetCategoryByFilter(jsonObjectString: String): String? {
+        suspend fun apiGetCategoryByFilter(jsonObjectString: String, token: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -33,7 +36,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getCategoryByFilter(requestBody)
+            val response = service.getCategoryByFilter(token, requestBody)
             Log.v("AppJson", "Response: ${response.toString()}")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
@@ -60,15 +63,18 @@ object ServerInteraction {
         }
 
 
-        suspend fun apiGetCategoryPagination(jsonObjectString: String): String? {
+        suspend fun apiGetCategoryPagination(jsonObjectString: String, token: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getCategoryPagination(requestBody)
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
+            Log.d("AppJson", "Token in categoryPagination: $token")
+            Log.d("AppJson", "Request cat.page.: $requestBody")
+            val response = service.getCategoryPagination(token, requestBody)
+            Log.v("AppJson", "CategoryPagination response: $response")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -92,7 +98,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPostCategory(jsonObjectString: String): String? {
+        suspend fun apiPostCategory(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -100,7 +106,7 @@ object ServerInteraction {
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
-            val response = service.postCategory(requestBody)
+            val response = service.postCategory(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -155,7 +161,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPutCategoryById(jsonObjectString: String, id: String): String? {
+        suspend fun apiPutCategoryById(token: String, jsonObjectString: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -163,7 +169,7 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            val response = service.putCategoryById(requestBody, id)
+            val response = service.putCategoryById(token, requestBody, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -186,14 +192,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteCategoryById(id: String): String? {
+        suspend fun apiDeleteCategoryById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            val response = service.deleteCategoryById(id)
+            val response = service.deleteCategoryById(token, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -217,7 +223,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetIncomesById(id: String): String? {
+        suspend fun apiGetIncomesById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -225,7 +231,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = false
             CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getIncomesByIdCategory(id)
+                val response = service.getIncomesByIdCategory(token, id)
                 withContext(Dispatchers.Main) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val prettyJson = gson.toJson(
@@ -249,14 +255,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetExpensesById(id: String): String? {
+        suspend fun apiGetExpensesById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = false
-            val response = service.getExpensesByIdCategory(id)
+            val response = service.getExpensesByIdCategory(token, id)
             withContext(Dispatchers.Main) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -282,7 +288,7 @@ object ServerInteraction {
     }
 
     object Expense {
-        suspend fun apiGetExpensesByFilter(jsonObjectString: String): String? {
+        suspend fun apiGetExpensesByFilter(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -290,7 +296,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getExpensesGetByFilter(requestBody)
+            val response = service.getExpensesGetByFilter(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -314,7 +320,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetExpensesPagination(jsonObjectString: String): String? {
+        suspend fun apiGetExpensesPagination(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -322,7 +328,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getExpensesPagination(requestBody)
+            val response = service.getExpensesPagination(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -346,7 +352,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPostExpenses(jsonObjectString: String): String? {
+        suspend fun apiPostExpenses(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -355,7 +361,7 @@ object ServerInteraction {
             Log.v("AppJson", "Request Post Expenses: $jsonObjectString")
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
             var gsonRes: String = ""
-            val response = service.postExpenses(requestBody)
+            val response = service.postExpenses(token, requestBody)
             Log.d("AppJson", "Response inside interaction: $response")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
@@ -379,14 +385,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetExpenseById(id: String): String? {
+        suspend fun apiGetExpenseById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.getExpenseById(id)
+            val response = service.getExpenseById(token, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -409,7 +415,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPutExpenseById(jsonObjectString: String, id: String): String? {
+        suspend fun apiPutExpenseById(token: String, jsonObjectString: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -417,7 +423,7 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.putExpenseById(requestBody, id)
+            val response = service.putExpenseById(token, requestBody, id)
             withContext(Dispatchers.Main) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -440,7 +446,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteExpenseById(id: String): String? {
+        suspend fun apiDeleteExpenseById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -448,7 +454,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag = false
             CoroutineScope(Dispatchers.IO).launch {
-                val response = service.deleteExpenseById(id)
+                val response = service.deleteExpenseById(token, id)
                 withContext(Dispatchers.Main) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val prettyJson = gson.toJson(
@@ -474,7 +480,7 @@ object ServerInteraction {
     }
 
     object Income {
-        suspend fun apiGetIncomesByFilter(jsonObjectString: String): String? {
+        suspend fun apiGetIncomesByFilter(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -482,7 +488,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getIncomesGetByFilter(requestBody)
+            val response = service.getIncomesGetByFilter(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -506,15 +512,17 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetIncomesPagination(jsonObjectString: String): String? {
+        suspend fun apiGetIncomesPagination(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getIncomesPagination(requestBody)
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
+            Log.d("AppJson", "Request inc.page. $jsonObjectString")
+            Log.v("AppJson", "Token inc.page: $token")
+            val response = service.getIncomesPagination(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -538,7 +546,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPostIncomes(jsonObjectString: String): String? {
+        suspend fun apiPostIncomes(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -546,7 +554,7 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.postIncomes(requestBody)
+            val response = service.postIncomes(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -569,14 +577,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetIncomeById(id: String): String? {
+        suspend fun apiGetIncomeById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.getIncomeById(id)
+            val response = service.getIncomeById(token, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -599,7 +607,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPutIncomeById(jsonObjectString: String, id: String): String? {
+        suspend fun apiPutIncomeById(token: String, jsonObjectString: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -607,7 +615,7 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.putIncomeById(requestBody, id)
+            val response = service.putIncomeById(token, requestBody, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -630,14 +638,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteIncomeById(id: String): String? {
+        suspend fun apiDeleteIncomeById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.deleteIncomeById(id)
+            val response = service.deleteIncomeById(token, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -662,7 +670,7 @@ object ServerInteraction {
     }
 
     object User {
-        suspend fun apiGetUserByFilter(jsonObjectString: String): String? {
+        suspend fun apiGetUserByFilter(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -670,7 +678,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getUserGetByFilter(requestBody)
+            val response = service.getUserGetByFilter(token, requestBody)
             Log.v("AppJson", "Response: ${response.toString()}")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
@@ -695,7 +703,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetUserPagination(jsonObjectString: String): String? {
+        suspend fun apiGetUserPagination(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -703,7 +711,7 @@ object ServerInteraction {
             var gsonRes: String = ""
             var successFlag: Boolean = true
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-            val response = service.getUserPagination(requestBody)
+            val response = service.getUserPagination(token, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -727,7 +735,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPostUser(jsonObjectString: String): String? {
+        suspend fun apiPostUser(token: String, jsonObjectString: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -737,7 +745,7 @@ object ServerInteraction {
             Log.d("AppJson", "")
             var successFlag = false
             Log.d("AppJson", "Request PostUser: $jsonObjectString")
-            val response = service.postUser(requestBody)
+            val response = service.postUser(token, requestBody)
             Log.v("AppJson", "Response: $response")
             Log.d("AppJson", "UserPost response: response")
             Log.d("AppJson", "UserPost responsebody: ${response.body()}")
@@ -767,14 +775,14 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetUserById(id: String): String? {
+        suspend fun apiGetUserById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.getUserById(id)
+            val response = service.getUserById(token, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -797,7 +805,7 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiPutUserById(jsonObjectString: String, id: String): String? {
+        suspend fun apiPutUserById(token: String, jsonObjectString: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
@@ -805,7 +813,7 @@ object ServerInteraction {
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.putUserById(requestBody, id)
+            val response = service.putUserById(token, requestBody, id)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -828,15 +836,15 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteUserById(id: String): String? {
+        suspend fun apiDeleteUserById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.deleteCategoryById(id)
-            withContext(Dispatchers.Main) {
+            val response = service.deleteCategoryById(token, id)
+            withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
                     JsonParser.parseString(
@@ -858,15 +866,15 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetIncomesById(id: String): String? {
+        suspend fun apiGetIncomesById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.getIncomesByIdUser(id)
-            withContext(Dispatchers.Main) {
+            val response = service.getIncomesByIdUser(token, id)
+            withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
                     JsonParser.parseString(
@@ -888,15 +896,15 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiGetExpensesById(id: String): String? {
+        suspend fun apiGetExpensesById(token: String, id: String): String? {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
-            val response = service.getExpensesByIdUser(id)
-            withContext(Dispatchers.Main) {
+            val response = service.getExpensesByIdUser(token, id)
+            withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
                     JsonParser.parseString(
@@ -916,6 +924,90 @@ object ServerInteraction {
                 return gsonRes
             }
             return null
+        }
+
+        suspend fun apiRegister(jsonObjectString: String) : String? {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(url)
+                .build()
+            val service = retrofit.create(APIServer::class.java)
+            var gsonRes: String = ""
+            var successFlag = false
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
+            val response = service.register(requestBody)
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
+                    )
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("App", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("App", response.code().toString())
+                }
+            }
+            if(successFlag){
+                return gsonRes
+            }
+            return null
+        }
+
+        suspend fun apiLogin(jsonObjectString: String) : String? {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(url)
+                .build()
+            val service = retrofit.create(APIServer::class.java)
+            var gsonRes: String = ""
+            var successFlag = false
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
+            val response = service.login(requestBody)
+            Log.d("AppJson", "Response for login: $response")
+            withContext(Dispatchers.IO) {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val prettyJson = gson.toJson(
+                    JsonParser.parseString(
+                        response.body()
+                            ?.string()
+                    )
+                )
+                gsonRes = prettyJson
+                if (response.isSuccessful) {
+                    Log.d("AppJson", prettyJson)
+                    successFlag = true
+                } else {
+                    Log.e("AppJson", response.code().toString())
+                }
+            }
+            if(successFlag){
+                return response.headers()["Authorization"]
+            }
+            return null
+        }
+
+        fun loginTest() {
+            val client = OkHttpClient()
+
+            val request = Request.Builder()
+                .url("https://publicobject.com/helloworld.txt")
+                .build()
+
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Запрос к серверу не был успешен:" +
+                                " ${response.code} ${response.message}")
+                    }
+                    Log.v("AppJson", "Server: ${response.header("Server")}")
+                    println(response.body!!.string())
+                }
+            } catch (e: IOException) {
+                Log.e("AppJson", "Ошибка подключения: $e");
+            }
         }
     }
 }

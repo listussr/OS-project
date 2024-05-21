@@ -63,10 +63,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         getLastExpenses()
         getLastIncomes()
         getLocalTime()
-        getDateInBorderCurMonth()
-        getDateInBorderLastMonth()
-        getDateInBorderThreeMonths()
-        getDateInBorderCurYear()
     }
 
     /**
@@ -81,7 +77,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         val time = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd.MM.yyyy")
         dateCur = formatter.format(time).toString()
-        Log.d("AppJson", "Current time = $dateCur")
+        //Log.d("AppJson", "Current time = $dateCur")
     }
 
     /**
@@ -371,7 +367,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getDateInBorderCurYear() : String {
         var date = dateCur
-        date = "01.01.20${dateCur[9]}${dateCur[9]}"
+        date = "01.01.20${dateCur[8]}${dateCur[9]}"
         return date
     }
 
@@ -382,6 +378,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getExpensesInDate(date: String) {
         var response: String?
+        //val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val request = JsonConverter.ToJson.toFilterClassArrayJson(
             arrayOf(
                 FilterClass(
@@ -391,9 +388,11 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                 )
             )
         )
+
+
         Log.d("AppJson", "getExpensesInDate request: $request")
         runBlocking {
-            response = ServerInteraction.Expense.apiGetExpensesByFilter(request)
+            response = ServerInteraction.Expense.apiGetExpensesByFilter(settings.getString("Token", "")!!, request)
         }
         expensesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
         Log.d("AppJson", "Response getExpenses: $response")
@@ -415,9 +414,10 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
                 )
             )
         )
+
         Log.d("AppJson", "getIncomesInDate request: $request")
         runBlocking {
-            response = ServerInteraction.Income.apiGetIncomesByFilter(request)
+            response = ServerInteraction.Income.apiGetIncomesByFilter(settings.getString("Token", "") ?: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcxNzE2OTUxNH0.-X3nfgtAWczuOZnqPxkRSBfmiG5h0M6rLL4iS7CNCsbaNyHXTrZzE5uSdfhd4RvrQ-6aoBMlou0tBXY6ia6rZw", request)
         }
         incomesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
         Log.d("AppJson", "Response getIncomes: $response")
@@ -430,7 +430,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val response: String?
         runBlocking {
-            response = ServerInteraction.Category.apiGetCategoryPagination(request)
+            response = ServerInteraction.Category.apiGetCategoryPagination(request, settings.getString("Token", "") ?: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcxNzE2OTUxNH0.-X3nfgtAWczuOZnqPxkRSBfmiG5h0M6rLL4iS7CNCsbaNyHXTrZzE5uSdfhd4RvrQ-6aoBMlou0tBXY6ia6rZw")
         }
         expenseCategoryArray = JsonConverter.FromJson.categoriesListJson(response) ?: arrayOf()
         incomeCategoryArray = expenseCategoryArray

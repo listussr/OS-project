@@ -56,38 +56,6 @@ class MainActivity : AppCompatActivity(){
     private var outOfDictionaryFlag: Boolean = false
     private var word: String = ""
 
-    private val deferredResult: Deferred<String> = CoroutineScope(Dispatchers.IO).async {
-        val url = "http://10.0.2.2:8080"
-        val retrofit = Retrofit.Builder()
-            .baseUrl(url)
-            .build()
-        val service = retrofit.create(APIServer::class.java)
-        var successFlag: Boolean = true
-        val requestBody = JsonConverter.ToJson.toFilterClassArrayJson(
-            arrayOf(FilterClass("name", "Бензин", "EQUAL"))
-        ).toRequestBody("application/json".toMediaTypeOrNull())
-        val response = service.getCategoryByFilter(requestBody)
-        Log.v("AppJson", "Response: ${response.toString()}")
-        val gsonStr = ""
-        withContext(Dispatchers.IO) {
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            val prettyJson = gson.toJson(
-                JsonParser.parseString(
-                    response.body()
-                        ?.string()
-                )
-            )
-            successFlag = if (response.isSuccessful) {
-                Log.w("App", prettyJson)
-                true
-            } else {
-                Log.e("App", response.code().toString())
-                false
-            }
-            return@withContext prettyJson
-        }
-    }
-
     private val dataModel: DataModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

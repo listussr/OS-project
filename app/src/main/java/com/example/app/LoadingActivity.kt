@@ -68,12 +68,16 @@ class LoadingActivity : AppCompatActivity() {
             editor.putString("UsersUUID", "null")
             editor.commit()
         }
-        if(!settings.contains("UserPassword")){
+        if(settings.contains("UserPassword")){
             editor.putString("UserPassword", "12345")
             editor.commit()
         }
         if(settings.contains("Recipients")){
             editor.putString("Recipients", "null")
+            editor.commit()
+        }
+        if(!settings.contains("Token")){
+            editor.putString("Token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcxNzE2OTUxNH0.-X3nfgtAWczuOZnqPxkRSBfmiG5h0M6rLL4iS7CNCsbaNyHXTrZzE5uSdfhd4RvrQ-6aoBMlou0tBXY6ia6rZw")
             editor.commit()
         }
     }

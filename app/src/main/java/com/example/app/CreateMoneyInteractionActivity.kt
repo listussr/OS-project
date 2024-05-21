@@ -21,7 +21,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 
-class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class CreateMoneyInteractionActivity : AppCompatActivity() {
     private lateinit var settings: SharedPreferences
 
     private lateinit var binding: ActivityCreateMoneyInteractionBinding
@@ -46,13 +46,28 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         expenseFlag = intent.getBooleanExtra("ExpenseFlag", true)
         Log.v("Set", "ExpensesFlag = $expenseFlag")
         getUUID()
+        setCorrectMoneyInteraction()
     }
 
+    /**
+     * Устанавливаем правильную надпись на кнопке добавления расхода/дохода
+     */
+    private fun setCorrectMoneyInteraction() {
+        binding.addMoneyInteractionButton.text = if(expenseFlag){
+            "Добавить расход"
+        } else {
+            "Добавить доход"
+        }
+    }
+
+    /**
+     * Получаем от сервера все категории
+     */
     private fun getCategories() : ArrayList<String> {
         val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val response: String?
         runBlocking{
-            response = ServerInteraction.Category.apiGetCategoryPagination(request)
+            response = ServerInteraction.Category.apiGetCategoryPagination(request, "")
         }
         val categoryClassArray = JsonConverter.FromJson.categoriesListJson(response)
         val arrayOfCategory = if (categoryClassArray != null){
@@ -69,10 +84,16 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         return arrayOfCategory
     }
 
+    /**
+     * Получаем id пользователя из настроек приложения
+     */
     private fun getUUID(){
         uuid = settings.getString("UsersUUID", "").toString()
     }
 
+    /**
+     * Устанавливаем содержимое RecyclerView с категориями
+     */
     private fun setCategoriesAdapter() {
         binding.categoriesSelector.layoutManager = LinearLayoutManager(this)
         binding.categoriesSelector.setHasFixedSize(true)
@@ -100,6 +121,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         })
     }
 
+    /**
+     * Получаем всех получателей из настроек
+     */
     private fun getRecipients() {
         val recipientsStr = settings.getString("Recipients", "")
         Log.d("Recipients", "Recipients: $recipientsStr")
@@ -114,6 +138,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Устанавливаем содержимое RecyclerView с получателями
+     */
     private fun setRecipientsAdapter() {
         binding.recipientsSelector.layoutManager = LinearLayoutManager(this)
         binding.recipientsSelector.setHasFixedSize(true)
@@ -136,6 +163,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         })
     }
 
+    /**
+     * Обработка нажатия на кнопку выбора получателя
+     */
     fun onRecipientButtonClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.recipientsSelector.visibility = View.VISIBLE
@@ -147,6 +177,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         setRecipientsAdapter()
     }
 
+    /**
+     * Обработка нажатия на кнопку ОК при добавлении новой категории
+     */
     fun onOkCategoryButtonClicked(view: View) {
         category = binding.newCategoryField.text.toString()
         if(category.isNotEmpty()) {
@@ -155,7 +188,7 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
             binding.addCategoryLayout.visibility = View.GONE
             binding.addingLayout.visibility = View.VISIBLE
             runBlocking {
-                response = ServerInteraction.Category.apiPostCategory(request)
+                response = ServerInteraction.Category.apiPostCategory(settings.getString("Token", "")!!, request)
             }
             if (response != null) {
                 Log.d("AppJson", "Category has been added successfully! Id: $response")
@@ -170,11 +203,17 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Обработка нажатия на кнопку Отмена при добавлении новой категории
+     */
     fun onCancelCategoryButtonClicked(view: View) {
         binding.addCategoryLayout.visibility = View.GONE
         binding.categoriesSelector.visibility = View.VISIBLE
     }
 
+    /**
+     * Получаем корректную настоящую дату
+     */
     fun getDate(view: View) {
         binding.addingLayout.visibility = View.GONE
         val c = Calendar.getInstance()
@@ -189,6 +228,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         dpd.show()
     }
 
+    /**
+     * Получаем данные из полей ввода
+     */
     private fun getDataFromFields() {
         comment = binding.commentField.text.toString()
         val sumStr = binding.sumField.text.toString()
@@ -199,6 +241,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Добавляем в базу данныз на сервере новое взаимодействие с деньгами
+     */
     private fun postMoneyInteraction() {
         if(date[1] == '.'){
             date = "0$date"
@@ -219,9 +264,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         val response: String?
         runBlocking {
             response = if(expenseFlag){
-                ServerInteraction.Expense.apiPostExpenses(request)
+                ServerInteraction.Expense.apiPostExpenses(settings.getString("Token", "")!!, request)
             } else {
-                ServerInteraction.Income.apiPostIncomes(request)
+                ServerInteraction.Income.apiPostIncomes(settings.getString("Token", "")!!, request)
             }
         }
         if(response != null) {
@@ -232,6 +277,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         Log.w("AppJson", "Post request json: $request")
     }
 
+    /**
+     * Обработка нажатия на кнопку добавления расхода/дохода
+     */
     fun onCreateMoneyInteractionClicked(view: View) {
         getDataFromFields()
         if(sum <= 0) {
@@ -252,6 +300,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Обработка нажатия на кнопку выбора категории
+     */
     fun onCategoriesPickerButtonClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.categoriesSelector.visibility = View.VISIBLE
@@ -263,16 +314,25 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         setCategoriesAdapter()
     }
 
+    /**
+     * Обработка нажатия на кнопку выбора времени
+     */
     fun onTimePickerClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.timePickerLayout.visibility = View.VISIBLE
     }
 
+    /**
+     * Обработка нажатия на кнопку Отмена при выборе времени
+     */
     fun onTimePickerCancelButtonClicked(view: View) {
         binding.addingLayout.visibility = View.VISIBLE
         binding.timePickerLayout.visibility = View.GONE
     }
 
+    /**
+     * Обработка нажатия на кнопку ОК при добавлении нового получателя
+     */
     fun onOkRecipientButtonClicked(view: View) {
         recipient = binding.newRecipientField.text.toString()
         if(recipient.isNotEmpty()){
@@ -290,17 +350,26 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Обработка нажатия на кнопку Отмена при добавлении нового получателя
+     */
     fun onCancelRecipientsButtonClicked(view: View) {
         binding.recipientsSelector.visibility = View.VISIBLE
         binding.addRecipientsLayout.visibility = View.GONE
     }
 
+    /**
+     * Обработка нажатия на кнопку Разовый доход
+     */
     fun onIrregularButtonClicked(view: View) {
         binding.addingLayout.visibility = View.VISIBLE
         binding.typePickerLayout.visibility = View.GONE
         binding.typeButton.text = "Нерегулярный"
     }
 
+    /**
+     * Обработка нажатия на кнопку регулярный доход
+     */
     fun onRegularButtonClicked(view: View) {
         binding.typePickerLayout.visibility = View.GONE
         binding.regularTypeSelector.visibility = View.VISIBLE
@@ -312,21 +381,50 @@ class CreateMoneyInteractionActivity : AppCompatActivity(), DatePickerDialog.OnD
         }
     }
 
+    /**
+     * Обработка нажатия на кнопку ОК при задании времени
+     */
     fun onTimePickerOkButtonClicked(view: View) {
         val hours = binding.hoursEditText.text.toString()
         val minutes = binding.minutesEditText.text.toString()
-        time = "$hours:$minutes:00"
-        binding.timeButton.text = time
-        binding.timeButton.setTextColor(Color.parseColor("#656565"))
-        onTimePickerCancelButtonClicked(view)
+        if(hours.toInt() < 0 || hours.toInt() > 23 || minutes.toInt() < 0 || minutes.toInt() > 59){
+            Toast.makeText(applicationContext, "Неверное время", Toast.LENGTH_LONG).show()
+        } else {
+            time = "$hours:$minutes:00"
+            binding.timeButton.text = time
+            binding.timeButton.setTextColor(Color.parseColor("#656565"))
+            onTimePickerCancelButtonClicked(view)
+        }
     }
 
+    /**
+     * Обработка нажатия на кнопку выбора типа дохода
+     */
     fun onTypePickerClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.typePickerLayout.visibility = View.VISIBLE
     }
 
-    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        TODO("Not yet implemented")
+    /**
+     * Обработка нажатия на кнопку добавить скан
+     */
+    fun onAddScanClicked(view: View) {
+        Toast.makeText(applicationContext, "Функция находится в разработке!",Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * Меняем фон при нажатии на ввод минут
+     */
+    fun onMinutesClicked(view: View) {
+        binding.hoursEditText.setBackgroundResource(R.drawable.roundrect_off)
+        binding.minutesEditText.setBackgroundResource(R.drawable.roundrect)
+    }
+
+    /**
+     * Меняем фон при нажатии на часы
+     */
+    fun onHoursClicked(view: View) {
+        binding.hoursEditText.setBackgroundResource(R.drawable.roundrect)
+        binding.minutesEditText.setBackgroundResource(R.drawable.roundrect_off)
     }
 }
