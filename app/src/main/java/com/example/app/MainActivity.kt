@@ -65,35 +65,8 @@ class MainActivity : AppCompatActivity(){
         chooseStartFragment()
         setLanguageView()
         getUUID()
-        /*
-        if (categoryStr == null) {
-            Log.v("ApplicationJson", categoryStr)
-            val categoryId = JsonConverter.FromJson.categoriesListJson(categoryStr)!![0].id
-            var response2: String?
-            runBlocking {
-                val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(
-                    MoneyInteractionPostClass(
-                        "test expense",
-                        20000,
-                        categoryId,
-                        userId,
-                        "25.03.24 00:00:00"
-                    )
-                )
-                Log.d("AppJson", request)
-                response2 = ServerInteraction.Expense.apiPostExpensesTest(
-                    request
-                )
-                Log.e("AppJson", "Got response: $response2")
-            }
-            if(response2 != null)
-                Log.w("AppJson", "Response: $response2")
-            else
-                Log.e("AppJson", "Response is null")
-        } else {
-            Log.e("AppJson", "Impossible to connect to server")
-        }
-         */
+        Log.w("AppJson", "Token: ${settings.getString("Token", "")}")
+        Log.w("AppJson", "UUID: ${settings.getString("UsersUUID", "")}")
     }
 
     /**

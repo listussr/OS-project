@@ -3,6 +3,9 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -188,17 +191,25 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
+     * Проверка на подключение к интернету
+     */
+    private fun checkForConnection(context: Context) : Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
+    }
+
+        /**
      * Образаемся к серверу с запросом о существовании пользователя с такой почтой
      */
     private fun getUserExistenceFlag(): Boolean {
-        var response: String?
-        /*val request = JsonConverter.ToJson.toFilterClassJson(
-            FilterClass(
-                "email",
-                binding.editTextEmailAddressLogin.text.toString(),
-                "EQUAL"
-            )
-        )*/
+        var response: Pair<String?, String?>
         val request = "{\"name\": \"user1\", \"password\":\"$password\"}"
         runBlocking {
             Log.d("AppJson", request)
@@ -207,12 +218,14 @@ class LoginActivity : AppCompatActivity() {
             )
             Log.d("AppJson", "Response login: $response")
         }
-        return if(response == null) {
+        return if(response.second == null || response.first == null) {
             Toast.makeText(applicationContext, "Пользователя с таким email не существует. Пройдите регистрацию.", Toast.LENGTH_LONG).show()
             false
         } else {
-            Log.d("AppJson", "Login response: $response")
-            settings.edit().putString("Token", response).commit()
+            Log.d("AppJson", "Login response: ${response.first}")
+            Log.d("AppJson", "Login UUID: ${response.second}")
+            settings.edit().putString("Token", response.first).commit()
+            settings.edit().putString("UsersUUID", response.second).commit()
             true
         }
     }
@@ -235,6 +248,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Некорректная почта!", Toast.LENGTH_LONG).show()
             changeBackgroundLogin()
             changeVisibility()
+        } else if(!checkForConnection(applicationContext)){
+            Toast.makeText(applicationContext, "Для входа в аккаунт необходимо подключение к интернету", Toast.LENGTH_LONG).show()
         } else if(!getUserExistenceFlag()) {
             changeBackgroundLogin()
         } else if(!getWasRegisteredFlag()){

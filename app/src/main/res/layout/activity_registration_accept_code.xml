@@ -5,6 +5,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rect"
     android:backgroundTint="#F9F9F9"
     android:orientation="vertical"
     tools:context=".RegistrationAcceptCodeActivity">

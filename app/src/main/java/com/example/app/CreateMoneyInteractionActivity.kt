@@ -67,7 +67,7 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
         val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val response: String?
         runBlocking{
-            response = ServerInteraction.Category.apiGetCategoryPagination(request, "")
+            response = ServerInteraction.Category.apiGetCategoryPagination(request, settings.getString("Token", "")!!)
         }
         val categoryClassArray = JsonConverter.FromJson.categoriesListJson(response)
         val arrayOfCategory = if (categoryClassArray != null){
@@ -277,6 +277,8 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
         Log.w("AppJson", "Post request json: $request")
     }
 
+
+
     /**
      * Обработка нажатия на кнопку добавления расхода/дохода
      */
@@ -290,9 +292,8 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Дата не может быть пустой!", Toast.LENGTH_LONG).show()
         } else if(category.isEmpty()){
             Toast.makeText(applicationContext, "Категория не может быть пустой!", Toast.LENGTH_LONG).show()
-        } else if(recipient.isEmpty()){
-            Toast.makeText(applicationContext, "Получатель не может быть не указан!", Toast.LENGTH_LONG).show()
         } else {
+            if()
             postMoneyInteraction()
             val intent = Intent(this@CreateMoneyInteractionActivity, MainActivity::class.java)
             startActivity(intent)

@@ -12,6 +12,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface APIServer {
 
@@ -132,6 +133,14 @@ interface APIServer {
     @Headers("Content-type: application/json")
     @GET("/users/expensesById/{Id}")
     suspend fun getExpensesByIdUser(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+
+    @Headers("Content-type: application/json")
+    @POST("/users/expensesByIdAndFilter")
+    suspend fun getExpensesByIdAndFilter(@Header("Authorization") token: String, @Query("id") id: String, @Body requestBody: RequestBody) : Response<ResponseBody>
+
+    @Headers("Content-type: application/json")
+    @POST("/users/incomesByIdAndFilter")
+    suspend fun getIncomesByIdAndFilter(@Header("Authorization") token: String, @Query("id") id: String, @Body requestBody: RequestBody) : Response<ResponseBody>
 
     @POST("/register")
     suspend fun register(@Body requestBody: RequestBody) : Response<ResponseBody>

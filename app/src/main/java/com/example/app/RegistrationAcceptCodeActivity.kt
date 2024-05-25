@@ -25,8 +25,8 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration_accept_code)
-        //email = intent.getStringExtra("Email").toString()
-        //password = intent.getStringExtra("Password").toString()
+        email = intent.getStringExtra("Email").toString()
+        password = intent.getStringExtra("Password").toString()
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
     }
 
@@ -46,22 +46,18 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
      * Создаём на сервере нового пользователя
      */
     private fun registerUser() {
-        var response: String?
         val request = JsonConverter.ToJson.toUserRegClassJson(
             UserRegClass(
-                name="user",
+                name="user2",
                 email=email,
                 password=password
             )
         )
         runBlocking {
             Log.d("AppJson", "In runBlocking")
-            response = ServerInteraction.User.apiRegister(request)
+            ServerInteraction.User.apiRegister(request)
         }
-        Log.d("ApplicationJson", response!!.toString())
-        settings.edit().putString("UsersUUID", response).commit()
         settings.edit().putString("UserPassword", password).commit()
-        settings.edit().putString("Token", response).commit()
     }
 
     /**
@@ -69,6 +65,12 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
      */
     private fun toSettingPIN() {
         val intent = Intent(this@RegistrationAcceptCodeActivity, ChangingPinActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun toLogin() {
+        val intent = Intent(this@RegistrationAcceptCodeActivity, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -83,7 +85,7 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
             changeBackgroundCode()
         } else {
             registerUser()
-            toSettingPIN()
+            toLogin()
         }
     }
 

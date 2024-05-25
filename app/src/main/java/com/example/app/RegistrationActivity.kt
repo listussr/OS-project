@@ -3,6 +3,8 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -153,14 +155,30 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     /**
+     * Проверка на подключение к интернету
+     */
+    private fun checkForConnection(context: Context) : Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
+    }
+
+    /**
      * Обработка нажатия на кнопку "Войти"
      */
     fun onContinueButtonClicked(view: View) {
         val emailString: String = getViewInfo(emailEdit)
         val passwordString: String = getViewInfo(passwordEdit)
         val passwordStringCopy: String = getViewInfo(passwordEditCopy)
-
-        if(passwordString.isEmpty()){
+        if(!checkForConnection(applicationContext)){
+            Toast.makeText(applicationContext, "Для регистрации пользователя необходимо подключение к интернету", Toast.LENGTH_LONG).show()
+        } else if(passwordString.isEmpty()){
             clearPassword(passwordEditCopy)
             if(getLanguageFlag()){
                 Toast.makeText(applicationContext, "Пароль не может быть пустым!", Toast.LENGTH_LONG).show()

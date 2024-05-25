@@ -5,12 +5,15 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.ui.text.substring
 import androidx.fragment.app.activityViewModels
 import com.example.app.databinding.FragmentPieChartBinding
@@ -30,6 +33,36 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private var incomesArray: Array<MoneyInteractionClass> = arrayOf()
     private var expenseCategoryArray: Array<CategoryClass> = arrayOf()
     private var incomeCategoryArray: Array<CategoryClass> = arrayOf()
+
+    private val engMonths: Array<String> = arrayOf(
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    )
+
+    private val ruMonths: Array<String> = arrayOf(
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь"
+    )
 
     private var periodNum = 1
 
@@ -63,6 +96,29 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         getLastExpenses()
         getLastIncomes()
         getLocalTime()
+        setCorrectMonths()
+    }
+
+    /**
+     * Устанавливаем корректное отображение нанешнего и предыдущего месяцев на кнопках
+     */
+    private fun setCorrectMonths() {
+        binding.buttonCurrentMonth.text = if(getLanguageFlag()){
+            ruMonths[(dateCur[3].toString() + dateCur[4].toString()).toInt() - 1]
+        } else {
+            engMonths[(dateCur[3].toString() + dateCur[4].toString()).toInt() - 1]
+        }
+        binding.buttonLastMonth.text = if(getLanguageFlag()){
+            when((dateCur[3].toString() + dateCur[4].toString()).toInt() - 2) {
+                -1 -> ruMonths[11]
+                else -> ruMonths[(dateCur[3].toString() + dateCur[4].toString()).toInt() - 2]
+            }
+        } else {
+            when((dateCur[3].toString() + dateCur[4].toString()).toInt() - 2) {
+                -1 -> engMonths[11]
+                else -> engMonths[(dateCur[3].toString() + dateCur[4].toString()).toInt() - 2]
+            }
+        }
     }
 
     /**
@@ -77,7 +133,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         val time = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd.MM.yyyy")
         dateCur = formatter.format(time).toString()
-        //Log.d("AppJson", "Current time = $dateCur")
     }
 
     /**
@@ -189,9 +244,8 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastIncomes() {
         val incomesString = settings.getString("LastIncome", "")
-        //Log.e("App", "Get last Incomes: $incomesString")
         incomesArray = if(incomesString!! != "null") {
-            JsonConverter.FromJson.moneyInteractionListJson(incomesString)!!
+            JsonConverter.FromJson.moneyInteractionListJson(incomesString)
         } else {
             arrayOf()
         }
@@ -209,7 +263,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastExpensesString() : String {
         val strArray: String = if(expensesArray.isNotEmpty()) {
-            //Log.v("App", "Expenses: ${expensesArray.toString()}")
             JsonConverter.ToJson.toMoneyInteractionArrayJson(expensesArray)
         } else {
             "null"
@@ -222,7 +275,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastIncomesString() : String {
         val strArray: String = if(incomesArray.isNotEmpty()) {
-            //Log.v("App", "Incomes: ${expensesArray.toString()}")
             JsonConverter.ToJson.toMoneyInteractionArrayJson(incomesArray)
         } else {
             "null"
@@ -235,7 +287,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastExpensesCategoryString() : String {
         val strArray: String = if(expenseCategoryArray.isNotEmpty()) {
-            //Log.v("App", "Expenses: ${expenseCategoryArray.toString()}")
             JsonConverter.ToJson.toCategoryArrayJson(expenseCategoryArray)
         } else {
             "null"
@@ -248,7 +299,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getLastIncomesCategoryString() : String {
         val strArray: String = if(incomeCategoryArray.isNotEmpty()) {
-            Log.v("App", "Incomes: ${incomeCategoryArray.toString()}")
+            Log.v("App", "Incomes: $incomeCategoryArray")
             JsonConverter.ToJson.toCategoryArrayJson(incomeCategoryArray)
         } else {
             "null"
@@ -260,12 +311,10 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      * Отмечаем изменения данных для круговых диаграмм
      */
     private fun sendUpdatesToActivity() {
-        //Log.v("App", "Expenses: ${getLastExpensesString()}")
-        //Log.v("App", "Incomes: ${getLastIncomesString()}")
-        dataModel.message.value = listOf(
-            getLastExpensesString(),
-            getLastIncomesString()
-        )
+        //dataModel.message.value = listOf(
+        //    getLastExpensesString(),
+        //    getLastIncomesString()
+        //)
         settings.edit().putString("LastExpenses", getLastExpensesString()).commit()
         settings.edit().putString("LastIncome", getLastIncomesString()).commit()
         settings.edit().putString("LastExpensesCategory", getLastExpensesCategoryString()).commit()
@@ -296,6 +345,21 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    /**
+     * Проверка на подключение к интернету
+     */
+    private fun checkForConnection(context: Context) : Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
     }
 
     /**
@@ -378,7 +442,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun getExpensesInDate(date: String) {
         var response: String?
-        //val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val request = JsonConverter.ToJson.toFilterClassArrayJson(
             arrayOf(
                 FilterClass(
@@ -392,7 +455,11 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
 
         Log.d("AppJson", "getExpensesInDate request: $request")
         runBlocking {
-            response = ServerInteraction.Expense.apiGetExpensesByFilter(settings.getString("Token", "")!!, request)
+            response = ServerInteraction.User.apiGetExpensesByIdAndFilter(
+                settings.getString("Token", "")!!,
+                request,
+                settings.getString("UsersUUID", "")!!
+            )
         }
         expensesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
         Log.d("AppJson", "Response getExpenses: $response")
@@ -417,7 +484,11 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
 
         Log.d("AppJson", "getIncomesInDate request: $request")
         runBlocking {
-            response = ServerInteraction.Income.apiGetIncomesByFilter(settings.getString("Token", "") ?: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcxNzE2OTUxNH0.-X3nfgtAWczuOZnqPxkRSBfmiG5h0M6rLL4iS7CNCsbaNyHXTrZzE5uSdfhd4RvrQ-6aoBMlou0tBXY6ia6rZw", request)
+            response = ServerInteraction.User.apiGetIncomesByIdAndFilter(
+                settings.getString("Token", "")!!,
+                request,
+                settings.getString("UsersUUID", "")!!
+            )
         }
         incomesArray = JsonConverter.FromJson.moneyInteractionListJson(response)
         Log.d("AppJson", "Response getIncomes: $response")
@@ -430,7 +501,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         val request = "{\"size\": \"100\", \"page\": \"0\"}"
         val response: String?
         runBlocking {
-            response = ServerInteraction.Category.apiGetCategoryPagination(request, settings.getString("Token", "") ?: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcxNzE2OTUxNH0.-X3nfgtAWczuOZnqPxkRSBfmiG5h0M6rLL4iS7CNCsbaNyHXTrZzE5uSdfhd4RvrQ-6aoBMlou0tBXY6ia6rZw")
+            response = ServerInteraction.Category.apiGetCategoryPagination(request, settings.getString("Token", "")!!)
         }
         expenseCategoryArray = JsonConverter.FromJson.categoriesListJson(response) ?: arrayOf()
         incomeCategoryArray = expenseCategoryArray
@@ -441,77 +512,19 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onCurrentMonthClicked() {
         binding.buttonCurrentMonth.setOnClickListener{
-            /*
-            incomesArray = arrayOf(
-                MoneyInteractionClass(
-                    "1",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    20000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                )
-            )
-            expensesArray = arrayOf(
-                MoneyInteractionClass(
-                    "2",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    20000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                )
-            )
-            */
-            getCategories()
-            Log.d("AppJson", "Got categories")
-            getExpensesInDate("${getDateInBorderCurMonth()} 00:00:00")
-            Log.d("AppJson", "Got expenses")
-            getIncomesInDate("${getDateInBorderCurMonth()} 00:00:00")
+            if (checkForConnection(requireContext())) {
+                getCategories()
+                Log.d("AppJson", "Got categories")
+                getExpensesInDate("${getDateInBorderCurMonth()} 00:00:00")
+                Log.d("AppJson", "Got expenses")
+                getIncomesInDate("${getDateInBorderCurMonth()} 00:00:00")
+            } else {
+                Toast.makeText(requireContext(), "Нет подключения к сети!", Toast.LENGTH_LONG).show()
+                expensesArray = arrayOf()
+                incomesArray = arrayOf()
+                expenseCategoryArray = arrayOf()
+                incomeCategoryArray = arrayOf()
+            }
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -526,97 +539,19 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onLastMonthClicked() {
         binding.buttonLastMonth.setOnClickListener{
-            /*
-            incomesArray = arrayOf(
-                MoneyInteractionClass(
-                    "1",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Еда",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    20000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Дом",
-                        "bknl"
-                    )
-                )
-            )
-            expensesArray = arrayOf(
-                MoneyInteractionClass(
-                    "2",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Еда",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "4",
-                    "",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Авто",
-                        "bknl"
-                    )
-                )
-            )
-            incomeCategoryArray = arrayOf(
-                CategoryClass(
-                    "Еда",
-                    "1243"
-                ),
-                CategoryClass(
-                    "Дом",
-                    "1000"
-                )
-            )
-            expenseCategoryArray = arrayOf(
-                CategoryClass(
-                    "Еда",
-                    "1243"
-                ),
-                CategoryClass(
-                    "Авто",
-                    "1000"
-                )
-            )
-            */
-            getCategories()
-            Log.d("AppJson", "Got categories")
-            getExpensesInDate("${getDateInBorderLastMonth()} 00:00:00")
-            Log.d("AppJson", "Got expenses")
-            getIncomesInDate("${getDateInBorderLastMonth()} 00:00:00")
+            if(checkForConnection(requireContext())){
+                getCategories()
+                Log.d("AppJson", "Got categories")
+                getExpensesInDate("${getDateInBorderLastMonth()} 00:00:00")
+                Log.d("AppJson", "Got expenses")
+                getIncomesInDate("${getDateInBorderLastMonth()} 00:00:00")
+            } else {
+                Toast.makeText(requireContext(), "Нет подключения к сети!", Toast.LENGTH_LONG).show()
+                expensesArray = arrayOf()
+                incomesArray = arrayOf()
+                expenseCategoryArray = arrayOf()
+                incomeCategoryArray = arrayOf()
+            }
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -631,93 +566,19 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onThreeMonthsClicked() {
         binding.buttonThreeMonths.setOnClickListener{
-            /*
-            incomesArray = arrayOf(
-                MoneyInteractionClass(
-                    "1",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    5000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                )
-            )
-            expensesArray = arrayOf(
-                MoneyInteractionClass(
-                    "2",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    10000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Авто",
-                        "bknl"
-                    )
-                )
-            )
-            incomeCategoryArray = arrayOf(
-                CategoryClass(
-                    "food",
-                    "1243"
-                )
-            )
-            expenseCategoryArray = arrayOf(
-                CategoryClass(
-                    "food",
-                    "1243"
-                ),
-                CategoryClass(
-                    "Авто",
-                    "1000"
-                )
-            )
-            */
-            getCategories()
-            Log.d("AppJson", "Got categories")
-            getExpensesInDate("${getDateInBorderThreeMonths()} 00:00:00")
-            Log.d("AppJson", "Got expenses")
-            getIncomesInDate("${getDateInBorderThreeMonths()} 00:00:00")
+            if(checkForConnection(requireContext())){
+                getCategories()
+                Log.d("AppJson", "Got categories")
+                getExpensesInDate("${getDateInBorderThreeMonths()} 00:00:00")
+                Log.d("AppJson", "Got expenses")
+                getIncomesInDate("${getDateInBorderThreeMonths()} 00:00:00")
+            } else {
+                Toast.makeText(requireContext(), "Нет подключения к сети!", Toast.LENGTH_LONG).show()
+                expensesArray = arrayOf()
+                incomesArray = arrayOf()
+                expenseCategoryArray = arrayOf()
+                incomeCategoryArray = arrayOf()
+            }
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -732,93 +593,19 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      */
     private fun onCurrentYearClicked() {
         binding.buttonCurrentYear.setOnClickListener{
-            /*
-            incomesArray = arrayOf(
-                MoneyInteractionClass(
-                    "1",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    20000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                )
-            )
-            expensesArray = arrayOf(
-                MoneyInteractionClass(
-                    "2",
-                    "jknl",
-                    4000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "Дом",
-                        "bknl"
-                    )
-                ),
-                MoneyInteractionClass(
-                    "2",
-                    "",
-                    20000,
-                    "21.12.2004",
-                    UserClass(
-                        "Ivan",
-                        "Ivan",
-                        "list@mail.ru"
-                    ),
-                    CategoryClass(
-                        "food",
-                        "bknl"
-                    )
-                )
-            )
-            incomeCategoryArray = arrayOf(
-                CategoryClass(
-                    "food",
-                    "1243"
-                )
-            )
-            expenseCategoryArray = arrayOf(
-                CategoryClass(
-                    "food",
-                    "1243"
-                ),
-                CategoryClass(
-                    "Дом",
-                    "1000"
-                )
-            )
-            */
-            getCategories()
-            Log.d("AppJson", "Got categories")
-            getExpensesInDate("${getDateInBorderCurYear()} 00:00:00")
-            Log.d("AppJson", "Got expenses")
-            getIncomesInDate("${getDateInBorderCurYear()} 00:00:00")
+            if(checkForConnection(requireContext())){
+                getCategories()
+                Log.d("AppJson", "Got categories")
+                getExpensesInDate("${getDateInBorderCurYear()} 00:00:00")
+                Log.d("AppJson", "Got expenses")
+                getIncomesInDate("${getDateInBorderCurYear()} 00:00:00")
+            } else {
+                Toast.makeText(requireContext(), "Нет подключения к сети!", Toast.LENGTH_LONG).show()
+                expensesArray = arrayOf()
+                incomesArray = arrayOf()
+                expenseCategoryArray = arrayOf()
+                incomeCategoryArray = arrayOf()
+            }
             binding.pieChartExpenses.setInfoList(expensesArray, expenseCategoryArray)
             binding.pieChartIncome.setInfoList(incomesArray, incomeCategoryArray)
             binding.pieChartExpenses.invalidate()
@@ -866,7 +653,6 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      * Меняем внешний вид кнопок по нажатию на кнопку с последним месяцем
      */
     private fun changeButtonsLastMonth() {
-        //Log.v("App", "On last month clicked")
         binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
         binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
         when(periodNum){
