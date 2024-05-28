@@ -132,7 +132,7 @@ class SettingsFragment : Fragment() {
      */
     private fun setThemeButtonsState() {
         val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
-        Toast.makeText(context, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
         if(lightThemeFlag){
             binding.darkThemeButton.setBackgroundResource(R.drawable.half_roundrect_right_off)
             binding.lightThemeButton.setTextColor(Color.parseColor("#F1F1F1"))
