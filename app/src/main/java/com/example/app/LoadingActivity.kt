@@ -78,6 +78,10 @@ class LoadingActivity : AppCompatActivity() {
             editor.putString("Token", "")
             editor.commit()
         }
+        if(!settings.contains("UserName")){
+            editor.putString("UserName", "user")
+            editor.commit()
+        }
     }
 
     /**

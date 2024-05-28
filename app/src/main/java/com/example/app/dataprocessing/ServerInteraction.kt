@@ -659,7 +659,8 @@ object ServerInteraction {
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag: Boolean = true
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
+            Log.d("AppJson", "Get user filter: $jsonObjectString")
             val response = service.getUserGetByFilter(token, requestBody)
             Log.v("AppJson", "Response: ${response.toString()}")
             withContext(Dispatchers.IO) {
@@ -672,17 +673,18 @@ object ServerInteraction {
                 )
                 gsonRes = prettyJson
                 successFlag = if (response.isSuccessful) {
-                    Log.d("App", prettyJson)
+                    Log.d("AppJson", "Success")
+                    Log.d("AppJson", prettyJson)
                     true
                 } else {
-                    Log.e("App", response.code().toString())
+                    Log.e("AppJson", response.code().toString())
                     false
                 }
             }
             if(successFlag){
                 return gsonRes
             }
-            return null
+            return ""
         }
 
         suspend fun apiGetUserPagination(token: String, jsonObjectString: String): String? {
@@ -919,14 +921,14 @@ object ServerInteraction {
             val response = service.getIncomesByIdAndFilter(token, id, requestBody)
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
-                val prettyJson = gson.toJson(
-                    JsonParser.parseString(
-                        response.body()
-                            ?.string()
-                    )
-                )
-                gsonRes = prettyJson
                 if (response.isSuccessful) {
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string()
+                        )
+                    )
+                    gsonRes = prettyJson
                     Log.d("App", prettyJson)
                     successFlag = true
                 } else {
@@ -973,7 +975,6 @@ object ServerInteraction {
             return null
         }
 
-
         suspend fun apiRegister(jsonObjectString: String) {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
@@ -984,15 +985,8 @@ object ServerInteraction {
             val response = service.register(requestBody)
             Log.d("AppJson", "Response registration: $response")
             withContext(Dispatchers.IO) {
-                val gson = GsonBuilder().setPrettyPrinting().create()
-                val prettyJson = gson.toJson(
-                    JsonParser.parseString(
-                        response.body()
-                            ?.string()
-                    )
-                )
                 if (response.isSuccessful) {
-                    Log.d("App", prettyJson)
+                    Log.d("App", "Registered")
                 } else {
                     Log.e("App", response.code().toString())
                 }

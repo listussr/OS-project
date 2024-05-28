@@ -203,6 +203,8 @@ class SettingsFragment : Fragment() {
         editor.putBoolean("Language", false)
             .commit()
         translateToEnglish()
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
     }
 
     /**
@@ -213,6 +215,8 @@ class SettingsFragment : Fragment() {
         editor.putBoolean("Language", true)
             .commit()
         translateToRussian()
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
     }
 
     /**

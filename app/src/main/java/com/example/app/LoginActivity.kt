@@ -16,6 +16,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.app.databinding.ActivityLoginBinding
+import com.example.app.dataprocessing.FilterClass
+import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.ServerInteraction
 import kotlinx.coroutines.runBlocking
 
@@ -205,12 +207,36 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-        /**
-     * Образаемся к серверу с запросом о существовании пользователя с такой почтой
+    /**
+     * Получаем имя пользователя и его id по почте
+     */
+    private fun getUserName(): Pair<String, String> {
+        val request = JsonConverter.ToJson.toFilterClassArrayJson(
+            arrayOf(
+                FilterClass(
+                    "email",
+                    binding.editTextEmailAddressLogin.text.toString(),
+                    "EQUAL"
+                )
+            )
+        )
+        val response: String?
+        runBlocking {
+            response = ServerInteraction.User.apiGetUserByFilter(settings.getString("Token", "")!!, request)
+        }
+        Log.v("AppJson", "Response get UserName")
+        Log.d("AppJson", "Repsonse: $response")
+        val user = JsonConverter.FromJson.userListJson(response)!!
+        return Pair(user[0].name, user[0].id)
+    }
+
+    /**
+     * Обращаемся к серверу с запросом о существовании пользователя с такой почтой
      */
     private fun getUserExistenceFlag(): Boolean {
+        val name_id = getUserName()
         var response: Pair<String?, String?>
-        val request = "{\"name\": \"user1\", \"password\":\"$password\"}"
+        val request = "{\"name\": \"${name_id.first}\", \"password\":\"$password\"}"
         runBlocking {
             Log.d("AppJson", request)
             response = ServerInteraction.User.apiLogin(

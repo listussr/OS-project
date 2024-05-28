@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.app.databinding.ActivityRegistrationAcceptCodeBinding
+import com.example.app.dataprocessing.FilterClass
 import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.ServerInteraction
 import com.example.app.dataprocessing.UserRegClass
@@ -69,22 +71,62 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
         }
     }
 
+    private fun generateName(): String {
+        var name = "user"
+        var length = (3..10).random()
+        while(length != 0){
+            name += (0..9).random().toString()
+            length--
+        }
+        return name
+    }
+
+    /**
+     * Проверяем существует ли такая почта в бд
+     */
+    private fun checkExistence(): Boolean {
+        val request = JsonConverter.ToJson.toFilterClassArrayJson(
+            arrayOf(
+                FilterClass(
+                    "email",
+                    email,
+                    "EQUAL"
+                )
+            )
+        )
+        val response: String?
+        runBlocking {
+            response = ServerInteraction.User.apiGetUserByFilter(settings.getString("Token", "")!!, request)
+        }
+        val user = JsonConverter.FromJson.userListJson(response)
+        Log.d("AppJson", "Response for email: $response")
+        return response == "[]"
+    }
+
     /**
      * Создаём на сервере нового пользователя
      */
     private fun registerUser() {
-        val request = JsonConverter.ToJson.toUserRegClassJson(
-            UserRegClass(
-                name="user2",
-                email=email,
-                password=password
+        if (checkExistence()) {
+            val request = JsonConverter.ToJson.toUserRegClassJson(
+                UserRegClass(
+                    name = generateName(),
+                    email = email,
+                    password = password
+                )
             )
-        )
-        runBlocking {
-            Log.d("AppJson", "In runBlocking")
-            ServerInteraction.User.apiRegister(request)
+            Log.d("AppJson", "Registration Request: $request")
+            runBlocking {
+                Log.d("AppJson", "In runBlocking")
+                ServerInteraction.User.apiRegister(request)
+            }
+            settings.edit().putString("UserPassword", password).commit()
+        } else {
+            Toast.makeText(applicationContext, "Пользователь с такой почтой существует!", Toast.LENGTH_LONG).show()
+            val intent = Intent(this@RegistrationAcceptCodeActivity, RegistrationActivity::class.java)
+            startActivity(intent)
+            finish()
         }
-        settings.edit().putString("UserPassword", password).commit()
     }
 
     /**
