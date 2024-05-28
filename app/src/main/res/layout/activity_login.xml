@@ -5,7 +5,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
+    android:background="@drawable/rect_light"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
@@ -33,8 +33,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/roundrect"
-        android:backgroundTint="#F2F2F2"
+        android:background="@drawable/roundrect_light"
         android:orientation="vertical">
 
         <TextView
@@ -58,8 +57,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/roundrect"
-            android:backgroundTint="#F9F9F9"
+            android:background="@drawable/roundrect_white"
             android:ems="10"
             android:fontFamily="@font/montserrat"
             android:hint="@string/t_email"
@@ -77,8 +75,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/roundrect"
-            android:backgroundTint="#F9F9F9"
+            android:background="@drawable/roundrect_white"
             android:ems="10"
             android:fontFamily="@font/montserrat"
             android:hint="@string/t_password"
@@ -143,8 +140,7 @@
         android:layout_marginStart="80dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="80dp"
-        android:background="@drawable/roundrect"
-        android:backgroundTint="#E0E0E0"
+        android:background="@drawable/roundrect_light"
         android:onClick="onRegistrationButtonClicked"
         android:text="@string/t_registration"
         android:textColor="#000000" />

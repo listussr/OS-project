@@ -3,9 +3,9 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,13 +13,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.app.databinding.ActivityLoginBinding
-import com.example.app.databinding.ActivityMainBinding
-import com.example.app.dataprocessing.FilterClass
-import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.ServerInteraction
 import kotlinx.coroutines.runBlocking
 
@@ -37,11 +33,17 @@ class LoginActivity : AppCompatActivity() {
 
     private val password: String = "12345678"
 
+    private var lightThemeFlag: Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
+        if(!lightThemeFlag){
+            setDarkTheme()
+        }
         updateCheckbox()
         setLanguageInViews()
     }
@@ -175,10 +177,8 @@ class LoginActivity : AppCompatActivity() {
     /**
      * Получаем из настроек флаг входа в приложение
      */
-    private fun getWasRegisteredFlag() : Boolean {
-        val wasRegistered: Boolean = settings.getBoolean("WasRegistered", true)
-        Toast.makeText(applicationContext, "Was registered, $wasRegistered", Toast.LENGTH_LONG).show()
-        return wasRegistered
+    private fun getWasRegisteredFlag(): Boolean {
+        return settings.getBoolean("WasRegistered", true)
     }
 
     /**
@@ -263,7 +263,7 @@ class LoginActivity : AppCompatActivity() {
      * Обработка нажатия на кнопку забыли пароль
      */
     fun onForgotPasswordClicked(view: View) {
-        val intent = Intent(this@LoginActivity, ChangingProfilePasswordAccessActivity::class.java)
+        val intent = Intent(this@LoginActivity, ChangingPasswordActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -275,5 +275,27 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this@LoginActivity, RegistrationActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding){
+            textViewWealthFamilyLoging.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewEntryWealthFamilyLogin.setTextColor(Color.parseColor("#F1F3F6"))
+            rememberUserCheckBoxLogin.setTextColor(Color.parseColor("#F1F3F6"))
+            registrationButtonAccess.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextPasswordLogin.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextPasswordLogin.setHintTextColor(Color.parseColor("#BCBCBC"))
+            editTextEmailAddressLogin.setHintTextColor(Color.parseColor("#BCBCBC"))
+            editTextEmailAddressLogin.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextEmailAddressLogin.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            loginLayout.setBackgroundResource(R.drawable.roundrect_dark)
+            registrationButtonAccess.setBackgroundResource(R.drawable.roundrect_dark)
+            editTextPasswordLogin.setBackgroundResource(R.drawable.roundrect_dark_gray)
+
+        }
     }
 }

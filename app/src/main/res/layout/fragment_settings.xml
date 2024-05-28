@@ -2,17 +2,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rect"
-    android:backgroundTint="#F7F7F7"
+    android:background="@drawable/rect_light"
     tools:context=".SettingsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fragmentLayoutSettings"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="#F7F7F7">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/textViewThemeSettings"
@@ -69,8 +68,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="80dp"
             android:layout_marginEnd="50dp"
-            android:background="@drawable/roundrect"
-            android:backgroundTint="#BBBBBB"
+            android:background="@drawable/roundrect_gray"
             android:fontFamily="@font/montserrat"
             android:text="Сменить пароль"
             android:textAlignment="center"

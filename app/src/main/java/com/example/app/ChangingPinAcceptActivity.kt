@@ -6,9 +6,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.app.databinding.ActivityChangingPinAcceptBinding
 
@@ -36,8 +34,33 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
         setContentView(binding.root)
         passwordEntered = intent.getStringExtra("Password").toString()
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        setColorTheme(getColorTheme())
+        if(!getColorTheme()){
+            setDarkTheme()
+        }
         setLanguageInViews()
+    }
+
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding){
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            wealthFamilyTextViewChangingPinAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            passwordEnteringLayoutChange.setBackgroundResource(R.drawable.roundrect_dark)
+            button0Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button1Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button2Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button3Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button4Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button5Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button6Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button7Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button8Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            button9Accept.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewApproveChangePinAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            wealthFamilyTextViewChangingPinAccept.setBackgroundResource(R.drawable.rect_gray)
+        }
     }
 
     /**
@@ -68,23 +91,8 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
      * Функция получения цветовой темы приложения из SharedPreferences
      * @return lightThemeFlag
      */
-    private fun getColorTheme() : Boolean {
-        val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
-        Toast.makeText(applicationContext, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
-        return lightThemeFlag
-    }
-
-    /**
-     * Функция установки цветовой темы, исходя из установленных настроек
-     * @param colorTheme
-     */
-    private fun setColorTheme(colorTheme: Boolean) {
-        val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
-        if(colorTheme) {
-            mainLayout.setBackgroundColor(Color.WHITE)
-        } else {
-            mainLayout.setBackgroundColor(Color.GRAY)
-        }
+    private fun getColorTheme(): Boolean {
+        return settings.getBoolean("ColorTheme", true)
     }
 
     /**
@@ -111,7 +119,7 @@ class ChangingPinAcceptActivity : AppCompatActivity() {
      */
     private fun savePasswordToSettings() {
         val editor = settings.edit()
-        Toast.makeText(applicationContext, "New password: ${passwordToString()}", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "New password: ${passwordToString()}", Toast.LENGTH_LONG).show()
         editor.putString("Password", passwordToString())
         editor.commit()
     }

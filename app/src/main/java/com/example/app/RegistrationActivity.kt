@@ -3,6 +3,7 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -12,13 +13,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.databinding.ActivityRegistrationBinding
-import com.example.app.dataprocessing.ServerInteraction
-import com.example.app.dataprocessing.UserRegClass
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -33,12 +30,17 @@ class RegistrationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrationBinding
 
+    private var lightThemeFlag: Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        setContentView(R.layout.activity_registration)
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
+        if(!lightThemeFlag){
+            setDarkTheme()
+        }
         setLanguageInViews()
     }
 
@@ -69,7 +71,32 @@ class RegistrationActivity : AppCompatActivity() {
         return settings.getBoolean("Language", true)
     }
 
-    /** textViewRegistrationReg
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding){
+            wealthFamilyTextViewRegistration.setTextColor(Color.parseColor("#F1F3F6"))
+            wealthFamilyTextViewRegistration.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            textViewRegistrationReg.setTextColor(Color.parseColor("#F1F3F6"))
+            RegistrationLayoutRegistration.setBackgroundResource(R.drawable.roundrect_dark)
+            enterButton.setTextColor(Color.parseColor("#F1F3F6"))
+            enterButton.setBackgroundResource(R.drawable.roundrect_dark)
+            editTextPasswordRegistration.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            editTextPasswordRegistration.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextPasswordRegistration.setHintTextColor(Color.parseColor("#BCBCBC"))
+            editTextEmailAddressRegistration.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            editTextEmailAddressRegistration.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextEmailAddressRegistration.setHintTextColor(Color.parseColor("#BCBCBC"))
+            editTextEntryCodeRegistrationAccept.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            editTextEntryCodeRegistrationAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextEntryCodeRegistrationAccept.setHintTextColor(Color.parseColor("#BCBCBC"))
+
+        }
+    }
+
+    /**
      * Проверка на корректность почты
      */
     private fun isEmailValid(email: String) : Boolean {

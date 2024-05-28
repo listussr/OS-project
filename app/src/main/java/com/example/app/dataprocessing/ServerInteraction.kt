@@ -419,12 +419,17 @@ object ServerInteraction {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
+            Log.v("AppJson", "Created request")
             val service = retrofit.create(APIServer::class.java)
+            Log.v("AppJson", "1")
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+            Log.v("AppJson", "2")
             var gsonRes: String = ""
             var successFlag = false
+            Log.v("AppJson", "3")
             val response = service.putExpenseById(token, requestBody, id)
-            withContext(Dispatchers.Main) {
+            Log.v("AppJson", "Response put Exp: $response")
+            withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
                     JsonParser.parseString(
@@ -446,36 +451,21 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteExpenseById(token: String, id: String): String? {
+        suspend fun apiDeleteExpenseById(token: String, id: String) {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
-            var gsonRes: String = ""
-            var successFlag = false
             CoroutineScope(Dispatchers.IO).launch {
                 val response = service.deleteExpenseById(token, id)
                 withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            response.body()
-                                ?.string()
-                        )
-                    )
-                    gsonRes = prettyJson
                     if (response.isSuccessful) {
-                        Log.d("App", prettyJson)
-                        successFlag = true
+                        Log.d("App", "Deleted successfully")
                     } else {
                         Log.e("App", response.code().toString())
                     }
                 }
             }
-            if(successFlag){
-                return gsonRes
-            }
-            return null
         }
     }
 
@@ -612,10 +602,12 @@ object ServerInteraction {
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaType())
             var gsonRes: String = ""
             var successFlag = false
+            Log.d("AppJson", "Request id put: $id")
             val response = service.putIncomeById(token, requestBody, id)
+            Log.d("AppJson", "Response putIncome: $response")
             withContext(Dispatchers.IO) {
                 val gson = GsonBuilder().setPrettyPrinting().create()
                 val prettyJson = gson.toJson(
@@ -638,34 +630,24 @@ object ServerInteraction {
             return null
         }
 
-        suspend fun apiDeleteIncomeById(token: String, id: String): String? {
+        suspend fun apiDeleteIncomeById(token: String, id: String) {
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .build()
             val service = retrofit.create(APIServer::class.java)
             var gsonRes: String = ""
             var successFlag = false
+            Log.v("AppJson", "Request for delete: $id")
             val response = service.deleteIncomeById(token, id)
+            Log.v("AppJson", "Response for delete: $response")
             withContext(Dispatchers.IO) {
-                val gson = GsonBuilder().setPrettyPrinting().create()
-                val prettyJson = gson.toJson(
-                    JsonParser.parseString(
-                        response.body()
-                            ?.string()
-                    )
-                )
-                gsonRes = prettyJson
                 if (response.isSuccessful) {
-                    Log.d("App", prettyJson)
+                    Log.d("App", "Deleted successfully")
                     successFlag = true
                 } else {
                     Log.e("App", response.code().toString())
                 }
             }
-            if(successFlag){
-                return gsonRes
-            }
-            return null
         }
     }
 

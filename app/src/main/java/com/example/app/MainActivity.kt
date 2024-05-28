@@ -11,52 +11,20 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.app.databinding.ActivityMainBinding
-import com.example.app.dataprocessing.APIServer
-import com.example.app.dataprocessing.FilterClass
-import com.example.app.dataprocessing.JsonConverter
-import com.example.app.dataprocessing.MoneyInteractionPostClass
-import com.example.app.dataprocessing.ServerInteraction
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Retrofit
 
-/*
-"a94d85c7-75a2-41d3-b267-58a0c86a500d"
-"5d9009ba-7c75-4c7e-a5ea-92da55eab16c"
- */
 
 class MainActivity : AppCompatActivity(){
 
     private var fragmentNum: Int = 2
     private lateinit var binding: ActivityMainBinding
     private lateinit var settings: SharedPreferences
-    private var autocompleteList: Array<String> = arrayOf(
-        "Еда",
-        "Транспорт",
-        "Бензин",
-        "Бытовые расходы",
-        "Food",
-        "Transport",
-        "House",
-        "Entertainments"
-    )
     private var userId = ""
-    private var outOfDictionaryFlag: Boolean = false
-    private var word: String = ""
+    private var lightThemeFlag: Boolean = true
 
-    private val dataModel: DataModel by viewModels()
+    //private val dataModel: DataModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -67,6 +35,10 @@ class MainActivity : AppCompatActivity(){
         getUUID()
         Log.w("AppJson", "Token: ${settings.getString("Token", "")}")
         Log.w("AppJson", "UUID: ${settings.getString("UsersUUID", "")}")
+        getColorTheme()
+        if(!lightThemeFlag) {
+            setDarkTheme()
+        }
     }
 
     /**
@@ -74,6 +46,13 @@ class MainActivity : AppCompatActivity(){
      */
     private fun getUUID() {
         userId = settings.getString("UserUUID", "").toString()
+    }
+
+    /**
+     * Получаем цветовую тему приложения
+     */
+    private fun getColorTheme() {
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
     }
 
     /**
@@ -112,9 +91,15 @@ class MainActivity : AppCompatActivity(){
             findViewById<TextView>(R.id.reportTextViewMain).text = getString(R.string.t_operations_eng)
         }
         if(fragmentNum == 2){
-            findViewById<TextView>(R.id.textViewReportNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewReportNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewReportNav.setTextColor(Color.parseColor("#F1F3F6"))
         } else {
-            findViewById<TextView>(R.id.textViewSettingsNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewSettingsNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewSettingsNav.setTextColor(Color.parseColor("#F1F3F6"))
         }
         findViewById<TextView>(R.id.textViewOperationNav).setTextColor(Color.parseColor("#346BBC"))
         fragmentNum = 1
@@ -129,6 +114,8 @@ class MainActivity : AppCompatActivity(){
             binding.textViewReportNav.text = getString(R.string.t_report_eng)
             binding.textViewPlanNav.text = getString(R.string.t_plan_eng)
             binding.textViewSettingsNav.text = getString(R.string.t_settings_page_eng)
+            binding.addExpensButton.text = "Add expense"
+            binding.addIncomeButton.text = "Add income"
             when(fragmentNum){
                 1 -> binding.reportTextViewMain.text = getString(R.string.t_operations_eng)
                 2 -> binding.reportTextViewMain.text = getString(R.string.t_report_eng)
@@ -159,9 +146,15 @@ class MainActivity : AppCompatActivity(){
             findViewById<TextView>(R.id.reportTextViewMain).text = getString(R.string.t_report_eng)
         }
         if(fragmentNum == 1){
-            findViewById<TextView>(R.id.textViewOperationNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewOperationNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewOperationNav.setTextColor(Color.parseColor("#F1F3F6"))
         } else {
-            findViewById<TextView>(R.id.textViewSettingsNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewSettingsNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewSettingsNav.setTextColor(Color.parseColor("#F1F3F6"))
         }
         findViewById<TextView>(R.id.textViewReportNav).setTextColor(Color.parseColor("#346BBC"))
         fragmentNum = 2
@@ -182,9 +175,15 @@ class MainActivity : AppCompatActivity(){
             findViewById<TextView>(R.id.reportTextViewMain).text = getString(R.string.t_settings_page_eng)
         }
         if(fragmentNum == 1){
-            findViewById<TextView>(R.id.textViewOperationNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewOperationNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewOperationNav.setTextColor(Color.parseColor("#F1F3F6"))
         } else {
-            findViewById<TextView>(R.id.textViewReportNav).setTextColor(Color.BLACK)
+            if(lightThemeFlag)
+                findViewById<TextView>(R.id.textViewReportNav).setTextColor(Color.BLACK)
+            else
+                binding.textViewReportNav.setTextColor(Color.parseColor("#F1F3F6"))
         }
         findViewById<TextView>(R.id.textViewSettingsNav).setTextColor(Color.parseColor("#346BBC"))
         fragmentNum = 3
@@ -204,27 +203,33 @@ class MainActivity : AppCompatActivity(){
         val panel = findViewById<LinearLayout>(R.id.addingPanel)
         if(panel.visibility == View.GONE) {
             panel.visibility = View.VISIBLE
-            val darkColor = Color.parseColor("#80000000")
+            var darkColor: Int = Color.parseColor("#333333")
+            if(lightThemeFlag)
+                darkColor = Color.parseColor("#80000000")
             val layout = findViewById<ConstraintLayout>(R.id.mainLayout)
             layout.setBackgroundColor(darkColor)
             layout.setOnClickListener {
                 panel.visibility = View.GONE
-                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                if(lightThemeFlag)
+                    layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
             val fragmentLayout = findViewById<FrameLayout>(R.id.reportFrameLayout)
             fragmentLayout.setOnClickListener {
                 panel.visibility = View.GONE
-                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                if(lightThemeFlag)
+                    layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
             val navigationLayout = findViewById<LinearLayout>(R.id.navigationLayout)
             navigationLayout.setOnClickListener {
                 panel.visibility = View.GONE
-                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                if(lightThemeFlag)
+                    layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         } else {
             val layout = findViewById<ConstraintLayout>(R.id.mainLayout)
             panel.visibility = View.GONE
-            layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            if(lightThemeFlag)
+                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
         }
     }
 
@@ -251,5 +256,26 @@ class MainActivity : AppCompatActivity(){
         }
         startActivity(intent)
         finish()
+    }
+
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding) {
+            addingPanel.setBackgroundResource(R.drawable.circle_dark)
+            reportTextViewMain.setTextColor(Color.parseColor("#F1F3F6"))
+            reportTextViewMain.setBackgroundResource(R.drawable.rect_dark)
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            navigationLayout.setBackgroundResource(R.drawable.rect_dark)
+            textViewSettingsNav.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewReportNav.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewPlanNav.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewOperationNav.setTextColor(Color.parseColor("#F1F3F6"))
+            imageButton3.setImageResource(R.drawable.tasks_9151641)
+            imageButton4.setImageResource(R.drawable.krugovaya_diagramma_58rmx56nvp7n_32)
+            imageButton6.setImageResource(R.drawable.baza_dannyh_5fdkbqmeo746_32)
+            imageButton7.setImageResource(R.drawable.nastrojki_k5mpx6n84ssf_32)
+        }
     }
 }

@@ -1,19 +1,47 @@
 package com.example.app
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import com.example.app.databinding.ActivityChangingProfilePasswordAccessBinding
 
 class ChangingProfilePasswordAccessActivity : AppCompatActivity() {
     private val password: String = "12345"
+    private lateinit var settings: SharedPreferences
+    private var lightThemeFlag: Boolean = true
+    private lateinit var binding: ActivityChangingProfilePasswordAccessBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_changing_profile_password_access)
+        binding = ActivityChangingProfilePasswordAccessBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
+        if(!lightThemeFlag){
+            setDarkTheme()
+        }
+    }
+
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding){
+            textViewWealthFamilyAccessChangingPassword.setTextColor(Color.parseColor("#F1F3F6"))
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            gettingCodeLayoutAccess.setBackgroundResource(R.drawable.roundrect_dark)
+            textView10.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextNumberPasswordAccess.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextNumberPasswordAccess.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            editTextNumberPasswordAccess.setHintTextColor(Color.parseColor("#BCBCBC"))
+            registrationButtonAccess.setTextColor(Color.parseColor("#F1F3F6"))
+            registrationButtonAccess.setBackgroundResource(R.drawable.roundrect_dark)
+        }
     }
 
     /**

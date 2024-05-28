@@ -35,24 +35,24 @@ interface APIServer {
     suspend fun getCategoryByFilter(@Header("Authorization") token: String, @Body requestBody: RequestBody) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/categories/categoryById/{Id}")
-    suspend fun getCategoryById(@Path("Id") id: String) : Response<ResponseBody>
+    @GET("/categories/categoryById")
+    suspend fun getCategoryById(@Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @PUT("/categories/categoryById/{Id}")
-    suspend fun putCategoryById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Path("Id") id: String) : Response<ResponseBody>
+    @PUT("/categories/categoryById")
+    suspend fun putCategoryById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @DELETE("/categories/categoryById/{Id}")
-    suspend fun deleteCategoryById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @DELETE("/categories/categoryById")
+    suspend fun deleteCategoryById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/category/incomesById/{ID}")
-    suspend fun getIncomesByIdCategory(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/category/incomesById")
+    suspend fun getIncomesByIdCategory(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/category/expensesById/{Id}")
-    suspend fun getExpensesByIdCategory(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/category/expensesById")
+    suspend fun getExpensesByIdCategory(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
     @POST("/expenses/pagination")
@@ -67,16 +67,16 @@ interface APIServer {
     suspend fun postExpenses(@Header("Authorization") token: String, @Body requestBody: RequestBody) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/expenses/expensesById/{Id}")
-    suspend fun getExpenseById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/expenses/expensesById")
+    suspend fun getExpenseById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @PUT("/expenses/expensesById/{Id}")
-    suspend fun putExpenseById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Path("Id") id: String) : Response<ResponseBody>
+    @PUT("/expenses/expensesById")
+    suspend fun putExpenseById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @DELETE("/expenses/expensesById/{Id}")
-    suspend fun deleteExpenseById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @DELETE("/expenses/expensesById")
+    suspend fun deleteExpenseById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
     @POST("/incomes/pagination")
@@ -91,16 +91,16 @@ interface APIServer {
     suspend fun postIncomes(@Header("Authorization") token: String, @Body requestBody: RequestBody) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/incomes/incomesById/{Id}")
-    suspend fun getIncomeById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/incomes/incomesById")
+    suspend fun getIncomeById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @PUT("/incomes/incomesById/{Id}")
-    suspend fun putIncomeById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Path("Id") id: String) : Response<ResponseBody>
+    @PUT("/incomes/incomesById")
+    suspend fun putIncomeById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @DELETE("/incomes/incomesById/{Id}")
-    suspend fun deleteIncomeById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @DELETE("/incomes/incomesById")
+    suspend fun deleteIncomeById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
     @POST("/users/pagination")
@@ -115,24 +115,24 @@ interface APIServer {
     suspend fun postUser(@Header("Authorization") token: String, @Body requestBody: RequestBody) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/users/usersById/{Id}")
-    suspend fun getUserById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/users/usersById")
+    suspend fun getUserById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @PUT("/users/usersById/{Id}")
-    suspend fun putUserById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Path("Id") id: String) : Response<ResponseBody>
+    @PUT("/users/usersById")
+    suspend fun putUserById(@Header("Authorization") token: String, @Body requestBody: RequestBody, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @DELETE("/users/usersById/{Id}")
-    suspend fun deleteUserById(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @DELETE("/users/usersById")
+    suspend fun deleteUserById(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/users/incomesById/{Id}")
-    suspend fun getIncomesByIdUser(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/users/incomesById")
+    suspend fun getIncomesByIdUser(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
-    @GET("/users/expensesById/{Id}")
-    suspend fun getExpensesByIdUser(@Header("Authorization") token: String, @Path("Id") id: String) : Response<ResponseBody>
+    @GET("/users/expensesById")
+    suspend fun getExpensesByIdUser(@Header("Authorization") token: String, @Query("id") id: String) : Response<ResponseBody>
 
     @Headers("Content-type: application/json")
     @POST("/users/expensesByIdAndFilter")

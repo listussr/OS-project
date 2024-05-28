@@ -9,12 +9,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.ui.text.substring
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.app.databinding.FragmentPieChartBinding
 import com.example.app.dataprocessing.CategoryClass
@@ -22,7 +21,6 @@ import com.example.app.dataprocessing.FilterClass
 import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.MoneyInteractionClass
 import com.example.app.dataprocessing.ServerInteraction
-import com.example.app.dataprocessing.UserClass
 import kotlinx.coroutines.runBlocking
 
 class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
@@ -33,6 +31,8 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private var incomesArray: Array<MoneyInteractionClass> = arrayOf()
     private var expenseCategoryArray: Array<CategoryClass> = arrayOf()
     private var incomeCategoryArray: Array<CategoryClass> = arrayOf()
+
+    private var lightThemeFlag: Boolean = true
 
     private val engMonths: Array<String> = arrayOf(
         "January",
@@ -75,6 +75,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = context?.getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)!!
+        lightThemeFlag = settings.getBoolean("ColorTheme", false)
     }
 
     override fun onCreateView(
@@ -97,6 +98,9 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         getLastIncomes()
         getLocalTime()
         setCorrectMonths()
+        if(!lightThemeFlag){
+            setDarkTheme()
+        }
     }
 
     /**
@@ -129,6 +133,9 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
         updatePieCharts()
     }
 
+    /**
+     * Получаем правильное локальное время
+     */
     private fun getLocalTime() {
         val time = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd.MM.yyyy")
@@ -169,56 +176,100 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
      * Устанавливаем видимость нажатия на кнопку с текущим месяцем
      */
     private fun setCurrentMonthButtonOn() {
-        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
-        binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
-        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-        binding.buttonLastMonth.setTextColor(Color.BLACK)
-        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-        binding.buttonThreeMonths.setTextColor(Color.BLACK)
-        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
+            binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+            binding.buttonLastMonth.setTextColor(Color.BLACK)
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+            binding.buttonThreeMonths.setTextColor(Color.BLACK)
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+            binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
+            binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+            binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F3F6"))
+        }
     }
 
     /**
      * Устанавливаем видимость нажатия на кнопку с прошлым месяцем
      */
     private fun setLastMonthButtonOn() {
-        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
-        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
-        binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
-        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-        binding.buttonThreeMonths.setTextColor(Color.BLACK)
-        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+            binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
+            binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+            binding.buttonThreeMonths.setTextColor(Color.BLACK)
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+            binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+            binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
+            binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+            binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F3F6"))
+        }
     }
 
     /**
      * Устанавливаем видимость нажатия на кнопку с прошлыми 3 месяцами
      */
     private fun setThreeMonthButtonOn() {
-        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
-        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-        binding.buttonLastMonth.setTextColor(Color.BLACK)
-        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_on)
-        binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F1F1"))
-        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-        binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        if(lightThemeFlag){
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+            binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+            binding.buttonLastMonth.setTextColor(Color.BLACK)
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_on)
+            binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F1F1"))
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+            binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+            binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_on)
+            binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+            binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F3F6"))
+        }
     }
 
     /**
      * Устанавливаем видимость нажатия на кнопку с текущим годом
      */
     private fun setCurrentYearButtonOn() {
-        binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-        binding.buttonCurrentMonth.setTextColor(Color.BLACK)
-        binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-        binding.buttonLastMonth.setTextColor(Color.BLACK)
-        binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-        binding.buttonThreeMonths.setTextColor(Color.BLACK)
-        binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_on)
-        binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F1F1"))
+        if (lightThemeFlag) {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+            binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+            binding.buttonLastMonth.setTextColor(Color.BLACK)
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+            binding.buttonThreeMonths.setTextColor(Color.BLACK)
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_on)
+            binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F1F1"))
+        } else {
+            binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+            binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+            binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F3F6"))
+            binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_on)
+            binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F3F6"))
+        }
     }
 
     /**
@@ -395,7 +446,7 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     }
 
     /**
-     * Получаем дату начала прошлого месяца
+     * Получаем дату начала прошлых 3 месяцев
      */
     private fun getDateInBorderThreeMonths() : String {
         var date = dateCur
@@ -630,19 +681,42 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun changeButtonsCurrentMonth() {
         binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_on)
         binding.buttonCurrentMonth.setTextColor(Color.parseColor("#F1F1F1"))
-        when(periodNum){
-            1 -> {}
-            2 -> {
-                binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-                binding.buttonLastMonth.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            when (periodNum) {
+                1 -> {}
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+                    binding.buttonLastMonth.setTextColor(Color.BLACK)
+                }
+
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+                    binding.buttonThreeMonths.setTextColor(Color.BLACK)
+                }
+
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+                    binding.buttonCurrentYear.setTextColor(Color.BLACK)
+                }
             }
-            3 -> {
-                binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-                binding.buttonThreeMonths.setTextColor(Color.BLACK)
-            }
-            4 -> {
-                binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-                binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            when(periodNum) {
+                1 -> {}
+
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonLastMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonThreeMonths.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+                    binding.buttonCurrentYear.setTextColor(Color.parseColor("#E1E3E6"))
+                }
             }
         }
         periodNum = 1
@@ -655,19 +729,42 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun changeButtonsLastMonth() {
         binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_on)
         binding.buttonLastMonth.setTextColor(Color.parseColor("#F1F1F1"))
-        when(periodNum){
-            1 -> {
-                binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-                binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            when (periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+                    binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+                }
+
+                2 -> {}
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+                    binding.buttonThreeMonths.setTextColor(Color.BLACK)
+                }
+
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+                    binding.buttonCurrentYear.setTextColor(Color.BLACK)
+                }
             }
-            2 -> {}
-            3 -> {
-                binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-                binding.buttonThreeMonths.setTextColor(Color.BLACK)
-            }
-            4 -> {
-                binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-                binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            when(periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+                    binding.buttonCurrentMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                2 -> {}
+
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonThreeMonths.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+                    binding.buttonCurrentYear.setTextColor(Color.parseColor("#E1E3E6"))
+                }
             }
         }
         periodNum = 2
@@ -680,19 +777,42 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun changeButtonsThreeMonths() {
         binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_on)
         binding.buttonThreeMonths.setTextColor(Color.parseColor("#F1F1F1"))
-        when(periodNum){
-            1 -> {
-                binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-                binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            when (periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+                    binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+                }
+
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+                    binding.buttonLastMonth.setTextColor(Color.BLACK)
+                }
+
+                3 -> {}
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
+                    binding.buttonCurrentYear.setTextColor(Color.BLACK)
+                }
             }
-            2 -> {
-                binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-                binding.buttonLastMonth.setTextColor(Color.BLACK)
-            }
-            3 -> {}
-            4 -> {
-                binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_off)
-                binding.buttonCurrentYear.setTextColor(Color.BLACK)
+        } else {
+            when (periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+                    binding.buttonCurrentMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonLastMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                3 -> {}
+
+                4 -> {
+                    binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_dark)
+                    binding.buttonCurrentYear.setTextColor(Color.parseColor("#E1E3E6"))
+                }
             }
         }
         periodNum = 3
@@ -705,23 +825,64 @@ class PieChartFragment : Fragment(R.layout.fragment_pie_chart) {
     private fun changeButtonsCurrentYear() {
         binding.buttonCurrentYear.setBackgroundResource(R.drawable.half_roundrect_right_on)
         binding.buttonCurrentYear.setTextColor(Color.parseColor("#F1F1F1"))
-        when(periodNum){
-            1 -> {
-                binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
-                binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            when (periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_off)
+                    binding.buttonCurrentMonth.setTextColor(Color.BLACK)
+                }
+
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
+                    binding.buttonLastMonth.setTextColor(Color.BLACK)
+                }
+
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
+                    binding.buttonThreeMonths.setTextColor(Color.BLACK)
+                }
+
+                4 -> {}
             }
-            2 -> {
-                binding.buttonLastMonth.setBackgroundResource(R.drawable.rect)
-                binding.buttonLastMonth.setTextColor(Color.BLACK)
+        } else {
+            when (periodNum) {
+                1 -> {
+                    binding.buttonCurrentMonth.setBackgroundResource(R.drawable.half_roundrect_left_dark)
+                    binding.buttonCurrentMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                2 -> {
+                    binding.buttonLastMonth.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonLastMonth.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                3 -> {
+                    binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect_dark)
+                    binding.buttonThreeMonths.setTextColor(Color.parseColor("#E1E3E6"))
+                }
+
+                4 -> {}
             }
-            3 -> {
-                binding.buttonThreeMonths.setBackgroundResource(R.drawable.rect)
-                binding.buttonThreeMonths.setTextColor(Color.BLACK)
-            }
-            4 -> {}
         }
         periodNum = 4
         saveButtonState()
+    }
+
+    /**
+     * Устанавливаем тёмную тему
+     */
+    private fun setDarkTheme() {
+        with(binding) {
+            IncomeTextViewPlan.setTextColor(Color.parseColor("#E1E3E6"))
+            ExpensesTextViewPlan.setTextColor(Color.parseColor("#E1E3E6"))
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            when(periodNum){
+                1 -> setCurrentMonthButtonOn()
+                2 -> setLastMonthButtonOn()
+                3 -> setThreeMonthButtonOn()
+                4 -> setCurrentYearButtonOn()
+            }
+        }
     }
 
     companion object {

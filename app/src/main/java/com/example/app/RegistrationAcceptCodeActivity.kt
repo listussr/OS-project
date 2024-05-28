@@ -3,13 +3,14 @@ package com.example.app
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.app.databinding.ActivityRegistrationAcceptCodeBinding
 import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.ServerInteraction
 import com.example.app.dataprocessing.UserRegClass
@@ -20,14 +21,21 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
     private var email = "list@mail.ru"
     private var password = "12345678"
     private lateinit var settings: SharedPreferences
+    private var lightThemeFlag: Boolean = true
+    private lateinit var binding: ActivityRegistrationAcceptCodeBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration_accept_code)
+        binding = ActivityRegistrationAcceptCodeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         email = intent.getStringExtra("Email").toString()
         password = intent.getStringExtra("Password").toString()
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
+        if(!lightThemeFlag){
+            setDarkTheme()
+        }
     }
 
     /**
@@ -40,6 +48,25 @@ class RegistrationAcceptCodeActivity : AppCompatActivity() {
         codeInput.hint = "    Неправильный код!"
         codeInput.setHintTextColor(ContextCompat.getColor(this, R.color.mistake_text))
         codeInput.backgroundTintMode = null
+    }
+
+    /**
+     * Устанавливаем тёмную тему приложения
+     */
+    private fun setDarkTheme() {
+        with(binding) {
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            wealthFamilyTextViewRegistrationAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            wealthFamilyTextViewRegistrationAccept.setBackgroundResource(R.drawable.roundrect_dark)
+            RegistrationLayoutRegistrationAccept.setBackgroundResource(R.drawable.roundrect_dark)
+            editTextEntryCodeRegistrationAccept.setBackgroundResource(R.drawable.roundrect_dark_gray)
+            editTextEntryCodeRegistrationAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            editTextEntryCodeRegistrationAccept.setHintTextColor(Color.parseColor("#BCBCBC"))
+            textViewRegistrationReg.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewRegistrationReg.setBackgroundResource(R.drawable.roundrect_dark)
+            entryButtonRegistrationAccept.setTextColor(Color.parseColor("#F1F3F6"))
+            entryButtonRegistrationAccept.setBackgroundResource(R.drawable.roundrect_dark)
+        }
     }
 
     /**

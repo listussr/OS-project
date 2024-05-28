@@ -5,7 +5,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
+    android:background="@drawable/rect_light"
     android:orientation="vertical">
 
     <TextView
@@ -30,8 +30,7 @@
         android:layout_marginStart="20dip"
         android:layout_marginTop="60dip"
         android:layout_marginEnd="20dip"
-        android:background="@drawable/roundrect"
-        android:backgroundTint="#F2F2F2"
+        android:background="@drawable/roundrect_light"
         android:orientation="vertical"
         android:paddingTop="0px">
 
@@ -283,7 +282,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:backgroundTint="#F2F2F2"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/delete"
                 android:onClick="onBackSpaceClicked"
                 android:src="@drawable/backspace" />

@@ -4,14 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
+    android:background="@drawable/rect_light"
     android:orientation="vertical"
-    tools:context=".LoadingActivity">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="100dp"
-        android:src="@drawable/ic_launcher_background" />
-</LinearLayout>
+    tools:context=".LoadingActivity"/>

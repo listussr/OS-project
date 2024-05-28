@@ -1,6 +1,7 @@
 package com.example.app
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
@@ -8,28 +9,21 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.marginStart
-import com.example.app.databinding.FragmentPieChartBinding
+import androidx.fragment.app.Fragment
 import com.example.app.databinding.FragmentTableBinding
-import com.example.app.dataprocessing.CategoryClass
 import com.example.app.dataprocessing.FilterClass
 import com.example.app.dataprocessing.JsonConverter
 import com.example.app.dataprocessing.MoneyInteractionClass
 import com.example.app.dataprocessing.ServerInteraction
-import com.example.app.dataprocessing.TableInfoClass
-import com.example.app.dataprocessing.UserClass
 import kotlinx.coroutines.runBlocking
 
 
@@ -40,6 +34,7 @@ class TableFragment : Fragment() {
     private var listOfInfo: ArrayList<Pair<MoneyInteractionClass, Boolean>> = ArrayList()
     private lateinit var settings: SharedPreferences
 
+    private var lightThemeFlag: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +46,28 @@ class TableFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTableBinding.inflate(inflater, container, false)
+        lightThemeFlag = settings.getBoolean("ColorTheme", true)
+        if(!lightThemeFlag){
+            setDarkTheme()
+        } else {
+            binding.mainLayout.setBackgroundResource(R.drawable.rect_light)
+        }
         setStartTableInfo()
+        translateViews()
         return binding.root
+    }
+
+    /**
+     * Переводим View на англиский
+     */
+    private fun translateViews() {
+        if(!settings.getBoolean("Language", true)){
+            with(binding){
+                textViewCategory.text = "Category"
+                textViewDate.text = "Date"
+                textViewSum.text = "Sum"
+            }
+        }
     }
 
     /**
@@ -155,8 +170,10 @@ class TableFragment : Fragment() {
                 listOfInfo.add(Pair(income, true))
             }
         }
+        var counter = 0
         for (info in listOfInfo){
-            updateTable(info)
+            updateTable(info, counter)
+            counter++
         }
     }
 
@@ -186,19 +203,23 @@ class TableFragment : Fragment() {
         return incomesArray
     }
 
-    private fun updateTable(info: Pair<MoneyInteractionClass, Boolean>){
+    private fun updateTable(info: Pair<MoneyInteractionClass, Boolean>, counter: Int){
         val tableRow = TableRow(context)
 
         // LinearLayout
         val linearLayout = LinearLayout(context)
+        linearLayout.id = View.generateViewId()
         val params = TableRow.LayoutParams( // if the parent is FrameLayout, this should be FrameLayout.LayoutParams
             LinearLayout.LayoutParams.WRAP_CONTENT, // modify this if its not wrap_content
             LinearLayout.LayoutParams.WRAP_CONTENT // modify this if its not wrap_content
         )
         params.setMargins(40, 0, 0, 0) // last argument here is the bottom margin
         linearLayout.layoutParams = params
-        linearLayout.setBackgroundResource(R.drawable.table_border)
-
+        if(lightThemeFlag) {
+            linearLayout.setBackgroundResource(R.drawable.table_border)
+        } else {
+            linearLayout.setBackgroundResource(R.drawable.table_border_dark)
+        }
         // ImageView
         val operationFlag = ImageView(context)
         if (info.second) {
@@ -215,7 +236,11 @@ class TableFragment : Fragment() {
 
         // TextView
         val categoryView = TextView(context)
-        categoryView.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            categoryView.setTextColor(Color.BLACK)
+        } else {
+            categoryView.setTextColor(Color.parseColor("#F1F3F6"))
+        }
         val paramsCategoryView = TableRow.LayoutParams( // if the parent is FrameLayout, this should be FrameLayout.LayoutParams
             LinearLayout.LayoutParams.WRAP_CONTENT, // modify this if its not wrap_content
             LinearLayout.LayoutParams.WRAP_CONTENT // modify this if its not wrap_content
@@ -227,7 +252,11 @@ class TableFragment : Fragment() {
         setViewParams(categoryView)
 
         val dateView = TextView(context)
-        dateView.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            dateView.setTextColor(Color.BLACK)
+        } else {
+            dateView.setTextColor(Color.parseColor("#F1F3F6"))
+        }
         val paramsDateView = TableRow.LayoutParams( // if the parent is FrameLayout, this should be FrameLayout.LayoutParams
             LinearLayout.LayoutParams.WRAP_CONTENT, // modify this if its not wrap_content
             LinearLayout.LayoutParams.WRAP_CONTENT // modify this if its not wrap_content
@@ -239,7 +268,11 @@ class TableFragment : Fragment() {
         setViewParams(dateView)
 
         val sumView = TextView(context)
-        sumView.setTextColor(Color.BLACK)
+        if(lightThemeFlag) {
+            sumView.setTextColor(Color.BLACK)
+        } else {
+            sumView.setTextColor(Color.parseColor("#F1F3F6"))
+        }
         val paramsSumView = TableRow.LayoutParams( // if the parent is FrameLayout, this should be FrameLayout.LayoutParams
             LinearLayout.LayoutParams.WRAP_CONTENT, // modify this if its not wrap_content
             LinearLayout.LayoutParams.WRAP_CONTENT // modify this if its not wrap_content
@@ -249,22 +282,71 @@ class TableFragment : Fragment() {
         sumView.layoutParams = paramsSumView
         sumView.text = info.first.value.toString()
         setViewParams(sumView)
-
+        operationFlag.setOnLongClickListener{
+            toDeleteChangeActivity(counter)
+            false
+        }
+        categoryView.setOnLongClickListener{
+            toDeleteChangeActivity(counter)
+            false
+        }
+        dateView.setOnLongClickListener{
+            toDeleteChangeActivity(counter)
+            false
+        }
+        sumView.setOnLongClickListener{
+            toDeleteChangeActivity(counter)
+            false
+        }
         linearLayout.addView(operationFlag)
         linearLayout.addView(categoryView)
         linearLayout.addView(dateView)
         linearLayout.addView(sumView)
-
+        linearLayout.setOnLongClickListener{
+            toDeleteChangeActivity(counter)
+            false
+        }
         tableRow.addView(linearLayout)
 
         binding.table.addView(tableRow)
     }
 
+    /**
+     * Переходим к изменению/удалению расхода/дохода
+     */
+    private fun toDeleteChangeActivity(counter: Int) {
+        val intent = Intent(requireActivity(), ChangeDeleteMoneyInteractionActivity::class.java)
+        intent.putExtra("CategoryName", listOfInfo[counter].first.category.name)
+        intent.putExtra("CategoryId", listOfInfo[counter].first.category.id)
+        intent.putExtra("Sum", listOfInfo[counter].first.value.toString())
+        intent.putExtra("Date", listOfInfo[counter].first.getDate)
+        intent.putExtra("Comment", listOfInfo[counter].first.comment)
+        intent.putExtra("Id", listOfInfo[counter].first.id)
+        intent.putExtra("Type", listOfInfo[counter].second)
+        startActivity(intent)
+    }
+
+    /**
+     * Устанавливаем параметры текста
+     */
     private fun setViewParams(view: TextView){
         val typeFace: Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat)
         view.typeface = typeFace
         view.textSize = 17f
         view.typeface = Typeface.DEFAULT_BOLD
+    }
+
+    /**
+     * Устанавливаем тёмную тему
+     */
+    private fun setDarkTheme() {
+        with(binding) {
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            textViewCategory.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewDate.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewSum.setTextColor(Color.parseColor("#F1F3F6"))
+            headerLayout.setBackgroundResource(R.drawable.table_border_dark)
+        }
     }
 
     companion object {

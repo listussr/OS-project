@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -48,7 +47,9 @@ class PINCodeActivity : AppCompatActivity() {
         binding = ActivityPinCodeEnteringBinding.inflate(layoutInflater)
         setContentView(binding.root)
         settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        setColorTheme(getColorTheme())
+        if(!getColorTheme()){
+            setDarkTheme()
+        }
         setLanguageInViews()
         appPassword = unmaskPassword(getAppPassword())
     }
@@ -74,23 +75,8 @@ class PINCodeActivity : AppCompatActivity() {
      * Функция получения цветовой темы приложения из SharedPreferences
      * @return lightThemeFlag
      */
-    private fun getColorTheme() : Boolean {
-        val lightThemeFlag: Boolean = settings.getBoolean("ColorTheme", true)
-        Toast.makeText(applicationContext, "Light theme, $lightThemeFlag", Toast.LENGTH_LONG).show()
-        return lightThemeFlag
-    }
-
-    /**
-     * Функция установки цветовой темы, исходя из установленных настроек
-     * @param colorTheme
-     */
-    private fun setColorTheme(colorTheme: Boolean) {
-        val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
-        if(colorTheme) {
-            mainLayout.setBackgroundColor(Color.WHITE)
-        } else {
-            mainLayout.setBackgroundColor(Color.GRAY)
-        }
+    private fun getColorTheme(): Boolean {
+        return settings.getBoolean("ColorTheme", true)
     }
 
     /**
@@ -108,7 +94,7 @@ class PINCodeActivity : AppCompatActivity() {
             editor.putString("Password", strPassword)
             editor.commit()
         }
-        Toast.makeText(applicationContext, "Password, $strPassword", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Password, $strPassword", Toast.LENGTH_LONG).show()
         return strPassword
     }
 
@@ -311,5 +297,28 @@ class PINCodeActivity : AppCompatActivity() {
             --index
         }
         updateCircles(index, false)
+    }
+
+    /**
+     * Устанавливаем тёмную тему для прриложения
+     */
+    private fun setDarkTheme() {
+        with(binding) {
+            mainLayout.setBackgroundResource(R.drawable.rect_gray)
+            wealthFamilyTextViewEnterPin.setTextColor(Color.parseColor("#F1F3F6"))
+            passwordEnteringLayoutChange.setBackgroundResource(R.drawable.roundrect_dark)
+            button0Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button1Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button2Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button3Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button4Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button5Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button6Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button7Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button8Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            button9Enter.setTextColor(Color.parseColor("#F1F3F6"))
+            textViewApproveEnterPin.setTextColor(Color.parseColor("#F1F3F6"))
+            wealthFamilyTextViewEnterPin.setBackgroundResource(R.drawable.rect_gray)
+        }
     }
 }

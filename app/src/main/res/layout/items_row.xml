@@ -6,8 +6,7 @@
     android:id="@+id/llMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rect"
-    android:backgroundTint="#F7F7F7"
+    android:background="@drawable/rect_light"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="10dp">
@@ -18,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/white"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="3dp"
         app:cardElevation="3dp"
@@ -26,10 +24,10 @@
 
         <!--LinearLayout orientation horizontal -->
         <LinearLayout
+            android:id="@+id/linLayoutHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rect"
-            android:backgroundTint="#F7F7F7"
+            android:background="@drawable/rect_light"
             android:orientation="horizontal"
             android:padding="15dp">
 

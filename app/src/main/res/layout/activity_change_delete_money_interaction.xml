@@ -2,12 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rect_light"
     android:onClick="onBackgroundClicked"
-    tools:context=".CreateMoneyInteractionActivity">
+    tools:context=".ChangeDeleteMoneyInteractionActivity">
 
     <LinearLayout
         android:id="@+id/timePickerLayout"
@@ -43,7 +43,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:onClick="onHoursClicked"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -101,7 +100,8 @@
                         android:id="@+id/minutesEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/roundrect_gray"
+                        android:background="@drawable/roundrect"
+                        android:backgroundTint="#F2F2F2"
                         android:ems="10"
                         android:fontFamily="@font/montserrat"
                         android:gravity="center"
@@ -131,7 +131,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginTop="15dp"
-                android:onClick="onMinutesClicked"
                 android:orientation="horizontal">
 
                 <Button
@@ -164,6 +163,7 @@
         android:id="@+id/addingLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:onClick="onBackgroundClicked"
         android:orientation="vertical"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -436,32 +436,20 @@
                 android:id="@+id/addMoneyInteractionButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="80dp"
                 android:layout_weight="1"
                 android:background="@drawable/roundrect"
-                android:onClick="onCreateMoneyInteractionClicked"
-                android:text="Добавить расход" />
+                android:onClick="onDeleteClicked"
+                android:text="Удалить расход" />
 
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/roundrect"
-                android:onClick="onAddScanClicked"
-                android:text="Добавить скан" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/typePickerLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="250dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/roundrect_light"
         android:orientation="vertical"
         android:visibility="gone"
@@ -481,8 +469,7 @@
             <Button
                 android:id="@+id/button10"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="onIrregularButtonClicked"
                 android:text="Разовый"
@@ -493,8 +480,7 @@
             <Button
                 android:id="@+id/button12"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:fontFamily="@font/montserrat"
                 android:onClick="onRegularButtonClicked"
@@ -524,7 +510,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/linLayoutReg"
+            android:id="@+id/linLayoutRegular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -619,9 +605,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="220dp"
+        android:layout_marginBottom="150dp"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -645,7 +631,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="right"
             android:orientation="horizontal">
 
@@ -746,5 +732,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

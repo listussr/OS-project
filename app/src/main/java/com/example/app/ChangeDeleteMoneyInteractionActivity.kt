@@ -13,7 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.app.databinding.ActivityCreateMoneyInteractionBinding
+import com.example.app.databinding.ActivityChangeDeleteMoneyInteractionBinding
 import com.example.app.dataprocessing.CategoryClass
 import com.example.app.dataprocessing.Item
 import com.example.app.dataprocessing.JsonConverter
@@ -23,39 +23,76 @@ import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 
-class CreateMoneyInteractionActivity : AppCompatActivity() {
+class ChangeDeleteMoneyInteractionActivity : AppCompatActivity() {
     private lateinit var settings: SharedPreferences
+    private lateinit var binding: ActivityChangeDeleteMoneyInteractionBinding
 
-    private lateinit var binding: ActivityCreateMoneyInteractionBinding
-
-    private var category: String = ""
-    private var sum: Int = 0
+    private var categoryName: String = ""
+    private var categoryId: String = ""
+    private var sum: String = ""
     private var date: String = ""
     private var time: String = "00:00:00"
     private var recipient: String = ""
-    private var type: String = ""
+    private var expenseFlag: Boolean = false
     private var comment: String = ""
+    private var id: String = ""
+
     private var recipientsArray = ArrayList<String>()
     private var uuid = ""
     private var categoryArray = arrayOf<CategoryClass>()
-    private var expenseFlag: Boolean = true
-
     private var lightThemFlag: Boolean = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateMoneyInteractionBinding.inflate(layoutInflater)
+        binding = ActivityChangeDeleteMoneyInteractionBinding.inflate(layoutInflater)
+        settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)!!
         setContentView(binding.root)
-        settings = getSharedPreferences(getString(R.string.name_sp_settings), Context.MODE_PRIVATE)
-        expenseFlag = intent.getBooleanExtra("ExpensesFlag", false)
-        Log.v("Set", "ExpensesFlag = $expenseFlag")
-        getUUID()
+        getDataFromIntent()
+        setData()
         setCorrectMoneyInteraction()
         lightThemFlag = settings.getBoolean("ColorTheme", true)
-        if(!lightThemFlag){
+        if(!lightThemFlag) {
             setDarkTheme()
         }
         translateViews()
+    }
+
+    /**
+     * Переводим View на англиский
+     */
+    private fun translateViews() {
+        if(!settings.getBoolean("Language", true)){
+            with(binding){
+                textView.text = "Sum"
+                textView2.text = "Category"
+                textView4.text = "Date"
+                textView5.text = "Time"
+                textView7.text = "Recipient"
+                textView8.text = "Type"
+                textView11.text = "Comment"
+                sumField.hint = "Sum"
+                categoryButton.text = "Category"
+                dateButton.text = "Date"
+                timeButton.text = "Time"
+                recipientButton.text = "Recipient"
+                typeButton.text = "Type"
+                commentField.hint = "Comment"
+                textView19.text = "Hours"
+                textView20.text = "Minutes"
+                button8.text = "Ok"
+                button9.text = "Cancel"
+                button10.text = "One-time"
+                button12.text = "Regular"
+                textView23.text = "Amount of months"
+                textView24.text = "Amount in one month"
+                cancelCategoryButton.text = "Cancel"
+                okCategoryButton.text = "Ok"
+                cancelRecipientsButton.text = "Cancel"
+                okRecipientsButton.text = "Ok"
+                newRecipientField.hint = "Recipient"
+                newCategoryField.hint = "Category"
+                addMoneyInteractionButton.text = if(expenseFlag) "Delete expense" else "Delete Income"
+            }
+        }
     }
 
     /**
@@ -108,60 +145,66 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
             editTextText8.setTextColor(Color.parseColor("#F1F3F6"))
             editTextText7.setHintTextColor(Color.parseColor("#BCBCBC"))
             editTextText8.setHintTextColor(Color.parseColor("#BCBCBC"))
-            linLayoutReg.setBackgroundResource(R.drawable.roundrect_dark_gray)
-
+            linLayoutRegular.setBackgroundResource(R.drawable.roundrect_dark_gray)
         }
+    }
+
+
+    /**
+     * Получаем данные от TableFragment
+     */
+    private fun getDataFromIntent() {
+        categoryId = intent.getStringExtra("CategoryId")!!
+        categoryName = intent.getStringExtra("CategoryName")!!
+        id = intent.getStringExtra("Id")!!
+        sum = intent.getStringExtra("Sum")!!
+        date = intent.getStringExtra("Date")!!
+        comment = intent.getStringExtra("Comment")!!
+        expenseFlag = !intent.getBooleanExtra("Type", false)
+        time = getTime()
+        date = getDate()
+        getUUID()
+        Log.d("AppJson", "Expense flag: $expenseFlag")
+        Log.d("AppJson", "Interaction id: $id")
     }
 
     /**
-     * Переводим View на англиский
+     * Получаем время из даты
      */
-    private fun translateViews() {
-        if(!settings.getBoolean("Language", true)){
-            with(binding){
-                textView.text = "Sum"
-                textView2.text = "Category"
-                textView4.text = "Date"
-                textView5.text = "Time"
-                textView7.text = "Recipient"
-                textView8.text = "Type"
-                textView11.text = "Comment"
-                sumField.hint = "Sum"
-                categoryButton.text = "Category"
-                dateButton.text = "Date"
-                timeButton.text = "Time"
-                recipientButton.text = "Recipient"
-                typeButton.text = "Type"
-                commentField.hint = "Comment"
-                textView19.text = "Hours"
-                textView20.text = "Minutes"
-                button8.text = "Ok"
-                button9.text = "Cancel"
-                button10.text = "One-time"
-                button12.text = "Regular"
-                textView23.text = "Amount of months"
-                textView24.text = "Amount in one month"
-                cancelCategoryButton.text = "Cancel"
-                okCategoryButton.text = "Ok"
-                cancelRecipientsButton.text = "Cancel"
-                okRecipientsButton.text = "Ok"
-                newRecipientField.hint = "Recipient"
-                newCategoryField.hint = "Category"
-                addMoneyInteractionButton.text = if(expenseFlag) "Add expense" else "Add Income"
-                button7.text = "Add scan"
-            }
-        }
+    private fun getTime() : String {
+        return date.substring(11)
     }
 
+    /**
+     * Получаем дату
+     */
+    private fun getDate() : String {
+        return date.substring(0, 10)
+    }
+
+    /**
+     * Устанавливаем данные в поля ввода
+     */
+    private fun setData() {
+        binding.sumField.setText(sum)
+        binding.categoryButton.text = categoryName
+        binding.dateButton.text = date
+        binding.timeButton.text = time
+        binding.recipientButton.text = "-"
+        binding.typeButton.text = "-"
+        binding.commentField.setText(comment)
+        binding.hoursEditText.setText("${time[0]}${time[1]}")
+        binding.minutesEditText.setText("${time[3]}${time[4]}")
+    }
 
     /**
      * Устанавливаем правильную надпись на кнопке добавления расхода/дохода
      */
     private fun setCorrectMoneyInteraction() {
         binding.addMoneyInteractionButton.text = if(expenseFlag){
-            "Добавить расход"
+            "Удалить расход"
         } else {
-            "Добавить доход"
+            "Удалить доход"
         }
     }
 
@@ -187,7 +230,10 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
             arrayList
         } else {
             categoryArray = arrayOf()
-            arrayListOf("Добавить новую категорию")
+            if(settings.getBoolean("Language", true))
+                arrayListOf("Добавить новую категорию")
+            else
+                arrayListOf("Add new category")
         }
         return arrayOfCategory
     }
@@ -197,6 +243,70 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
      */
     private fun getUUID(){
         uuid = settings.getString("UsersUUID", "").toString()
+    }
+
+    /**
+     * Меняем расход/доход
+     */
+    private fun changeMoneyInteraction() {
+        getDataFromFields()
+        val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(
+            MoneyInteractionPostClass(
+                comment,
+                sum.toInt(),
+                categoryId,
+                uuid,
+                "$date $time"
+            )
+        )
+        Log.v("AppJson", "Put expense/income request: $request")
+        var response: String?
+        runBlocking {
+            Log.d("AppJson", "Put expense: $expenseFlag")
+            response = if(expenseFlag) {
+                ServerInteraction.Expense.apiPutExpenseById(settings.getString("Token", "")!!, request, id)
+            } else {
+                ServerInteraction.Income.apiPutIncomeById(settings.getString("Token", "")!!, request, id)
+            }
+        }
+    }
+
+    /**
+     * Возвращаемся в MainActivity
+     */
+    private fun toMainActivity() {
+        val intent = Intent(this@ChangeDeleteMoneyInteractionActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    /**
+     * Обработка нажатия на задний фон приложения
+     */
+    fun onBackgroundClicked(view: View) {
+        changeMoneyInteraction()
+        toMainActivity()
+    }
+
+    /**
+     * Обработка нажатия на кнопку удаления дохода
+     */
+    fun onDeleteClicked(view: View) {
+        deleteMoneyInteraction()
+        toMainActivity()
+    }
+
+    /**
+     * Удаление дохода/расхода из базы данных
+     */
+    private fun deleteMoneyInteraction() {
+        runBlocking {
+            if(expenseFlag){
+                ServerInteraction.Expense.apiDeleteExpenseById(settings.getString("Token", "")!!, id)
+            } else {
+                ServerInteraction.Income.apiDeleteIncomeById(settings.getString("Token", "")!!, id)
+            }
+        }
     }
 
     /**
@@ -222,7 +332,7 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
                 if(model != "Добавить новую категорию" && model != "Add new category"){
                     for(i in categoryArray){
                         if(i.name == model) {
-                            category = i.id
+                            categoryId = i.id
                             break
                         }
                     }
@@ -296,16 +406,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
         binding.addingLayout.visibility = View.GONE
         binding.recipientsSelector.visibility = View.VISIBLE
         binding.mainLayout.setOnClickListener{
-            binding.addingLayout.visibility = View.VISIBLE
-            binding.typePickerLayout.visibility = View.GONE
-            binding.timePickerLayout.visibility = View.GONE
-            binding.categoriesSelector.visibility = View.GONE
+            binding.mainLayout.setOnClickListener{}
             binding.recipientsSelector.visibility = View.GONE
-            binding.addRecipientsLayout.visibility = View.GONE
-            binding.addCategoryLayout.visibility = View.GONE
-            binding.mainLayout.setOnClickListener{
-                onBackgroundClicked(view)
-            }
+            binding.addingLayout.visibility = View.VISIBLE
         }
         setRecipientsAdapter()
     }
@@ -314,9 +417,9 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
      * Обработка нажатия на кнопку ОК при добавлении новой категории
      */
     fun onOkCategoryButtonClicked(view: View) {
-        category = binding.newCategoryField.text.toString()
-        if(category.isNotEmpty()) {
-            val request = "{\"name\": \"$category\"}"
+        categoryName = binding.newCategoryField.text.toString()
+        if(categoryName.isNotEmpty()) {
+            val request = "{\"name\": \"$categoryName\"}"
             val response: String?
             binding.addCategoryLayout.visibility = View.GONE
             binding.addingLayout.visibility = View.VISIBLE
@@ -325,8 +428,8 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
             }
             if (response != null) {
                 Log.d("AppJson", "Category has been added successfully! Id: $response")
-                category = response
-                category = category.replace("\"", "")
+                categoryId = response
+                categoryId = categoryId.replace("\"", "")
             } else {
                 Log.e("AppJson", "Failure in adding category")
             }
@@ -367,56 +470,11 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
     private fun getDataFromFields() {
         comment = binding.commentField.text.toString()
         val sumStr = binding.sumField.text.toString()
-        sum = if(sumStr.isNotEmpty()){
+        sum = if(sumStr.isNotEmpty()) {
             sumStr.toInt()
         } else {
             -1
-        }
-    }
-
-    /**
-     * Обработка нажатия на задний фон приложения
-     */
-    fun onBackgroundClicked(view: View) {
-        val intent = Intent(this@CreateMoneyInteractionActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    /**
-     * Добавляем в базу данныз на сервере новое взаимодействие с деньгами
-     */
-    private fun postMoneyInteraction() {
-        if(date[1] == '.'){
-            date = "0$date"
-        }
-        if(date[4] == '.'){
-            date = date.replaceRange(3, 3, "0")
-        }
-        Log.d("Set", "Date: $date")
-        val getDate = "$date $time"
-        val moneyInteractionPost = MoneyInteractionPostClass(
-            comment = comment,
-            value = sum,
-            categoryId = category,
-            userId = uuid,
-            getDate = getDate
-        )
-        val request = JsonConverter.ToJson.toMoneyInteractionPostClassJson(moneyInteractionPost)
-        val response: String?
-        runBlocking {
-            response = if(expenseFlag){
-                ServerInteraction.Expense.apiPostExpenses(settings.getString("Token", "")!!, request)
-            } else {
-                ServerInteraction.Income.apiPostIncomes(settings.getString("Token", "")!!, request)
-            }
-        }
-        if(response != null) {
-            Log.w("AppJson", "Response Post Interaction: $response")
-        } else {
-            Log.e("AppJson", "NotPosted")
-        }
-        Log.w("AppJson", "Post request json: $request")
+        }.toString()
     }
 
     /**
@@ -435,31 +493,6 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
     }
 
     /**
-     * Обработка нажатия на кнопку добавления расхода/дохода
-     */
-    fun onCreateMoneyInteractionClicked(view: View) {
-        getDataFromFields()
-        if(sum <= 0) {
-            Toast.makeText(applicationContext, "Сумма не может быть отрицательной", Toast.LENGTH_LONG).show()
-        } else if(comment.isEmpty()){
-            Toast.makeText(applicationContext, "Комментарий не может быть пустым", Toast.LENGTH_LONG).show()
-        } else if (date.isEmpty()) {
-            Toast.makeText(applicationContext, "Дата не может быть пустой!", Toast.LENGTH_LONG).show()
-        } else if(category.isEmpty()){
-            Toast.makeText(applicationContext, "Категория не может быть пустой!", Toast.LENGTH_LONG).show()
-        } else {
-            if(checkForConnection(applicationContext)) {
-                postMoneyInteraction()
-            } else {
-                Toast.makeText(applicationContext, "Нет подключения к интернету!", Toast.LENGTH_LONG).show()
-            }
-            val intent = Intent(this@CreateMoneyInteractionActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
-
-    /**
      * Обработка нажатия на кнопку выбора категории
      */
     fun onCategoriesPickerButtonClicked(view: View) {
@@ -473,9 +506,6 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
         setCategoriesAdapter()
     }
 
-    /**
-     * Обработка нажатия на кнопку выбора времени
-     */
     fun onTimePickerClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.timePickerLayout.visibility = View.VISIBLE
@@ -523,11 +553,6 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
     fun onIrregularButtonClicked(view: View) {
         binding.addingLayout.visibility = View.VISIBLE
         binding.typePickerLayout.visibility = View.GONE
-        binding.timePickerLayout.visibility = View.GONE
-        binding.categoriesSelector.visibility = View.GONE
-        binding.recipientsSelector.visibility = View.GONE
-        binding.addRecipientsLayout.visibility = View.GONE
-        binding.addCategoryLayout.visibility = View.GONE
         binding.typeButton.text = "Нерегулярный"
     }
 
@@ -567,25 +592,6 @@ class CreateMoneyInteractionActivity : AppCompatActivity() {
     fun onTypePickerClicked(view: View) {
         binding.addingLayout.visibility = View.GONE
         binding.typePickerLayout.visibility = View.VISIBLE
-        binding.mainLayout.setOnClickListener {
-            binding.addingLayout.visibility = View.VISIBLE
-            binding.typePickerLayout.visibility = View.GONE
-            binding.timePickerLayout.visibility = View.GONE
-            binding.categoriesSelector.visibility = View.GONE
-            binding.recipientsSelector.visibility = View.GONE
-            binding.addRecipientsLayout.visibility = View.GONE
-            binding.addCategoryLayout.visibility = View.GONE
-            binding.mainLayout.setOnClickListener{
-                onBackgroundClicked(view)
-            }
-        }
-    }
-
-    /**
-     * Обработка нажатия на кнопку добавить скан
-     */
-    fun onAddScanClicked(view: View) {
-        Toast.makeText(applicationContext, "Функция находится в разработке!",Toast.LENGTH_LONG).show()
     }
 
     /**
